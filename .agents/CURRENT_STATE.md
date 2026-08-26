@@ -173,7 +173,7 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 [ ] Phase 7 — Spaced Repetition System (SRS SM-2 Engine)        [NOT_STARTED]
 [ ] Phase 8 — Personal Notes & User Settings                    [NOT_STARTED]
 [ ] Phase 9 — Frontend UI & Client API Integration              [NOT_STARTED]
-[ ] Phase 10 — Security Hardening, Performance & Quality QA      [NOT_STARTED]
+[ ] Phase 10 — Security, Performance & Quality Hardening        [NOT_STARTED]
 [ ] Phase 11 — Final E2E Integration & Delivery                 [NOT_STARTED]
 ================================================================
 ```
@@ -184,7 +184,7 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `backend/src/main/resources/application.yml`: Cấu hình kết nối MySQL `elearning_db`, kích hoạt Flyway, đặt Hibernate `ddl-auto: none`.
   * `backend/src/main/resources/db/migration/V1__init_schema.sql`: Khởi tạo trọn vẹn 14 bảng quan hệ, được Flyway áp dụng thành công.
   * `backend/src/main/java/com/elearning/ElearningApplication.java`: Class khởi động chuẩn của ứng dụng.
-  * `backend/src/test/java/com/elearning/ElearningApplicationTests.java`: Test khởi động context, kích hoạt migration tự động thành công 100%.
+  * `backend/src/test/java/com/elearning/ElearningApplicationTests.java`: Test khởi động context, kích hoạt migration tự động thành công (1 test, 0 failure).
   * `.gitignore`: Đã hiệu chỉnh loại trừ đúng `target/`, các file IDE, secrets, và đưa thư mục `db/migration` vào Git an toàn.
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
@@ -207,7 +207,7 @@ Dựa trên kết quả nghiên cứu external best practices (Anthropic, GitHub
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
   1. *Đóng gói dứt điểm Phase 1:* Tuân thủ nguyên tắc hoàn thiện từng lát cắt khép kín trước khi chuyển giai đoạn, không để Phase 1 dở dang.
   2. *Hạ tầng chuẩn cho toàn bộ REST Controller:* Toàn bộ các DTO và Controller từ Phase 3 trở đi đều cần gói dữ liệu vào `ApiResponse<T>` và `PageResponse<T>`. Xây dựng sớm giúp kiểm chứng chuẩn serialization JSON Jackson.
-  3. *Context nhỏ, rủi ro thấp nhất:* Task chỉ gồm 3 class DTO thuần túy và 1 unit test serialization. Không phụ thuộc database MySQL, có thể hoàn thành và nghiệm thu dứt điểm trong 1 phiên làm việc ngắn.
+  3. *Ngữ cảnh tinh gọn, rủi ro phụ thuộc thấp:* Task chỉ gồm 3 class DTO thuần túy và 1 unit test serialization. Không phụ thuộc database MySQL, có thể hoàn thành và nghiệm thu dứt điểm trong 1 phiên làm việc ngắn.
   4. *Nhiệm vụ tiếp sau đó:* `Task 1B.2` (GlobalExceptionHandler) $\rightarrow$ Khép lại Phase 1 $\rightarrow$ Bắt đầu `Task 2A.1` (JPA Entity Mapping).
 
 ---
@@ -230,7 +230,7 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 Xây dựng các lớp dữ liệu phong bì phản hồi API chuẩn (Standard Response Envelopes) và bảng mã lỗi hệ thống theo đúng quy chuẩn tại Mục 1.2, 1.3 và 1.4 của `.agents/API.md`.
 
 ### 2. Why (Tại sao cần)
-Để đảm bảo tính nhất quán 100% của cấu trúc JSON trả về client trên toàn bộ hệ thống, tránh việc mỗi Controller tự định nghĩa cấu trúc trả về riêng lẻ, và làm nền tảng cho `GlobalExceptionHandler` ở Task 1B.2.
+Để đảm bảo tính nhất quán của cấu trúc JSON trả về client trên toàn bộ hệ thống theo đặc tả API.md, tránh việc mỗi Controller tự định nghĩa cấu trúc trả về riêng lẻ, và làm nền tảng cho `GlobalExceptionHandler` ở Task 1B.2.
 
 ### 3. In-Scope (Phạm vi thực hiện)
 * Tạo class `com.elearning.dto.response.ApiResponse<T>`:
