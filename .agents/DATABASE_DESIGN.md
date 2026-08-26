@@ -174,7 +174,7 @@ Danh sách 14 liên kết khóa ngoại vật lý:
 | `LESSON.created_by` | `1:N` | `CASCADE` | `RESTRICT` | Không được xóa tài khoản tác giả nếu có bài học; phải chuyển status sang `Banned`/`Inactive`. |
 | `LESSON_VOCABULARY.lesson_id` | `N:N` | `CASCADE` | `CASCADE` | Xóa bài học thì xóa danh sách từ trong bài học đó. |
 | `LESSON_VOCABULARY.vocab_id` | `N:N` | `CASCADE` | `RESTRICT` | Không xóa từ vựng nếu đang nằm trong bài học đang hoạt động. |
-| `MODERATION_LOG.lesson_id` | `1:N` | `CASCADE` | `CASCADE` | Xóa bài học thì xóa lịch sử kiểm duyệt bài học đó. |
+| `MODERATION_LOG.lesson_id` | `1:N` | `CASCADE` | `RESTRICT` | Bảo vệ lịch sử kiểm duyệt: không được xóa bài học nếu đã có nhật ký kiểm duyệt; phải lưu vết kiểm toán. |
 | `MODERATION_LOG.moderator_id` | `1:N` | `CASCADE` | `RESTRICT` | Bảo vệ lịch sử kiểm duyệt: không được xóa tài khoản kiểm duyệt viên. |
 | `REVIEW_LOG.user_id` | `1:N` | `CASCADE` | `CASCADE` | Xóa người dùng thì dọn dẹp lịch sử ôn tập cá nhân. |
 
@@ -393,7 +393,6 @@ CREATE TABLE `USER_SRS_SETTING` (
     `user_id` BIGINT UNSIGNED NOT NULL,
     `new_cards_per_day` INT UNSIGNED NOT NULL DEFAULT 20,
     `max_review_per_day` INT UNSIGNED NOT NULL DEFAULT 100,
-    PRIMARY KEY (`setting_id`),
     CONSTRAINT `uk_user_srs_setting_user` UNIQUE (`user_id`),
     CONSTRAINT `fk_user_srs_setting_user` FOREIGN KEY (`user_id`) 
         REFERENCES `USER_PROFILE` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -466,7 +465,7 @@ CREATE TABLE `MODERATION_LOG` (
     `flagged_fields` TEXT NULL,
     `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `fk_moderation_log_lesson` FOREIGN KEY (`lesson_id`) 
-        REFERENCES `LESSON` (`lesson_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+        REFERENCES `LESSON` (`lesson_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT `fk_moderation_log_moderator` FOREIGN KEY (`moderator_id`) 
         REFERENCES `ACCOUNT` (`account_id`) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT `chk_moderation_action` CHECK (`action` IN ('Approve', 'Reject')),

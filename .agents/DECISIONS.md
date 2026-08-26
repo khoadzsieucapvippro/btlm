@@ -42,7 +42,7 @@
 | **DES-04** | Polymorphic Reference | **Phương án A: item_type + item_id** | Giữ nguyên 2 trường như đặc tả, không tạo FK vật lý ở MySQL; kiểm soát toàn vẹn tại tầng Service / JPA. |
 | **DES-05** | Charset / Collation | **utf8mb4 / utf8mb4_unicode_ci** | Hỗ trợ toàn diện 4-byte Unicode cho chữ Hán Khang Hy, Pinyin có dấu và tiếng Việt. |
 | **DES-06** | Timestamps | **Specific + Lifecycle Auditing** | Giữ nguyên các timestamp bắt buộc (`PERSONAL_NOTE.created_at`, `MODERATION_LOG.created_at`, `REVIEW_LOG.reviewed_at`, `CARD_PROGRESS.next_review_at`). Bổ sung `created_at` và `updated_at` cho 5 bảng thực thể chính (`ACCOUNT`, `USER_PROFILE`, `LESSON`, `RADICAL`, `VOCABULARY`). |
-| **DES-07** | Cascade Strategy | **Bảo vệ toàn vẹn lịch sử** | Áp dụng `ON DELETE RESTRICT` cho tác giả bài học, kiểm duyệt viên, vai trò hệ thống, và từ vựng trong bài học để chống mất dấu vết kiểm toán. |
+| **DES-07** | Cascade Strategy | **Bảo vệ toàn vẹn lịch sử** | Áp dụng `ON DELETE RESTRICT` cho tác giả bài học, kiểm duyệt viên, vai trò hệ thống, từ vựng trong bài học, và bài học có nhật ký kiểm duyệt (`MODERATION_LOG.lesson_id`) để chống mất dấu vết kiểm toán. |
 
 ---
 
