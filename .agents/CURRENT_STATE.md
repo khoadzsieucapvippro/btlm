@@ -243,13 +243,15 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `Task 2F.1 [COMPLETED]`: Tổng kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation. Toàn bộ 14 bảng quan hệ khớp chính xác với Hibernate `ddl-auto: validate`. 12 Spring Data JPA Repositories pass.
   * `Checkpoint Phase 2 [COMPLETED]`: `mvn clean test` PASS 81/81 tests (0 failures, 0 errors) với cấu hình `ddl-auto: validate`. Không có cảnh báo sai lệch kiểu dữ liệu, khóa chính hoặc khóa ngoại. Phase 2 chính thức hoàn tất 100%.
 
-* `Module 3A [IN_PROGRESS]`:
+* `Module 3A [COMPLETED]`:
   * `Task 3A.1 [COMPLETED]`: Cấu hình `SecurityConfig`: Spring Security 6 `SecurityFilterChain`, `BCryptPasswordEncoder`, cấu hình session `STATELESS`, vô hiệu hóa CSRF cho REST API. `SecurityConfigTests` PASS 10/10 tests (8.71s).
-  * `Task 3A.2 [COMPLETED]`: Thư viện JJWT 0.12.6, `JwtUtil` (sinh/đọc/validate token HMAC-SHA256, claims `sub`, `roles`, `iat`, `exp`), `JwtAuthenticationFilter` (OncePerRequestFilter, trích xuất `Authorization: Bearer <token>`, nạp `Authentication` vào `SecurityContextHolder` trước `UsernamePasswordAuthenticationFilter` mà không truy vấn DB). `JwtUtilTests` PASS 11/11 tests, `JwtAuthenticationFilterTests` PASS 7/7 tests, `SecurityConfigTests` PASS 12/12 tests; `mvn clean test` PASS 111/111 tests (17.33s).
+  * `Task 3A.2 [COMPLETED]`: Thư viện JJWT 0.12.6, `JwtUtil` (sinh/đọc/validate token HMAC-SHA256, claims `sub`, `roles`, `iat`, `exp`), `JwtAuthenticationFilter` (OncePerRequestFilter, trích xuất `Authorization: Bearer <token>`, nạp `Authentication` vào `SecurityContextHolder` trước `UsernamePasswordAuthenticationFilter` mà không truy vấn DB). `JwtUtilTests` PASS 11/11 tests, `JwtAuthenticationFilterTests` PASS 7/7 tests, `SecurityConfigTests` PASS 12/12 tests.
+  * `Task 3A.3 [COMPLETED]`: Triển khai `CustomUserDetailsService` và `CustomUserDetails`. Nạp `Account` qua `AccountRepository.findByEmailOrPhone`, mapping chuẩn `ROLE_<RoleName>` độc lập khỏi lazy JPA graph, kiểm soát an toàn trạng thái `Active`, `Inactive`, `Banned`/`Locked`, ném `UsernameNotFoundException` không rò rỉ SQL; bean tự động cấu hình Global `AuthenticationManager`. `CustomUserDetailsTests` PASS 11/11 tests, `CustomUserDetailsServiceTests` PASS 6/6 tests, `CustomUserDetailsServiceIntegrationTests` PASS 2/2 tests.
+  * `Checkpoint 3A [COMPLETED]`: `mvn clean test` PASS 130/130 tests (19.37s). Hạ tầng Spring Security 6, BCrypt, JWT, UserDetailsService và FilterChain hoàn tất 100%.
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 3A`: `Task 3A.3` (`CustomUserDetailsService`, `CustomUserDetails`) và `Checkpoint 3A`.
-* `Module 3B-3D [NOT_STARTED]`: Chưa có `AuthService`, `AuthController`, User Profile APIs hay MockMvc RBAC tests.
+* `Module 3B`: `Task 3B.1` (`RegisterRequest`, `LoginRequest`, `AuthResponse`), `Task 3B.2` (`AuthService`, `AuthController`).
+* `Module 3C-3D [NOT_STARTED]`: Chưa có User Profile APIs hay MockMvc RBAC tests.
 * `Phase 4-8 [NOT_STARTED]`: Chưa có bất kỳ Service hay Controller nghiệp vụ nào.
 * `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
 
@@ -257,16 +259,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 3A.2`:
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 3A.3` và `Checkpoint 3A`:
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 3 — Authentication, Authorization & User Management`**
-* **Phân hệ hiện tại (Current Module):** **`Module 3A — Spring Security & JWT Infrastructure`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 3A.3 — Triển khai CustomUserDetailsService tải thông tin tài khoản`**
+* **Phân hệ hiện tại (Current Module):** **`Module 3B — Authentication & Registration Vertical Slice`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 3B.1 — Request/Response DTOs: RegisterRequest, LoginRequest, AuthResponse`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn tất toàn diện Task 3A.2:* Tiện ích `JwtUtil` và bộ lọc `JwtAuthenticationFilter` đã hoạt động độc lập, chính xác với 111/111 tests PASS.
-  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Task 2A.2, Task 3A.2`), `Task 3A.3` là mắt xích cuối cùng của Module 3A để kết nối Spring Security Authentication với CSDL thông qua `AccountRepository`, nạp thực thể `Account` kèm các `Role` đã ánh xạ và chuyển đổi thành `UserDetails` / `GrantedAuthority`.
-  3. *Điều kiện tiên quyết nghiệm thu Checkpoint 3A:* Hoàn tất 3A.3 sẽ mở đường cho việc nghiệm thu `Checkpoint 3A` và chuyển sang `Module 3B` (Authentication & Registration APIs).
-  4. *Nhiệm vụ tiếp sau đó:* `Checkpoint 3A` $\rightarrow$ `Module 3B` (`Task 3B.1 — Auth DTOs`).
+  1. *Hoàn tất toàn diện Module 3A:* Toàn bộ hạ tầng Spring Security 6, JWT, UserDetailsService, và FilterChain đã hoàn thiện 100% và vượt qua `Checkpoint 3A` với 130/130 tests PASS.
+  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Task 1B.1`), `Task 3B.1` là bước tiếp theo để xây dựng hợp đồng dữ liệu đầu vào/đầu ra (DTOs) kèm Jakarta Validation (`@NotBlank`, `@Size`, email/phone pattern) trước khi viết business logic đăng ký / đăng nhập tại `Task 3B.2`.
+  3. *Tách bạch tầng dữ liệu và logic:* Tách biệt DTO contract (`3B.1`) khỏi Service/Controller implementation (`3B.2`) theo đúng kiến trúc Spec-driven & Incremental implementation.
+  4. *Nhiệm vụ tiếp sau đó:* `Task 3B.2 — AuthService & AuthController (/api/v1/auth/**)`.
 
 ---
 
@@ -282,51 +284,54 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 3A.3
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 3B.1
 
 ### 1. What (Làm gì)
-Xây dựng `CustomUserDetailsService` hiện thực hóa interface `UserDetailsService` của Spring Security và đối tượng `CustomUserDetails` hiện thực `UserDetails`, nạp thông tin tài khoản từ `AccountRepository` dựa trên `emailOrPhone` (hoặc `username`), nạp các `Role` từ tập hợp `account.getRoles()` và ánh xạ chuẩn hóa sang danh sách `GrantedAuthority` (với prefix `ROLE_`).
+Tạo các Request và Response DTOs cho phân hệ xác thực tài khoản:
+- `RegisterRequest`: `emailOrPhone` (bắt buộc, format email/phone hợp lệ, tối đa 191 ký tự), `password` (bắt buộc, tối thiểu 6 ký tự, tối đa 100 ký tự), `fullName` (bắt buộc, tối đa 100 ký tự).
+- `LoginRequest`: `emailOrPhone` (bắt buộc), `password` (bắt buộc).
+- `AuthResponse`: `accessToken` (chuỗi JWT), `tokenType` (`"Bearer"`), `expiresIn` (ms hoặc giây), `emailOrPhone`, `roles` (`List<String>`).
+Tất cả DTOs áp dụng Jakarta Validation annotations (`@NotBlank`, `@Size`, `@Email`, custom/regex pattern nếu cần).
 
 ### 2. Why (Tại sao cần)
-Để cung cấp nguồn dữ liệu người dùng (User Details Provider) chuẩn mực cho Spring Security `DaoAuthenticationProvider`, phục vụ việc xác thực mật khẩu khi đăng nhập tại Task 3B.2 và phân quyền theo vai trò (RBAC) cho các endpoint nghiệp vụ.
+Để làm rõ giao diện truyền nhận (API Contract) cho luồng đăng ký và đăng nhập, đảm bảo payload gửi lên từ client được thẩm định (validate) chặt chẽ tại tầng Controller trước khi chuyển vào Service xử lý nghiệp vụ.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo lớp `CustomUserDetails` trong `com.elearning.security` implement `UserDetails` (wrap entity `Account`, cung cấp authorities `ROLE_<roleName>`).
-* Tạo lớp `CustomUserDetailsService` trong `com.elearning.security` implement `UserDetailsService`, inject `AccountRepository`.
-* Xử lý trường hợp tài khoản không tồn tại bằng `UsernameNotFoundException`.
-* Xử lý trạng thái tài khoản (`status = 1` là active/enabled, `status = 0` là disabled/locked).
-* Viết unit/integration tests cho `CustomUserDetailsService` (tài khoản tồn tại, nạp đủ 4 vai trò, tài khoản bị khóa/disabled, tài khoản không tồn tại ném `UsernameNotFoundException`).
-* Nghiệm thu `Checkpoint 3A`.
+* Tạo `RegisterRequest` trong package `com.elearning.dto.auth` (hoặc tương đương).
+* Tạo `LoginRequest` trong package `com.elearning.dto.auth`.
+* Tạo `AuthResponse` trong package `com.elearning.dto.auth`.
+* Viết unit test kiểm chứng validation constraints (Validator test) cho các trường hợp dữ liệu hợp lệ và không hợp lệ (blank, null, invalid size, invalid email/phone).
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 3A.3)
-* Chưa tạo `AuthService` hay `AuthController` (thuộc Module 3B).
-* Chưa tạo DTOs `RegisterRequest`, `LoginRequest` (thuộc Task 3B.1).
-* Không thay đổi schema bảng `account` hay `role`.
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 3B.1)
+* Chưa tạo `AuthService` hay `AuthController` (thuộc Task 3B.2).
+* Chưa gán role `Learner` hay tạo tài khoản thật (thuộc Task 3B.2).
+* Chưa sinh JWT thật cho flow đăng nhập (thuộc Task 3B.2).
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 2A.2` (`AccountRepository`), `Task 3A.2` (`JwtUtil`).
+* `depends_on`: `Task 1B.1` (`ApiResponse` & Global Exception Handling), `Task 3A.3` (`CustomUserDetailsService`).
 
 ### 6. Files/Modules Likely Affected
-* `backend/src/main/java/com/elearning/security/CustomUserDetails.java` [NEW]
-* `backend/src/main/java/com/elearning/security/CustomUserDetailsService.java` [NEW]
-* `backend/src/test/java/com/elearning/CustomUserDetailsServiceTests.java` [NEW]
+* `backend/src/main/java/com/elearning/dto/auth/RegisterRequest.java` [NEW]
+* `backend/src/main/java/com/elearning/dto/auth/LoginRequest.java` [NEW]
+* `backend/src/main/java/com/elearning/dto/auth/AuthResponse.java` [NEW]
+* `backend/src/test/java/com/elearning/dto/AuthDtoValidationTests.java` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `CustomUserDetailsService.loadUserByUsername(emailOrPhone)` trả về đúng `UserDetails` với email/phone, password hash, và authorities `ROLE_<RoleName>`.
-* Khi tài khoản không tồn tại, ném `UsernameNotFoundException`.
-* `isEnabled()` phản ánh đúng trạng thái `account.getStatus() == 1`.
+* `RegisterRequest` validate chính xác các trường bắt buộc và kích thước ký tự.
+* `LoginRequest` validate chính xác email/phone và password không được blank.
+* `AuthResponse` chứa đầy đủ accessToken, tokenType "Bearer", expiresIn, emailOrPhone, và danh sách roles.
 * Toàn bộ test suite tiếp tục PASS 100%.
 
 ### 8. Verification Command
 * Lệnh chạy: `mvn -f backend/pom.xml clean test`
 
 ### 9. Completion Condition
-* `CustomUserDetailsService` và test tương ứng hoàn thành và pass.
-* Nghiệm thu `Checkpoint 3A`.
-* Cập nhật `Task 3A.3` thành `COMPLETED` trong `PROGRESS.md`.
+* DTOs hoàn tất với validation constraints chuẩn.
+* Validator unit tests PASS.
+* Cập nhật `Task 3B.1` thành `COMPLETED` trong `PROGRESS.md`.
 
 ### 10. Next Task
-* `Module 3B: Authentication & Registration Vertical Slice` (`Task 3B.1 — Auth DTOs`).
+* `Task 3B.2 — AuthService & AuthController (/api/v1/auth/**)`.
 
 ---
 
