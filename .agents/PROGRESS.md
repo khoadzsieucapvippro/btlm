@@ -1,80 +1,116 @@
-# PROGRESS — BẢNG THEO DÕI TIẾN ĐỘ DỰ ÁN MỚI (CLEAN STATE TRACKING)
+# PROGRESS — BẢNG THEO DÕI TIẾN ĐỘ DỰ ÁN (PHASE → MODULE → TASK MATRIX)
 
-> **Nguyên tắc quản lý trạng thái:**  
+> **Mô hình quản lý:** 4 cấp độ chặt chẽ:  
+> $$\text{PHASE} \longrightarrow \text{MODULE} \longrightarrow \text{TASK} \longrightarrow \text{VERIFICATION CHECKPOINT}$$
+> 
+> **Nguyên tắc trạng thái:**  
 > - `NOT_STARTED`: Công việc chưa bắt đầu.  
 > - `IN_PROGRESS`: Đang trong quá trình thực hiện.  
-> - `COMPLETED`: Chỉ gán trạng thái này khi đã có bằng chứng nghiệm thu vật lý (Test pass, build pass, artifact đã tạo).  
-> - `BLOCKED`: Đang bị chặn bởi câu hỏi mở (Open Question) hoặc phụ thuộc kỹ thuật chưa được giải quyết.  
-> - **Tuyệt đối cấm:** Đánh dấu COMPLETED cho bất kỳ task triển khai nào dựa trên mã nguồn cũ đã xóa. Không áp đặt giả định 1 bảng = 1 JPA Entity.  
+> - `COMPLETED`: Chỉ gán trạng thái này khi đã có bằng chứng nghiệm thu vật lý độc lập (Test pass, build pass, file artifact đã tạo và kiểm chứng).  
+> - `BLOCKED`: Đang bị chặn bởi dependency hoặc câu hỏi mở.  
+> - **Tuyệt đối cấm:** Đánh dấu COMPLETED cho bất kỳ task nào dựa trên giả định hoặc mã nguồn cũ đã xóa.  
 
 ---
 
-## BẢNG TIẾN ĐỘ CHI TIẾT (TASK TRACKING MATRIX)
+## 1. BẢNG TRUY XUẤT LỊCH SỬ NHIỆM VỤ (TASK TRACEABILITY MAPPING)
 
-| Phase | Task ID | Tên công việc (Task Description) | Status | Dependency | Bằng chứng xác minh (Verification Evidence) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Phase 0** | **TASK-0.1** | Xóa bỏ toàn bộ mã nguồn cũ và artifacts triển khai không còn phù hợp | **COMPLETED** | Không | Đã xóa sạch thư mục `backend/*`, `frontend/*`, `scripts/`, `temp/`, `docs/`, `.vs/` và các báo cáo cũ. `backend` và `frontend` là thư mục rỗng. |
-| **Phase 0** | **TASK-0.2** | Bảo tồn và xác minh tính toàn vẹn 19 Agent Skills trong `.agents/skills/` | **COMPLETED** | Không | Script `validate_skills.ps1` trả về `Validation PASSED` (100% hợp lệ, không có orphan references). |
-| **Phase 0** | **TASK-0.3** | Thiết lập lại toàn bộ tài liệu đặc tả chuẩn 14 bảng cho lần triển khai mới | **COMPLETED** | Không | Đã tạo và chuẩn hóa 9 tài liệu đặc tả trong `.agents/` (`PROJECT_CONTEXT`, `ARCHITECTURE`, `DATABASE`, `API`, `DECISIONS`, `OPEN_QUESTIONS`, `WORKFLOW`, `ROADMAP`, `PROGRESS`). |
-| **Phase 0** | **TASK-0.4** | Cài đặt và cấu hình MySQL Community Server 8.4 LTS cục bộ | **COMPLETED** | Không | Cài đặt `Oracle.MySQL` 8.4.9 qua winget; cấu hình `my.ini` utf8mb4; tiến trình daemon mysqld chạy cổng 3306; kết nối `mysql.exe` thành công; tạo database `elearning_db`. Không ảnh hưởng tới SQL Server. |
-| **Phase 0** | **TASK-0.5** | Khởi tạo Git repository, thiết lập file `.gitignore` tiêu chuẩn | **COMPLETED** | Không | `git init` thành công; `.gitignore` bảo vệ secrets, target/, ide files; initial commit sẵn sàng. |
-| **Phase 0** | **TASK-0.6** | Soạn thảo tài liệu Thiết kế CSDL Vật lý chi tiết cho 14 bảng MySQL | **COMPLETED** | Không | Tài liệu `.agents/DATABASE_DESIGN.md` hoàn thành với đủ 20 mục chi tiết, giải quyết dứt điểm OQ-04, OQ-05, OQ-06, OQ-07. |
-| **Phase 1** | **TASK-1.1** | Khởi tạo cấu trúc dự án Spring Boot 3 và file `backend/pom.xml` | **COMPLETED** | Phase 0 | `backend/pom.xml` sử dụng Java 21 LTS, Spring Boot 3.3.5, Maven 3.9.16; build thành công. |
-| **Phase 1** | **TASK-1.2** | Thiết lập class khởi động, `application.yml` trỏ MySQL và Flyway cấu hình | **COMPLETED** | TASK-1.1 | `ElearningApplication.java`, `application.yml` kết nối MySQL cổng 3306 qua HikariCP, `ddl-auto=none`. |
-| **Phase 1** | **TASK-1.3** | Soạn thảo và thực thi Flyway migration `V1__init_schema.sql` cho 14 bảng chuẩn | **COMPLETED** | TASK-1.2 | `V1__init_schema.sql` áp dụng thành công qua Flyway; 14 bảng nghiệp vụ tạo đầy đủ trong `elearning_db`. |
-| **Phase 1** | **TASK-1.4** | Kiểm thử tự động nạp Spring Context và xác minh schema CSDL | **COMPLETED** | TASK-1.3 | `ElearningApplicationTests` pass 100%, `flyway_schema_history` ghi nhận version 1 `SUCCESS`. |
-| **Phase 1** | **TASK-1.5** | Thiết lập chuẩn `ApiResponse`, `PageResponse` và `GlobalExceptionHandler` | **NOT_STARTED** | TASK-1.4 | Chờ triển khai ở bước kế tiếp. |
-| **Phase 2** | **Task 2A.1** | JPA Mapping: Account, UserProfile, Role & AccountRole | **NOT_STARTED** | Phase 1 | Cụm bảng định danh: Entity, quan hệ N:N, composite key, Repositories, Unit test. |
-| **Phase 2** | **Task 2A.2** | JPA Mapping: Radical, Vocabulary & VocabRadical | **NOT_STARTED** | Task 2A.1 | Cụm bảng từ điển: Entity, quan hệ N:N, composite key, Repositories, Unit test. |
-| **Phase 2** | **Task 2A.3** | JPA Mapping: Lesson & LessonVocabulary | **NOT_STARTED** | Task 2A.2 | Cụm bảng bài học: Entity, quan hệ N:N kèm `order_index`, Repositories, Unit test. |
-| **Phase 2** | **Task 2A.4** | JPA Mapping: SRS Setting, CardProgress, ReviewLog, Notes & ModerationLog | **NOT_STARTED** | Task 2A.3 | Cụm bảng SRS & kiểm toán: Xử lý tham chiếu đa hình (`item_type` + `item_id`), Repositories, Unit test. |
-| **Phase 2** | **Task 2B.1** | Flyway Seed Data V2: 4 Vai trò hệ thống (`V2__seed_roles.sql`) | **NOT_STARTED** | Task 2A.1 | Seed 4 vai trò cố định: `Learner`, `Creator`, `Moderator`, `Admin`. |
-| **Phase 2** | **Task 2B.2** | Flyway Seed Data V3: 214 Bộ thủ Khang Hy (`V3__seed_radicals.sql`) | **NOT_STARTED** | Task 2A.2 | Seed 214 bộ thủ Khang Hy chuẩn từ dataset `.agents/references/radicals.json`. |
-| **Phase 2** | **Task 2C.1** | Kiểm thử tích hợp toàn diện tầng Persistence (Schema validation & JPA Tests) | **NOT_STARTED** | Task 2A.4, 2B.2 | Hibernate schema validation khớp 100% với 14 bảng CSDL; Integration test truy xuất dữ liệu seed. |
-| **Phase 3** | **Task 3A.1** | Cấu hình Spring Security 6 FilterChain, BCrypt & Stateless Session | **NOT_STARTED** | Phase 2 | Thiết lập security core, tắt CSRF cho REST, cấu hình phân quyền endpoint cơ bản. |
-| **Phase 3** | **Task 3A.2** | Xây dựng `JwtUtil`, trích xuất claims, mã hóa và `JwtAuthenticationFilter` | **NOT_STARTED** | Task 3A.1 | Bộ lọc JWT chặn request, giải mã Bearer token, gán Authentication vào SecurityContext. |
-| **Phase 3** | **Task 3A.3** | Triển khai `CustomUserDetailsService` tải thông tin tài khoản và roles | **NOT_STARTED** | Task 3A.2 | Tải user từ `AccountRepository`, ánh xạ Authorities từ bảng `ROLE`. |
-| **Phase 3** | **Task 3B.1** | DTOs xác thực (`RegisterRequest`, `LoginRequest`, `AuthResponse`) & `AuthService` | **NOT_STARTED** | Task 3A.3 | Nghiệp vụ đăng ký (gán vai trò mặc định `Learner`, mã hóa mật khẩu) và đăng nhập (kiểm tra pass, sinh JWT). |
-| **Phase 3** | **Task 3B.2** | Xây dựng `AuthController` (`/api/v1/auth/register`, `/api/v1/auth/login`) | **NOT_STARTED** | Task 3B.1 | REST endpoints xác thực với validation input `@Valid` và trả về `ApiResponse<AuthResponse>`. |
-| **Phase 3** | **Task 3B.3** | Xây dựng DTO, Service & Controller quản lý Hồ sơ người dùng (`/api/v1/users/profile`) | **NOT_STARTED** | Task 3B.2 | Lấy và cập nhật `full_name`, `avatar_url` của tài khoản hiện tại qua token. |
-| **Phase 3** | **Task 3C.1** | Kiểm thử MockMvc & Unit Test cho Auth flow và RBAC 4 vai trò | **NOT_STARTED** | Task 3B.3 | Kiểm thử kịch bản đăng ký, đăng nhập sai pass, token hết hạn, kiểm tra 401 Unauthorized và 403 Forbidden. |
-| **Phase 4** | **Task 4A.1** | DTOs & Service tra cứu Bộ thủ (`RadicalService`) | **NOT_STARTED** | Phase 2 | Danh sách 214 bộ thủ, chi tiết bộ thủ theo ID/ký tự, danh sách từ vựng cấu thành từ bộ thủ. |
-| **Phase 4** | **Task 4A.2** | Xây dựng `RadicalController` công khai và Admin CRUD Bộ thủ | **NOT_STARTED** | Task 4A.1, Phase 3 | `GET /api/v1/radicals/**` (công khai), `POST/PUT/DELETE /api/v1/admin/radicals/**` (quyền Admin). |
-| **Phase 4** | **Task 4B.1** | DTOs, tiêu chí tìm kiếm phân trang & `VocabularyService` | **NOT_STARTED** | Phase 2 | Tra cứu từ vựng theo pinyin, pinyin không dấu (`pinyin_raw`), chữ Hán (`hanzi`), lọc theo bộ thủ. |
-| **Phase 4** | **Task 4B.2** | Xây dựng `VocabularyController` công khai và Admin CRUD Từ vựng | **NOT_STARTED** | Task 4B.1, Phase 3 | `GET /api/v1/vocabularies/**` (công khai), `POST/PUT/DELETE /api/v1/admin/vocabularies/**` (quyền Admin). |
-| **Phase 4** | **Task 4C.1** | Kiểm thử tự động cho phân hệ Bộ thủ & Từ vựng | **NOT_STARTED** | Task 4A.2, 4B.2 | MockMvc test tra cứu, tìm kiếm pinyin không dấu, phân trang và bảo vệ quyền Admin. |
-| **Phase 5** | **Task 5A.1** | DTOs bài học, sắp xếp từ vựng & `LessonService` | **NOT_STARTED** | Phase 4 | CRUD bài học cá nhân, thêm từ vựng kèm `order_index`, chuyển trạng thái `Draft` -> `Pending`. |
-| **Phase 5** | **Task 5A.2** | Xây dựng `LessonController` xem bài học công khai (`Approved`) | **NOT_STARTED** | Task 5A.1 | `GET /api/v1/lessons`, `GET /api/v1/lessons/{id}` (chỉ trả về bài học đã được phê duyệt). |
-| **Phase 5** | **Task 5A.3** | Xây dựng `CreatorLessonController` quản lý bài học của tác giả | **NOT_STARTED** | Task 5A.1, Phase 3 | `POST/PUT/DELETE /api/v1/creator/lessons/**` (quyền Creator, kiểm tra quyền sở hữu bài học). |
-| **Phase 5** | **Task 5B.1** | Xây dựng `ExcelParserService` với Apache POI (bước 1: đọc & validate) | **NOT_STARTED** | Task 5A.3 | Đọc file `.xlsx`, validate từng dòng (chữ Hán, pinyin, nghĩa), trả về preview kèm mã lỗi chi tiết. |
-| **Phase 5** | **Task 5B.2** | API Upload & Xác nhận lưu bài học từ Excel (bước 2: confirm) | **NOT_STARTED** | Task 5B.1 | `POST /api/v1/creator/lessons/import/preview`, `POST /api/v1/creator/lessons/import/confirm`. |
-| **Phase 5** | **Task 5C.1** | Kiểm thử tự động cho quản lý bài học và import Excel | **NOT_STARTED** | Task 5B.2 | Kiểm thử vòng đời bài học, kiểm tra file Excel hợp lệ / sai định dạng, bảo vệ quyền Creator. |
-| **Phase 6** | **Task 6A.1** | DTOs kiểm duyệt & `ModerationService` | **NOT_STARTED** | Phase 5, Phase 3 | Lấy hàng đợi `Pending`, duyệt (`Approved`), từ chối (`Rejected` bắt buộc lý do & `flagged_fields` JSON), ghi log `MODERATION_LOG`. |
-| **Phase 6** | **Task 6B.1** | Xây dựng `ModeratorController` (`/api/v1/moderator/**`) | **NOT_STARTED** | Task 6A.1 | Endpoints hàng đợi duyệt, phê duyệt/từ chối bài học, xem lịch sử kiểm duyệt (quyền Moderator/Admin). |
-| **Phase 6** | **Task 6C.1** | Kiểm thử tự động cho quy trình Phê duyệt & Từ chối bài học | **NOT_STARTED** | Task 6B.1 | Kiểm thử bất biến nghiệp vụ: chỉ duyệt bài `Pending`, bắt buộc lý do khi từ chối, tính bất biến của log. |
-| **Phase 7** | **Task 7A.1** | Triển khai thuật toán thuần túy SM-2 trong `SrsCalculator` | **NOT_STARTED** | Phase 2 | Tính `interval_days`, `ease_factor`, `repetitions` theo đánh giá 1-4, chặn cận dưới $EF \ge 1.30$. |
-| **Phase 7** | **Task 7A.2** | Unit Test toán học cho thuật toán tính toán khoảng cách SM-2 | **NOT_STARTED** | Task 7A.1 | Kiểm thử các ca biên: nhớ tốt liên tiếp, quên thẻ (`Again`), hệ số suy giảm, chu kỳ ngày chính xác. |
-| **Phase 7** | **Task 7B.1** | DTOs ôn tập & `SrsService` (lấy thẻ đến hạn, ghi nhận kết quả ôn tập) | **NOT_STARTED** | Task 7A.2 | Lấy thẻ đến hạn (`next_review_at <= NOW()`), giới hạn ngày, cập nhật `CARD_PROGRESS`, ghi `REVIEW_LOG` kèm `review_time_seconds`. |
-| **Phase 7** | **Task 7B.2** | Xây dựng `SrsController` (`/api/v1/srs/**`) | **NOT_STARTED** | Task 7B.1, Phase 3 | Endpoints lấy danh sách thẻ học hôm nay, nộp kết quả lật thẻ (`POST /review`), xem thống kê ghi nhớ. |
-| **Phase 7** | **Task 7C.1** | Kiểm thử tự động cho phân hệ ôn tập SRS | **NOT_STARTED** | Task 7B.2 | Kiểm thử đa hình (`VOCABULARY` vs `RADICAL`), kiểm tra cập nhật tiến trình thẻ và nhật ký ôn tập. |
-| **Phase 8** | **Task 8A.1** | DTOs & `PersonalNoteService` (CRUD ghi chú từ vựng cá nhân) | **NOT_STARTED** | Phase 4, Phase 3 | Tạo/sửa/xóa ghi chú, chặn cứng độ dài $\le 500$ ký tự, không áp dụng giới hạn 5 ghi chú. |
-| **Phase 8** | **Task 8A.2** | Xây dựng `PersonalNoteController` (`/api/v1/notes/**`) | **NOT_STARTED** | Task 8A.1 | Endpoints quản lý ghi chú cá nhân, kiểm soát quyền sở hữu (chỉ xem/sửa ghi chú của chính mình). |
-| **Phase 8** | **Task 8B.1** | DTOs, Service & Controller Cài đặt SRS (`/api/v1/srs/settings`) | **NOT_STARTED** | Phase 7, Phase 3 | Lấy và tùy chỉnh `new_cards_per_day` (mặc định 20), `max_review_per_day` (mặc định 100). |
-| **Phase 8** | **Task 8C.1** | Kiểm thử tự động cho Ghi chú cá nhân và Cài đặt SRS | **NOT_STARTED** | Task 8A.2, 8B.1 | Kiểm thử giới hạn 500 ký tự, kiểm tra cách ly dữ liệu giữa các người dùng, cập nhật cấu hình SRS. |
-| **Phase 9** | **Task 9A.1** | Khởi tạo khung giao diện, layout dùng chung & hệ thống CSS | **NOT_STARTED** | Phase 3 | Khung HTML5/CSS tĩnh, header/footer, thanh điều hướng responsive, modal container. |
-| **Phase 9** | **Task 9A.2** | Xây dựng `frontend/js/api.js` tập trung | **NOT_STARTED** | Task 9A.1 | Wrapper gọi fetch, tự động đính kèm `Authorization: Bearer`, xử lý 401 chuyển về login, chuẩn hóa lỗi. |
-| **Phase 9** | **Task 9B.1** | Giao diện Đăng ký, Đăng nhập & Xem hồ sơ cá nhân | **NOT_STARTED** | Task 9A.2, Phase 3 | Form đăng nhập/đăng ký, lưu JWT vào localStorage, hiển thị thông tin profile người dùng. |
-| **Phase 9** | **Task 9B.2** | Giao diện Tra cứu 214 Bộ thủ & Từ vựng | **NOT_STARTED** | Task 9A.2, Phase 4 | Lưới 214 bộ thủ, thanh tìm kiếm từ vựng theo pinyin/chữ Hán, modal chi tiết nét viết và phát âm audio. |
-| **Phase 9** | **Task 9B.3** | Giao diện Khám phá Bài học & Thêm ghi chú cá nhân | **NOT_STARTED** | Task 9A.2, Phase 5, 8 | Danh sách bài học công khai, bảng từ vựng trong bài, form ghi chú cá nhân $\le 500$ ký tự ngay tại từ vựng. |
-| **Phase 9** | **Task 9B.4** | Giao diện Ôn tập Flashcard SRS tương tác | **NOT_STARTED** | Task 9A.2, Phase 7 | Thao tác lật thẻ mặt trước/sau, 4 nút đánh giá (Again/Hard/Good/Easy), đếm giây `review_time_seconds`. |
-| **Phase 9** | **Task 9C.1** | Giao diện Tác giả bài học (Creator Studio & Import Excel) | **NOT_STARTED** | Task 9A.2, Phase 5 | Tạo bài học, kéo thả sắp xếp từ vựng, upload Excel xem trước bảng dữ liệu trước khi bấm xác nhận lưu. |
-| **Phase 9** | **Task 9C.2** | Giao diện Bàn làm việc Kiểm duyệt viên (Moderator Dashboard) | **NOT_STARTED** | Task 9A.2, Phase 6 | Danh sách bài chờ duyệt, modal xem chi tiết, nút duyệt, modal từ chối nhập lý do và đánh dấu trường lỗi. |
-| **Phase 9** | **Task 9D.1** | Kiểm thử giao diện và tương tác qua trình duyệt với DevTools | **NOT_STARTED** | Task 9B.1..9C.2 | Kiểm tra mạng (Network API calls), kiểm tra 3 trạng thái giao diện (Loading, Success, Error), tính đáp ứng. |
-| **Phase 10** | **Task 10A.1** | Rà soát an ninh ứng dụng & Gia cố bảo mật OWASP | **NOT_STARTED** | Phase 9 | Rà soát CORS, chống XSS, kiểm tra chống SQLi trong truy vấn JPA, kiểm tra an toàn upload file Excel. |
-| **Phase 10** | **Task 10A.2** | Kiểm soát tần suất gọi (Rate Limiting) trên Auth endpoints | **NOT_STARTED** | Task 10A.1 | Chống brute-force tấn công dò mật khẩu tại `/api/v1/auth/login`. |
-| **Phase 10** | **Task 10B.1** | Tối ưu hóa truy vấn CSDL & Xác minh chỉ mục MySQL | **NOT_STARTED** | Task 10A.1 | Sử dụng `EXPLAIN` kiểm tra hiệu năng chỉ mục `idx_card_progress_due`, `idx_vocab_pinyin_raw`, `idx_lesson_status`. |
-| **Phase 10** | **Task 10B.2** | Hoàn thiện độ phủ kiểm thử tự động (Unit & Integration Tests) | **NOT_STARTED** | Task 10B.1 | Bổ sung test coverage cho toàn bộ các service và controller trọng yếu. |
-| **Phase 11** | **Task 11A.1** | Thực thi kịch bản E2E 1: Luồng Học viên (Đăng ký -> Học bộ thủ -> Ghi chú -> Ôn tập SRS) | **NOT_STARTED** | Phase 10 | Kiểm thử tích hợp trọn vẹn hành trình trải nghiệm người học từ đầu đến cuối. |
-| **Phase 11** | **Task 11A.2** | Thực thi kịch bản E2E 2: Luồng Tác giả & Kiểm duyệt (Import Excel -> Nộp bài -> Duyệt bài -> Học) | **NOT_STARTED** | Phase 10 | Kiểm thử tích hợp trọn vẹn luồng xuất bản nội dung giữa Creator, Moderator và Learner. |
-| **Phase 11** | **Task 11B.1** | Đóng gói sản phẩm cuối cùng & Kiểm tra triển khai sạch | **NOT_STARTED** | Task 11A.1, 11A.2 | `mvn clean package`, kiểm tra file JAR thực thi độc lập, kiểm tra chạy migration trên DB mới. |
-| **Phase 11** | **Task 11B.2** | Nghiệm thu và bàn giao bộ tài liệu hướng dẫn vận hành | **NOT_STARTED** | Task 11B.1 | Hoàn thiện tài liệu bàn giao, xuất file Postman collection hoàn chỉnh cho toàn bộ API. |
+Nhằm bảo toàn lịch sử thực thi và bằng chứng nghiệm thu từ các phiên trước, bảng ánh xạ định danh cũ $\rightarrow$ mới:
+
+| Định danh cũ (Old Task ID) | Định danh chuẩn hóa mới (New Task ID) | Phase | Trạng thái thực tế | Ghi chú chuyển đổi |
+| :--- | :--- | :--- | :--- | :--- |
+| `TASK-0.1` | **Task 0A.1** | Phase 0 | `COMPLETED` | Xóa sạch legacy artifacts và source cũ. |
+| `TASK-0.2` | **Task 0A.2** | Phase 0 | `COMPLETED` | Xác minh 19 Agent Skills trong `.agents/skills/`. |
+| `TASK-0.3` | **Task 0B.1** | Phase 0 | `COMPLETED` | Thiết lập 9 tài liệu đặc tả chuẩn 14 bảng. |
+| `TASK-0.4` | **Task 0B.2** | Phase 0 | `COMPLETED` | Cài đặt & cấu hình MySQL Community Server 8.4 LTS. |
+| `TASK-0.5` | **Task 0B.3** | Phase 0 | `COMPLETED` | Khởi tạo Git repo, thiết lập `.gitignore`. |
+| `TASK-0.6` | **Task 0B.4** | Phase 0 | `COMPLETED` | Thiết kế CSDL Vật lý 14 bảng (`DATABASE_DESIGN.md`). |
+| `TASK-1.1` | **Task 1A.1** | Phase 1 | `COMPLETED` | Cấu trúc Spring Boot 3.3.5, Java 21, `backend/pom.xml`. |
+| `TASK-1.2` | **Task 1A.2** | Phase 1 | `COMPLETED` | `application.yml` HikariCP kết nối MySQL 3306. |
+| `TASK-1.3` | **Task 1A.3** | Phase 1 | `COMPLETED` | Flyway V1 migration tạo 14 bảng nghiệp vụ. |
+| `TASK-1.4` | **Task 1A.4** | Phase 1 | `COMPLETED` | Kiểm thử Context Load & Flyway schema pass 100%. |
+| `TASK-1.5` | **Task 1B.1, 1B.2** | Phase 1 | `NOT_STARTED` | Phân rã thành 2 task nhỏ: DTOs phong bì và GlobalExceptionHandler. |
+| `TASK-2.1` | **Task 2E.1, 2E.2** | Phase 2 | `NOT_STARTED` | Chuyển thành Module 2E: Flyway Seed Data V2, V3. |
+| `TASK-2.2` | **Task 2A.1..2D.2** | Phase 2 | `NOT_STARTED` | Phân rã thành 4 Modules miền nghiệp vụ khép kín (2A, 2B, 2C, 2D). |
+| `TASK-2.3` | **Task 2A.2, 2B.2, 2C.2, 2D.3** | Phase 2 | `NOT_STARTED` | Repositories được gắn liền với từng Module miền tương ứng. |
+| `TASK-2.4` | **Task 2F.1** | Phase 2 | `NOT_STARTED` | Chuyển thành Module 2F: Full Persistence Verification. |
+
+---
+
+## 2. MA TRẬN TIẾN ĐỘ CHI TIẾT (TASK TRACKING MATRIX)
+
+| Phase | Module | Task ID | Tên công việc (Task Description) | Status | Dependency (depends_on) | Bằng chứng xác minh (Verification Evidence) |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Phase 0** | **Mod 0A** | **Task 0A.1** | Xóa bỏ toàn bộ mã nguồn cũ và artifacts không phù hợp | **COMPLETED** | Không | `backend/` và `frontend/` rỗng (`.gitkeep`); các thư mục rác cũ đã bị xóa sạch sẽ. |
+| **Phase 0** | **Mod 0A** | **Task 0A.2** | Bảo tồn và xác minh tính toàn vẹn 19 Agent Skills | **COMPLETED** | Không | Script `validate_skills.ps1` chạy PASS 100%, không có orphan references. |
+| **Phase 0** | **Mod 0B** | **Task 0B.1** | Thiết lập lại toàn bộ tài liệu đặc tả chuẩn 14 bảng | **COMPLETED** | Task 0A.1 | Đã tạo và chuẩn hóa 9 tài liệu đặc tả trong `.agents/` (`PROJECT_CONTEXT`, `ARCHITECTURE`, v.v.). |
+| **Phase 0** | **Mod 0B** | **Task 0B.2** | Cài đặt và cấu hình MySQL Community Server 8.4 LTS | **COMPLETED** | Không | Cài MySQL 8.4.9, daemon mysqld chạy cổng 3306, utf8mb4, kết nối thành công `elearning_db`. |
+| **Phase 0** | **Mod 0B** | **Task 0B.3** | Khởi tạo Git repository, thiết lập file `.gitignore` tiêu chuẩn | **COMPLETED** | Không | `git init` nhánh `main`; `.gitignore` bảo vệ secrets, target/, ide files. Initial commit `40ada12`. |
+| **Phase 0** | **Mod 0B** | **Task 0B.4** | Soạn thảo tài liệu Thiết kế CSDL Vật lý chi tiết cho 14 bảng | **COMPLETED** | Task 0B.1, 0B.2 | `.agents/DATABASE_DESIGN.md` gồm 20 mục chi tiết, giải quyết dứt điểm OQ-04..OQ-07. Commit `f2b2000`. |
+| **Phase 1** | **Mod 1A** | **Task 1A.1** | Khởi tạo cấu trúc Spring Boot 3 và file `backend/pom.xml` | **COMPLETED** | Task 0B.4 | `backend/pom.xml` sử dụng Java 21, Spring Boot 3.3.5; Maven compile thành công. Commit `5d59ff4`. |
+| **Phase 1** | **Mod 1A** | **Task 1A.2** | Thiết lập class khởi động, `application.yml` kết nối MySQL | **COMPLETED** | Task 1A.1 | `ElearningApplication.java`, `application.yml` kết nối MySQL cổng 3306 qua HikariCP, `ddl-auto=none`. |
+| **Phase 1** | **Mod 1A** | **Task 1A.3** | Soạn thảo và thực thi Flyway migration `V1__init_schema.sql` | **COMPLETED** | Task 1A.2 | Flyway áp dụng V1 (527ms); đúng 14 bảng nghiệp vụ tạo đầy đủ trong `elearning_db`. |
+| **Phase 1** | **Mod 1A** | **Task 1A.4** | Kiểm thử tự động nạp Spring Context và xác minh schema CSDL | **COMPLETED** | Task 1A.3 | `mvn test` PASS (1 test run, 0 failures), Flyway schema version 1 validated. |
+| **Phase 1** | **Mod 1B** | **Task 1B.1** | Xây dựng Base Response DTOs (`ApiResponse<T>`, `PageResponse<T>`, `ErrorCode`) | **NOT_STARTED** | Task 1A.4 | Định nghĩa chuẩn phong bì JSON thống nhất theo Mục 1.2 và 1.3 của API.md. Unit test serialization. |
+| **Phase 1** | **Mod 1B** | **Task 1B.2** | Xây dựng `GlobalExceptionHandler` (`@RestControllerAdvice`) | **NOT_STARTED** | Task 1B.1 | Bắt và chuẩn hóa `MethodArgumentNotValidException`, `BusinessException`, `AccessDeniedException` thành `ApiResponse`. |
+| **Phase 2** | **Mod 2A** | **Task 2A.1** | JPA Entity Mapping: `ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE` | **NOT_STARTED** | Task 1A.4 | Entity mapping, composite key `@IdClass` hoặc `@EmbeddedId`, quan hệ `@OneToOne`, `@ManyToMany`. |
+| **Phase 2** | **Mod 2A** | **Task 2A.2** | Spring Data JPA Repositories Cụm Định danh | **NOT_STARTED** | Task 2A.1 | `AccountRepository`, `UserProfileRepository`, `RoleRepository` kèm derived query methods. Repository test. |
+| **Phase 2** | **Mod 2B** | **Task 2B.1** | JPA Entity Mapping: `RADICAL`, `VOCABULARY`, `VOCAB_RADICAL` | **NOT_STARTED** | Task 1A.4 | Entity mapping, composite key cho bảng liên kết N:N `VOCAB_RADICAL`. |
+| **Phase 2** | **Mod 2B** | **Task 2B.2** | Spring Data JPA Repositories Cụm Từ điển | **NOT_STARTED** | Task 2B.1 | `RadicalRepository`, `VocabularyRepository` kèm derived queries tìm kiếm theo pinyin/pinyin_raw/hanzi. |
+| **Phase 2** | **Mod 2C** | **Task 2C.1** | JPA Entity Mapping: `LESSON`, `LESSON_VOCABULARY` | **NOT_STARTED** | Task 2A.1, 2B.1 | Entity mapping, composite key bảng liên kết, giữ đúng trường `order_index` thứ tự từ vựng. |
+| **Phase 2** | **Mod 2C** | **Task 2C.2** | Spring Data JPA Repositories Cụm Bài học | **NOT_STARTED** | Task 2C.1 | `LessonRepository`, `LessonVocabularyRepository` lọc theo status (`Draft`, `Pending`, `Approved`). |
+| **Phase 2** | **Mod 2D** | **Task 2D.1** | JPA Entity Mapping: `USER_SRS_SETTING`, `PERSONAL_NOTE`, `MODERATION_LOG` | **NOT_STARTED** | Task 2A.1, 2B.1, 2C.1 | Entity mapping: setting 1:1, note $\le 500$ chars, log kiểm toán bất biến `ON DELETE RESTRICT`. |
+| **Phase 2** | **Mod 2D** | **Task 2D.2** | JPA Entity Mapping: `CARD_PROGRESS`, `REVIEW_LOG` (Tham chiếu đa hình) | **NOT_STARTED** | Task 2A.1 | Mapping 2 trường `item_type` (`VARCHAR(20)`) và `item_id` (`BIGINT UNSIGNED`), không tạo FK vật lý. |
+| **Phase 2** | **Mod 2D** | **Task 2D.3** | Spring Data JPA Repositories Cụm SRS, Ghi chú & Kiểm toán | **NOT_STARTED** | Task 2D.1, 2D.2 | Repositories cho `CardProgress`, `ReviewLog`, `PersonalNote`, `ModerationLog`, `UserSrsSetting`. |
+| **Phase 2** | **Mod 2E** | **Task 2E.1** | Flyway Seed Data V2: 4 Vai trò hệ thống (`V2__seed_roles.sql`) | **NOT_STARTED** | Task 1A.4 | Script seed 4 vai trò cố định: `1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`. |
+| **Phase 2** | **Mod 2E** | **Task 2E.2** | Flyway Seed Data V3: 214 Bộ thủ Khang Hy (`V3__seed_radicals.sql`) | **NOT_STARTED** | Task 1A.4 | Script seed 214 bộ thủ Khang Hy chuẩn từ dataset `.agents/references/radicals.json`. |
+| **Phase 2** | **Mod 2F** | **Task 2F.1** | Kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation | **NOT_STARTED** | Mod 2A, 2B, 2C, 2D, 2E | Bật Hibernate `ddl-auto: validate`, chạy toàn bộ JPA integration tests khớp 100% với 14 bảng MySQL. |
+| **Phase 3** | **Mod 3A** | **Task 3A.1** | Cấu hình Spring Security 6 FilterChain, BCrypt & Stateless Session | **NOT_STARTED** | Task 1B.2, 2A.2 | SecurityConfig, vô hiệu hóa CSRF cho REST, session STATELESS, phân quyền URL pattern. |
+| **Phase 3** | **Mod 3A** | **Task 3A.2** | Xây dựng `JwtUtil` và `JwtAuthenticationFilter` | **NOT_STARTED** | Task 3A.1 | Tạo/giải mã JWT token, kiểm tra claims (`sub`, `roles`, `exp`), bộ lọc JWT trước UsernamePassword filter. |
+| **Phase 3** | **Mod 3A** | **Task 3A.3** | Triển khai `CustomUserDetailsService` tải thông tin tài khoản | **NOT_STARTED** | Task 3A.2 | Nạp user từ `AccountRepository`, ánh xạ Authorities từ danh sách `Role`. Unit test. |
+| **Phase 3** | **Mod 3B** | **Task 3B.1** | Auth DTOs (`RegisterRequest`, `LoginRequest`, `AuthResponse`) | **NOT_STARTED** | Task 1B.1 | DTOs validation với Jakarta Validation (`@NotBlank`, `@EmailOrPhone`, `@Size`). |
+| **Phase 3** | **Mod 3B** | **Task 3B.2** | `AuthService` & `AuthController` (`/api/v1/auth/**`) | **NOT_STARTED** | Task 3A.3, 3B.1, 2E.1 | Đăng ký (gán vai trò `Learner`), đăng nhập xác thực BCrypt, sinh JWT, trả về `ApiResponse<AuthResponse>`. |
+| **Phase 3** | **Mod 3C** | **Task 3C.1** | User Profile DTOs, `UserProfileService` & `UserProfileController` | **NOT_STARTED** | Task 3B.2 | Endpoints `GET /api/v1/users/profile`, `PUT /api/v1/users/profile` lấy thông tin user đăng nhập. |
+| **Phase 3** | **Mod 3D** | **Task 3D.1** | Kiểm thử tự động MockMvc cho Auth & RBAC 4 vai trò | **NOT_STARTED** | Mod 3A, 3B, 3C | MockMvc tests: register, login đúng/sai, token hết hạn, 401 khi không có token, 403 khi sai vai trò. |
+| **Phase 4** | **Mod 4A** | **Task 4A.1** | Radical DTOs & `RadicalService` tra cứu Bộ thủ | **NOT_STARTED** | Task 1B.1, 2B.2, 2E.2 | DTOs hiển thị bộ thủ, Service lấy 214 bộ thủ, chi tiết bộ thủ theo ID/ký tự kèm từ vựng liên quan. |
+| **Phase 4** | **Mod 4A** | **Task 4A.2** | `RadicalController` công khai & Admin CRUD Bộ thủ | **NOT_STARTED** | Task 4A.1, Mod 3A | `GET /api/v1/radicals/**` (công khai), `POST/PUT/DELETE /api/v1/admin/radicals/**` (chỉ Admin). |
+| **Phase 4** | **Mod 4B** | **Task 4B.1** | Vocabulary DTOs, tiêu chí tìm kiếm phân trang & `VocabularyService` | **NOT_STARTED** | Task 1B.1, 2B.2 | Tìm kiếm theo chữ Hán, pinyin, pinyin không dấu (`pinyin_raw`), lọc theo bộ thủ, phân trang `PageResponse`. |
+| **Phase 4** | **Mod 4B** | **Task 4B.2** | `VocabularyController` công khai & Admin CRUD Từ vựng | **NOT_STARTED** | Task 4B.1, Mod 3A | `GET /api/v1/vocabularies/**` (công khai), `POST/PUT/DELETE /api/v1/admin/vocabularies/**` (chỉ Admin). |
+| **Phase 4** | **Mod 4C** | **Task 4C.1** | Kiểm thử tự động MockMvc cho phân hệ Bộ thủ & Từ vựng | **NOT_STARTED** | Mod 4A, 4B | MockMvc test tra cứu public, tìm kiếm pinyin không dấu, phân trang, và phân quyền Admin. |
+| **Phase 5** | **Mod 5A** | **Task 5A.1** | Lesson DTOs & `LessonService` khám phá bài học công khai | **NOT_STARTED** | Task 1B.1, 2C.2 | DTOs tóm tắt bài học, chi tiết bài học kèm danh sách từ vựng theo `order_index`. |
+| **Phase 5** | **Mod 5A** | **Task 5A.2** | `LessonController` xem bài học công khai (`GET /api/v1/lessons/**`) | **NOT_STARTED** | Task 5A.1 | Endpoint công khai chỉ trả về các bài học có trạng thái `Approved`. Trả 404 nếu bài chưa duyệt. |
+| **Phase 5** | **Mod 5B** | **Task 5B.1** | Creator Lesson DTOs & `CreatorLessonService` quản lý bài viết | **NOT_STARTED** | Task 2C.2, Mod 3A | CRUD bài học của tác giả, kiểm tra quyền sở hữu, cập nhật thứ tự từ vựng, nộp bài (`Draft` $\rightarrow$ `Pending`). |
+| **Phase 5** | **Mod 5B** | **Task 5B.2** | `CreatorLessonController` (`/api/v1/creator/lessons/**`) | **NOT_STARTED** | Task 5B.1 | REST endpoints cho Creator; kiểm tra bảo vệ tài nguyên (Creator A không thể sửa bài Creator B). |
+| **Phase 5** | **Mod 5C** | **Task 5C.1** | `ExcelParserService` với Apache POI (bước 1: đọc & validate) | **NOT_STARTED** | Task 2B.2 | Đọc file `.xlsx`, validate từng dòng (chữ Hán, pinyin, nghĩa), đối chiếu từ vựng có sẵn, xuất báo cáo lỗi. |
+| **Phase 5** | **Mod 5C** | **Task 5C.2** | Controller API Upload Preview & Xác nhận lưu bài học từ Excel | **NOT_STARTED** | Task 5C.1, 5B.2 | `POST .../import/preview` (bước 1) và `POST .../import/confirm` (bước 2 lưu dữ liệu). |
+| **Phase 5** | **Mod 5D** | **Task 5D.1** | Kiểm thử tự động MockMvc cho Quản lý bài học & Import Excel | **NOT_STARTED** | Mod 5A, 5B, 5C | Test vòng đời bài học, upload file Excel mẫu hợp lệ / file lỗi, bảo vệ quyền Creator. |
+| **Phase 6** | **Mod 6A** | **Task 6A.1** | Moderation DTOs & `ModerationService` logic nghiệp vụ duyệt | **NOT_STARTED** | Task 1B.1, 2C.2, 2D.3 | Lấy hàng đợi `Pending`, chuyển trạng thái `Approved` hoặc `Rejected` (bắt buộc lý do & `flagged_fields` JSON). |
+| **Phase 6** | **Mod 6A** | **Task 6A.2** | Ghi vết kiểm duyệt bất biến vào `MODERATION_LOG` | **NOT_STARTED** | Task 6A.1 | Ghi nhận lịch sử kiểm duyệt đầy đủ `lesson_id`, `moderator_id`, `action`, `rejection_reason`. |
+| **Phase 6** | **Mod 6B** | **Task 6B.1** | `ModeratorController` (`/api/v1/moderator/**`) | **NOT_STARTED** | Task 6A.2, Mod 3A | Endpoints hàng đợi duyệt, nút phê duyệt, nút từ chối, xem lịch sử kiểm duyệt (chỉ Moderator/Admin). |
+| **Phase 6** | **Mod 6C** | **Task 6C.1** | Kiểm thử tự động MockMvc cho quy trình Phê duyệt & Từ chối | **NOT_STARTED** | Mod 6A, 6B | Test bất biến: từ chối thiếu lý do trả về 400, chỉ duyệt bài `Pending`, log không thể bị xóa. |
+| **Phase 7** | **Mod 7A** | **Task 7A.1** | Triển khai thuật toán thuần túy SM-2 trong `SrsCalculator` | **NOT_STARTED** | Không | Tính `interval_days`, `ease_factor`, `repetitions` theo rating 1-4, chặn sàn $EF \ge 1.30$. |
+| **Phase 7** | **Mod 7A** | **Task 7A.2** | Unit Test toán học cho thuật toán tính khoảng cách SM-2 | **NOT_STARTED** | Task 7A.1 | Đạt độ phủ 100% các nhánh thuật toán SM-2: rating Again, Hard, Good, Easy, chu kỳ ngày. |
+| **Phase 7** | **Mod 7B** | **Task 7B.1** | SRS DTOs & `SrsService` điều phối phiên học lặp lại ngắt quãng | **NOT_STARTED** | Task 7A.1, 2D.3 | Lấy thẻ đến hạn (`next_review_at <= NOW()`), áp dụng giới hạn ngày, cập nhật `CARD_PROGRESS`, ghi `REVIEW_LOG`. |
+| **Phase 7** | **Mod 7B** | **Task 7B.2** | `SrsController` (`/api/v1/srs/**`) | **NOT_STARTED** | Task 7B.1, Mod 3A | `GET /api/v1/srs/due`, `POST /api/v1/srs/review` (kèm `review_time_seconds`), `GET /api/v1/srs/stats`. |
+| **Phase 7** | **Mod 7C** | **Task 7C.1** | Kiểm thử tự động MockMvc cho phân hệ ôn tập SRS | **NOT_STARTED** | Mod 7A, 7B | Test lấy thẻ đến hạn, nộp đánh giá, cập nhật chu kỳ ôn tập, xác minh tham chiếu đa hình. |
+| **Phase 8** | **Mod 8A** | **Task 8A.1** | Personal Note DTOs & `PersonalNoteService` | **NOT_STARTED** | Task 1B.1, 2D.3, Mod 3A | CRUD ghi chú từ vựng, kiểm tra chặt chẽ `content <= 500 chars`, không giới hạn 5 notes, bảo vệ sở hữu. |
+| **Phase 8** | **Mod 8A** | **Task 8A.2** | `PersonalNoteController` (`/api/v1/notes/**`, `/api/v1/vocabularies/{id}/notes`) | **NOT_STARTED** | Task 8A.1 | REST endpoints cho ghi chú cá nhân của người học. Trả về 403 nếu cố sửa ghi chú của người khác. |
+| **Phase 8** | **Mod 8B** | **Task 8B.1** | Setting DTOs, `UserSrsSettingService` & `UserSrsSettingController` | **NOT_STARTED** | Task 1B.1, 2D.3, Mod 3A | `GET/PUT /api/v1/srs/settings`: `new_cards_per_day` (mặc định 20), `max_review_per_day` (mặc định 100). |
+| **Phase 8** | **Mod 8C** | **Task 8C.1** | Kiểm thử tự động MockMvc cho Ghi chú cá nhân & Cài đặt SRS | **NOT_STARTED** | Mod 8A, 8B | Test độ dài ghi chú 500 ký tự (400 nếu vượt quá), cách ly dữ liệu user, cập nhật setting SRS. |
+| **Phase 9** | **Mod 9A** | **Task 9A.1** | Khởi tạo khung giao diện, layout dùng chung & hệ thống CSS | **NOT_STARTED** | Không | Khung HTML5, navbar responsive, footer, modal container, hệ thống class CSS layout chuẩn. |
+| **Phase 9** | **Mod 9A** | **Task 9A.2** | Xây dựng HTTP Client tập trung `frontend/js/api.js` | **NOT_STARTED** | Task 9A.1, Phase 1 | Wrapper fetch, tự động đính kèm `Authorization: Bearer`, bắt lỗi 401 điều hướng login, chuẩn hóa lỗi. |
+| **Phase 9** | **Mod 9B** | **Task 9B.1** | Giao diện Đăng ký, Đăng nhập & Xem hồ sơ cá nhân | **NOT_STARTED** | Task 9A.2, Phase 3 | `login.html`, `register.html`, `profile.html`: form validation, lưu JWT localStorage, xử lý 3 trạng thái. |
+| **Phase 9** | **Mod 9B** | **Task 9B.2** | Giao diện Tra cứu 214 Bộ thủ & Từ vựng | **NOT_STARTED** | Task 9A.2, Phase 4 | `radicals.html`, `vocabulary.html`: lưới 214 bộ thủ, thanh tìm kiếm pinyin/hanzi, modal nét viết/audio. |
+| **Phase 9** | **Mod 9C** | **Task 9C.1** | Giao diện Khám phá Bài học & Thêm ghi chú cá nhân | **NOT_STARTED** | Task 9A.2, Phase 5, 8 | `lessons.html`, `lesson-detail.html`: danh sách bài học, bảng từ vựng, popover tạo ghi chú $\le 500$ chars. |
+| **Phase 9** | **Mod 9C** | **Task 9C.2** | Giao diện Ôn tập Flashcard SRS tương tác | **NOT_STARTED** | Task 9A.2, Phase 7 | `srs-review.html`: lật thẻ 3D, audio phát âm, 4 nút rating (Again/Hard/Good/Easy), đếm giây phản xạ. |
+| **Phase 9** | **Mod 9D** | **Task 9D.1** | Giao diện Creator Lesson Studio (soạn bài & sắp xếp từ vựng) | **NOT_STARTED** | Task 9A.2, Phase 5 | `creator-lessons.html`: form tạo bài học, danh sách từ vựng kéo thả đổi thứ tự, nút gửi duyệt. |
+| **Phase 9** | **Mod 9D** | **Task 9D.2** | Giao diện Import Excel 2 bước cho Creator | **NOT_STARTED** | Task 9D.1 | Dropzone upload file Excel, render bảng dữ liệu xem trước (preview) kèm lỗi từng dòng trước khi confirm. |
+| **Phase 9** | **Mod 9E** | **Task 9E.1** | Giao diện Bàn làm việc Kiểm duyệt viên (Moderator Dashboard) | **NOT_STARTED** | Task 9A.2, Phase 6 | `moderator.html`: hàng đợi bài `Pending`, modal xem bài, nút duyệt, modal từ chối nhập lý do/chọn lỗi. |
+| **Phase 9** | **Mod 9F** | **Task 9F.1** | Kiểm thử tích hợp UI trình duyệt & DevTools Console | **NOT_STARTED** | Mod 9A..9E | Kiểm tra Network gọi API, xử lý đủ 3 trạng thái (Loading, Empty, Error), chống XSS DOM. |
+| **Phase 10** | **Mod 10A** | **Task 10A.1** | Rà soát an ninh ứng dụng & Gia cố bảo mật OWASP | **NOT_STARTED** | Phase 9 | Rà soát CORS, chống XSS, kiểm tra truy vấn JPA chống SQLi, kiểm tra an toàn upload file Excel. |
+| **Phase 10** | **Mod 10A** | **Task 10A.2** | Kiểm soát tần suất gọi (Rate Limiting) trên Auth endpoints | **NOT_STARTED** | Task 10A.1 | Chống brute-force tấn công dò mật khẩu tại `/api/v1/auth/login`. |
+| **Phase 10** | **Mod 10B** | **Task 10B.1** | Tối ưu hóa truy vấn CSDL & Xác minh chỉ mục MySQL | **NOT_STARTED** | Task 10A.1 | `EXPLAIN` kiểm tra hiệu năng chỉ mục `idx_card_progress_due`, `idx_vocab_pinyin_raw`, `idx_lesson_status`. |
+| **Phase 10** | **Mod 10B** | **Task 10B.2** | Hoàn thiện độ phủ kiểm thử tự động (Unit & Integration Tests) | **NOT_STARTED** | Task 10B.1 | Bổ sung test coverage cho toàn bộ các service và controller trọng yếu. |
+| **Phase 11** | **Mod 11A** | **Task 11A.1** | Thực thi kịch bản E2E 1: Luồng Học viên hoàn chỉnh | **NOT_STARTED** | Phase 10 | Kịch bản tự động: Đăng ký $\rightarrow$ Học bộ thủ $\rightarrow$ Tạo ghi chú $\rightarrow$ Lật thẻ SRS $\rightarrow$ Thống kê. |
+| **Phase 11** | **Mod 11A** | **Task 11A.2** | Thực thi kịch bản E2E 2: Luồng Tác giả & Kiểm duyệt hoàn chỉnh | **NOT_STARTED** | Phase 10 | Kịch bản tự động: Upload Excel $\rightarrow$ Xem preview $\rightarrow$ Lưu bài $\rightarrow$ Gửi duyệt $\rightarrow$ Duyệt bài $\rightarrow$ Xuất bản. |
+| **Phase 11** | **Mod 11B** | **Task 11B.1** | Đóng gói sản phẩm cuối cùng & Kiểm tra triển khai sạch | **NOT_STARTED** | Mod 11A | `mvn clean package`, kiểm tra file JAR thực thi độc lập và chạy migration trên database sạch. |
+| **Phase 11** | **Mod 11B** | **Task 11B.2** | Nghiệm thu và bàn giao bộ tài liệu hướng dẫn vận hành | **NOT_STARTED** | Task 11B.1 | Hoàn thiện tài liệu bàn giao, xuất file Postman Collection hoàn chỉnh cho toàn bộ API. |

@@ -164,79 +164,81 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
                BẢNG TỔNG HỢP HIỆN TRẠNG TRIỂN KHAI
 ================================================================
 [x] Phase 0 — Project Specification & Physical Database Design  [COMPLETED]
-[x] Phase 1 — Spring Boot Foundation + MySQL + Flyway Schema   [COMPLETED]
-[ ] Phase 2 — Persistence Layer (JPA Entities, Repos, Seed)    [NOT_STARTED]
-[ ] Phase 3 — Authentication, JWT & RBAC                       [NOT_STARTED]
-[ ] Phase 4 — Radical & Vocabulary Catalog APIs                [NOT_STARTED]
-[ ] Phase 5 — Lesson Management & Excel Import                 [NOT_STARTED]
-[ ] Phase 6 — Moderation Workflow                              [NOT_STARTED]
-[ ] Phase 7 — Spaced Repetition System (SRS SM-2 Engine)       [NOT_STARTED]
-[ ] Phase 8 — Personal Notes & User Settings                   [NOT_STARTED]
-[ ] Phase 9 — Frontend UI & Client API Integration             [NOT_STARTED]
-[ ] Phase 10 — Security Hardening & Test Coverage              [NOT_STARTED]
-[ ] Phase 11 — Final E2E Integration & Delivery                [NOT_STARTED]
+[~] Phase 1 — Spring Boot Foundation & Web Infrastructure       [IN_PROGRESS: Mod 1A Done, Mod 1B Pending]
+[ ] Phase 2 — Persistence Layer & Database Seed Data            [NOT_STARTED]
+[ ] Phase 3 — Authentication, Security & RBAC                   [NOT_STARTED]
+[ ] Phase 4 — Radical & Vocabulary Catalog Domain               [NOT_STARTED]
+[ ] Phase 5 — Lesson Management & Excel Import                  [NOT_STARTED]
+[ ] Phase 6 — Content Moderation Workflow                       [NOT_STARTED]
+[ ] Phase 7 — Spaced Repetition System (SRS SM-2 Engine)        [NOT_STARTED]
+[ ] Phase 8 — Personal Notes & User Settings                    [NOT_STARTED]
+[ ] Phase 9 — Frontend UI & Client API Integration              [NOT_STARTED]
+[ ] Phase 10 — Security Hardening, Performance & Quality QA      [NOT_STARTED]
+[ ] Phase 11 — Final E2E Integration & Delivery                 [NOT_STARTED]
 ================================================================
 ```
 
 ### Chi tiết ĐÃ TRIỂN KHAI VÀ XÁC MINH (IMPLEMENTED):
-* `backend/pom.xml`: Khởi tạo thành công với Spring Boot 3.3.5, Java 21 LTS, dependencies: Web, JPA, MySQL Connector, Flyway, Validation, Test.
-* `backend/src/main/resources/application.yml`: Cấu hình kết nối MySQL `elearning_db`, kích hoạt Flyway, đặt Hibernate `ddl-auto: none`.
-* `backend/src/main/resources/db/migration/V1__init_schema.sql`: Khởi tạo trọn vẹn 14 bảng quan hệ, được Flyway áp dụng thành công.
-* `backend/src/main/java/com/elearning/ElearningApplication.java`: Class khởi động chuẩn của ứng dụng.
-* `backend/src/test/java/com/elearning/ElearningApplicationTests.java`: Test khởi động context, kích hoạt migration tự động thành công 100%.
-* `.gitignore`: Đã hiệu chỉnh loại trừ đúng `target/`, các file IDE, secrets, và đưa thư mục `db/migration` vào Git an toàn.
+* `Module 1A [COMPLETED]`:
+  * `backend/pom.xml`: Khởi tạo thành công với Spring Boot 3.3.5, Java 21 LTS, dependencies: Web, JPA, MySQL Connector, Flyway, Validation, Test.
+  * `backend/src/main/resources/application.yml`: Cấu hình kết nối MySQL `elearning_db`, kích hoạt Flyway, đặt Hibernate `ddl-auto: none`.
+  * `backend/src/main/resources/db/migration/V1__init_schema.sql`: Khởi tạo trọn vẹn 14 bảng quan hệ, được Flyway áp dụng thành công.
+  * `backend/src/main/java/com/elearning/ElearningApplication.java`: Class khởi động chuẩn của ứng dụng.
+  * `backend/src/test/java/com/elearning/ElearningApplicationTests.java`: Test khởi động context, kích hoạt migration tự động thành công 100%.
+  * `.gitignore`: Đã hiệu chỉnh loại trừ đúng `target/`, các file IDE, secrets, và đưa thư mục `db/migration` vào Git an toàn.
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* Chưa viết bất kỳ JPA Entity class nào (`backend/src/main/java/com/elearning/entity` chưa tồn tại).
-* Chưa viết bất kỳ Spring Data JPA Repository interface nào.
-* Chưa có file seed data `V2__seed_roles.sql` hay `V3__seed_radicals.sql`.
-* Chưa có cấu hình chuẩn `ApiResponse<T>`, `PageResponse<T>`, hay `GlobalExceptionHandler`.
-* Chưa có bất kỳ Service hay Controller nào.
-* Chưa có Spring Security, JWT token provider, Filter, hay cấu hình CORS.
-* Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
+* `Module 1B [NOT_STARTED]`: Chưa tạo `ApiResponse<T>`, `PageResponse<T>`, `ErrorCode`, hay `GlobalExceptionHandler`.
+* `Phase 2 [NOT_STARTED]`: Chưa viết bất kỳ JPA Entity class nào (`backend/src/main/java/com/elearning/entity` chưa tồn tại).
+* `Phase 2 [NOT_STARTED]`: Chưa viết bất kỳ Spring Data JPA Repository interface nào.
+* `Phase 2 [NOT_STARTED]`: Chưa có file seed data `V2__seed_roles.sql` hay `V3__seed_radicals.sql`.
+* `Phase 3-8 [NOT_STARTED]`: Chưa có bất kỳ Service, Controller hay Security/JWT configuration nào.
+* `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
 
 ---
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-* **Giai đoạn hiện tại (Current Phase):** **`Phase 2 — Persistence Layer`**
-* **Phân hệ hiện tại (Current Module):** **`Module 2A — JPA Domain Mapping`**
-* **Nhiệm vụ kế tiếp cụ thể (Current Next Task):** **`Task 2A.1 — Account / User / Role Persistence Mapping`**
-* **Trạng thái:** **`NOT_STARTED`**
+Dựa trên kết quả rà soát dependency thực tế:
+* **Giai đoạn hiện tại (Current Phase):** **`Phase 1`** (Đang hoàn thiện Module 1B) hoặc **`Phase 2`** (Sẵn sàng khởi động Module 2A).
+* **Nhiệm vụ kế tiếp đề xuất ưu tiên 1 (Khuyến nghị):** **`Task 1B.1 — Base Response Models (ApiResponse, PageResponse, ErrorCode)`**
+  * *Lý do:* Đóng gói dứt điểm 100% Phase 1; thiết lập ngay chuẩn phong bì JSON cho các tầng REST sau này; task nhỏ, độc lập, verify nhanh bằng Unit test.
+* **Nhiệm vụ kế tiếp đề xuất ưu tiên 2:** **`Task 2A.1 — Account / User / Role Persistence Mapping`**
+  * *Lý do:* Hạ tầng CSDL 14 bảng của Module 1A đã sẵn sàng và kiểm chứng; Task 2A.1 không phụ thuộc vào Module 1B nên có thể bắt đầu ngay nếu muốn ưu tiên tầng CSDL trước.
+* **Trạng thái cả 2 task:** **`NOT_STARTED`**
 
 ---
 
-## 9. MÔ HÌNH QUẢN LÝ TIẾN ĐỘ (PROGRESS MODEL)
+## 9. MÔ HÌNH QUẢN LÝ TIẾN ĐỘ CHUẨN HÓA (4-LEVEL PROGRESS MODEL)
 
-Dự án áp dụng mô hình phân rã 3 cấp:
-$$\text{Phase (Giai đoạn lớn)} \longrightarrow \text{Module (Phân hệ kỹ thuật)} \longrightarrow \text{Task (Đơn vị thực thi cụ thể)}$$
+Dự án áp dụng mô hình phân rã 4 cấp độ kỹ thuật:
+$$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ kỹ thuật)} \longrightarrow \text{TASK (Lát cắt thực thi)} \longrightarrow \text{VERIFICATION CHECKPOINT (Chốt chặn nghiệm thu)}$$
 
-* Mỗi Task là một đơn vị công việc có thể nghiệm thu độc lập bằng bằng chứng vật lý (compile thành công, test pass, DB schema khớp).
+* Mỗi Task là một đơn vị công việc khép kín, có phạm vi rõ (In-scope / Out-of-scope), dependency thực tế, và tiêu chí nghiệm thu kiểm chứng được.
+* Mỗi Module có Verification Checkpoint riêng trước khi chuyển module.
+* Mỗi Phase có Integration Verification Checkpoint trước khi nghiệm thu hoàn tất phase.
 * Tuyệt đối không tạo các task vụn vặt cho việc sửa 1-2 dòng code hoặc sửa format tài liệu.
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT TASK KẾ TIẾP: TASK 2A.1
+## 10. ĐẶC TẢ CHI TIẾT 2 TASK KẾ TIẾP CÓ THỂ THỰC THI NGAY
 
-### Mục tiêu
-Triển khai lớp ánh xạ JPA Persistence đầu tiên cho phân hệ Tài khoản và Vai trò dựa trên schema MySQL đã có sẵn từ Phase 1.
+### Lựa chọn 1: Task 1B.1 — Base Response Models (`ApiResponse<T>`, `PageResponse<T>`, `ErrorCode`)
+* **Mục tiêu:** Chuẩn hóa cấu trúc phản hồi JSON thống nhất theo đúng Mục 1.2 & 1.3 của `API.md`.
+* **Phạm vi (In-Scope):**
+  * Tạo `com.elearning.dto.response.ApiResponse<T>`: các trường `code`, `message`, `errors`, `data`, các factory methods (`success()`, `error()`).
+  * Tạo `com.elearning.dto.response.PageResponse<T>`: các trường `page`, `size`, `totalElements`, `totalPages`, `items`.
+  * Tạo `com.elearning.common.ErrorCode`: enum định nghĩa các mã lỗi chuẩn (`SUCCESS`, `VALIDATION_ERROR`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `INTERNAL_ERROR`, v.v.).
+  * Viết Unit test kiểm tra serialization/deserialization JSON qua Jackson.
+* **Ngoài phạm vi (Out-of-Scope):** Không viết Controller hay Service.
 
-### Phạm vi thực hiện (In-Scope)
-* Bảng liên quan: `ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE`.
-* Viết các JPA Entity tương ứng:
-  * Entity cho `ACCOUNT`
-  * Entity cho `USER_PROFILE` (Quan hệ 1:1 với `ACCOUNT` qua `@OneToOne`)
-  * Entity cho `ROLE`
-  * Ánh xạ quan hệ N:N giữa `ACCOUNT` và `ROLE` (thông qua `@ManyToMany` với `@JoinTable("ACCOUNT_ROLE", ...)` hoặc thực thể trung gian với `@EmbeddedId`).
-* Tạo các Spring Data JPA Repository tối thiểu tương ứng (`AccountRepository`, `UserProfileRepository`, `RoleRepository`).
-* Cấu hình kiểm tra tính tương thích của Hibernate (`spring.jpa.hibernate.ddl-auto: validate` hoặc chạy `@DataJpaTest`).
-* Viết các bài test persistence cơ bản để xác minh lưu/đọc dữ liệu không bị lỗi schema mapping.
-
-### Ngoài phạm vi (Out-of-Scope - TUYỆT ĐỐI KHÔNG LÀM Ở TASK 2A.1)
-* Không viết logic Spring Security, JWT, filter, đăng ký, đăng nhập.
-* Không viết REST Controller hay DTO.
-* Không động tới các bảng khác (`VOCABULARY`, `LESSON`, `CARD_PROGRESS`, v.v.).
-* Không sửa đổi schema CSDL trong MySQL.
+### Lựa chọn 2: Task 2A.1 — JPA Mapping Cụm Định danh (`ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE`)
+* **Mục tiêu:** Triển khai lớp ánh xạ JPA Persistence đầu tiên cho phân hệ Tài khoản và Vai trò dựa trên schema MySQL đã có sẵn từ Phase 1.
+* **Phạm vi (In-Scope):**
+  * Viết các JPA Entity tương ứng: `Account`, `UserProfile` (Quan hệ 1:1 qua `@OneToOne`), `Role`.
+  * Ánh xạ quan hệ N:N giữa `Account` và `Role` (thông qua `@ManyToMany` với `@JoinTable("ACCOUNT_ROLE", ...)` hoặc thực thể trung gian với `@EmbeddedId`).
+  * Cấu hình kiểm tra tính tương thích của Hibernate (`spring.jpa.hibernate.ddl-auto: validate` hoặc chạy `@DataJpaTest`).
+* **Ngoài phạm vi (Out-of-Scope):** Không viết logic Spring Security, JWT, filter, đăng ký, đăng nhập. Không viết Controller hay DTO. Không sửa đổi schema CSDL MySQL.
 
 ---
 
