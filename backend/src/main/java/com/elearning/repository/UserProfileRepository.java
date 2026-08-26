@@ -21,4 +21,13 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
      * @return Optional containing found UserProfile or empty if not found
      */
     Optional<UserProfile> findByAccount(Account account);
+
+    /**
+     * Finds user profile associated with the given account's emailOrPhone.
+     *
+     * @param emailOrPhone email or phone of the associated account
+     * @return Optional containing found UserProfile or empty if not found
+     */
+    @org.springframework.data.jpa.repository.Query("SELECT p FROM UserProfile p WHERE p.account.emailOrPhone = :emailOrPhone")
+    Optional<UserProfile> findByAccountEmailOrPhone(@org.springframework.data.repository.query.Param("emailOrPhone") String emailOrPhone);
 }

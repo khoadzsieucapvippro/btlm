@@ -47,6 +47,21 @@ public class SecurityConfig {
                         // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )
+                // Configure authentication entry point: 401 for /api/v1/users/**, 403 for other secured paths
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            if (request.getRequestURI().startsWith("/api/v1/users/")) {
+                                response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED);
+                                response.setContentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
+                                response.setCharacterEncoding("UTF-8");
+                                response.getWriter().write(
+                                        "{\"code\":\"UNAUTHORIZED\",\"message\":\"Chưa xác thực hoặc phiên đăng nhập đã hết hạn\",\"errors\":[],\"data\":null}"
+                                );
+                            } else {
+                                response.sendError(jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+                            }
+                        })
+                )
                 // Register JWT authentication filter before UsernamePasswordAuthenticationFilter
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

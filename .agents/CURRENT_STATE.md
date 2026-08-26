@@ -267,12 +267,12 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 Dựa trên kết quả triển khai và nghiệm thu thành công `Task 3B.2` và `Checkpoint 3B`:
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 3 — Authentication, Authorization & User Management`**
 * **Phân hệ hiện tại (Current Module):** **`Module 3C — User Profile Vertical Slice`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 3C.1 — User Profile DTOs, UserProfileService & UserProfileController`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 3D.1 — Kiểm thử tự động MockMvc cho Auth & RBAC 4 vai trò`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn tất toàn diện Module 3B:* Toàn bộ vertical slice đăng ký và đăng nhập (DTOs, Validation, AuthService, AuthController, BCrypt, JWT) đã hoàn thiện 100% và vượt qua `Checkpoint 3B` với 157/157 tests PASS.
-  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Task 1B.1, 1B.2, 2A.2, 3B.2`), `Task 3C.1` là bước tiếp theo để xây dựng API quản lý hồ sơ người dùng đăng nhập (`GET /api/v1/users/profile`, `PUT /api/v1/users/profile`), sử dụng token JWT nhận được từ Module 3B.
-  3. *Nhiệm vụ tiếp sau đó:* `Checkpoint 3C` $\rightarrow$ `Module 3D` (`Task 3D.1 — Kiểm thử tự động MockMvc cho Auth & RBAC 4 vai trò`).
+  1. *Hoàn tất toàn diện Module 3C:* Toàn bộ vertical slice hồ sơ người dùng (`GET /api/v1/users/profile`, `PUT /api/v1/users/profile`, DTOs, Service, Controller, SecurityContext-based ownership isolation) đã hoàn thiện 100% và vượt qua `Checkpoint 3C` với 167/167 tests PASS.
+  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Mod 3A, 3B, 3C`), `Task 3D.1` là bước chốt chặn cuối cùng của Phase 3 để kiểm thử tự động ma trận phân quyền 4 vai trò (`Learner`, `Creator`, `Moderator`, `Admin`) và xác minh các kịch bản 401/403 trên các endpoint bảo vệ.
+  3. *Nhiệm vụ tiếp sau đó:* `Checkpoint Phase 3` $\rightarrow$ `Phase 4: Radical and Vocabulary Catalog Domain` (`Task 4A.1`).
 
 ---
 
@@ -288,55 +288,45 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 3C.1
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 3D.1
 
 ### 1. What (Làm gì)
-Xây dựng User Profile DTOs (`UserProfileResponse`, `UpdateProfileRequest`), `UserProfileService` và `UserProfileController`.
-- `GET /api/v1/users/profile`: Trích xuất thông tin người dùng đang đăng nhập từ `SecurityContextHolder` (hoặc `Authentication.getName()`), tải `UserProfile` liên kết và trả về `ApiResponse<UserProfileResponse>`.
-- `PUT /api/v1/users/profile`: Cập nhật `fullName`, `avatarUrl` cho người dùng đang đăng nhập với validation `@Size(max=100)` cho fullName và `@Size(max=500)` cho avatarUrl.
+Xây dựng bộ kiểm thử tự động tích hợp MockMvc cho xác thực Auth và ma trận phân quyền RBAC 4 vai trò (`Learner`, `Creator`, `Moderator`, `Admin`).
+- Kiểm tra toàn diện luồng: Register, Login đúng/sai, Token hết hạn, 401 khi không có Bearer token.
+- Kiểm tra ma trận phân quyền 403 Forbidden khi vai trò không đủ thẩm quyền truy cập các endpoint tác giả/kiểm duyệt/quản trị.
 
 ### 2. Why (Tại sao cần)
-Để hoàn thiện lát cắt quản lý thông tin cá nhân của người học/người dùng trong hệ thống sau khi đã đăng nhập thành công.
+Để khóa chặt toàn bộ bề mặt bảo mật của Phase 3 (Authentication & Authorization) trước khi bước sang các Phase nghiệp vụ (Phase 4: Bộ thủ & Từ vựng, Phase 5: Bài học, Phase 6: Creator/Moderator).
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo DTOs trong package `com.elearning.dto.user` (hoặc `com.elearning.dto.request`/`com.elearning.dto.response`).
-* Tạo `UserProfileService` và `UserProfileServiceImpl` trong `com.elearning.service`.
-* Tạo `UserProfileController` tại endpoint `/api/v1/users/profile`.
-* Viết unit/integration tests cho Service và Controller (MockMvc).
-* Nghiệm thu `Checkpoint 3C`.
+* Tạo các test cases MockMvc kiểm thử 4 vai trò hệ thống (`Learner`, `Creator`, `Moderator`, `Admin`).
+* Kiểm thử chặn 401 Unauthorized khi thiếu hoặc sai token JWT.
+* Kiểm thử chặn 403 Forbidden khi role không đúng theo ma trận phân quyền.
+* Nghiệm thu `Checkpoint Phase 3`.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 3C.1)
-* Chưa tạo ma trận kiểm thử RBAC đầy đủ cho 4 vai trò (thuộc Task 3D.1).
-* Không tạo API admin quản lý user khác (chỉ xử lý self-profile của authenticated user).
-* Không upload file avatar (chỉ nhận chuỗi `avatarUrl`).
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 3D.1)
+* Không code các tính năng Phase 4 (Bộ thủ, Từ vựng).
+* Không sửa cấu trúc Flyway migration cũ.
+* Không thêm endpoint quản trị RBAC động.
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 1B.1`, `Task 1B.2`, `Task 2A.2`, `Task 3B.2`.
+* `depends_on`: `Mod 3A`, `Mod 3B`, `Mod 3C`.
 
-### 6. Files/Modules Likely Affected
-* `backend/src/main/java/com/elearning/dto/user/UserProfileResponse.java` [NEW]
-* `backend/src/main/java/com/elearning/dto/user/UpdateProfileRequest.java` [NEW]
-* `backend/src/main/java/com/elearning/service/UserProfileService.java` [NEW]
-* `backend/src/main/java/com/elearning/service/impl/UserProfileServiceImpl.java` [NEW]
-* `backend/src/main/java/com/elearning/controller/UserProfileController.java` [NEW]
-* `backend/src/test/java/com/elearning/UserProfileControllerTests.java` [NEW]
-
-### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `GET /api/v1/users/profile` với token JWT hợp lệ trả về HTTP 200 OK kèm thông tin profile chính xác.
-* `GET /api/v1/users/profile` không có token trả về HTTP 401/403.
-* `PUT /api/v1/users/profile` cập nhật thông tin thành công và lưu vào MySQL.
+### 6. Acceptance Criteria (Tiêu chí nghiệm thu)
+* Kiểm thử tự động chứng minh 100% các role truy cập đúng quyền và bị từ chối 403 khi vượt quyền.
+* Nghiệm thu đạt `Checkpoint Phase 3`.
 * Toàn bộ test suite tiếp tục PASS 100%.
 
-### 8. Verification Command
+### 7. Verification Command
 * Lệnh chạy: `mvn -f backend/pom.xml clean test`
 
-### 9. Completion Condition
-* `UserProfileService` và `UserProfileController` hoàn tất và các tests PASS.
-* Nghiệm thu `Checkpoint 3C`.
-* Cập nhật `Task 3C.1` thành `COMPLETED` trong `PROGRESS.md`.
+### 8. Completion Condition
+* Toàn bộ các kịch bản RBAC & Auth tests PASS.
+* Nghiệm thu `Checkpoint Phase 3`.
+* Cập nhật `Task 3D.1` thành `COMPLETED` trong `PROGRESS.md`.
 
-### 10. Next Task
-* `Module 3D: Testing & RBAC Verification` (`Task 3D.1 — Kiểm thử tự động MockMvc cho Auth & RBAC 4 vai trò`).
+### 9. Next Task
+* `Phase 4: Radical and Vocabulary Catalog Domain` (`Task 4A.1 — Radical DTOs & RadicalService tra cứu Bộ thủ`).
 
 ---
 

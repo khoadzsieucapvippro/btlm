@@ -187,8 +187,8 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 * **Checkpoint 3B: MockMvc test: Đăng ký thành công trả về 201; Đăng nhập đúng trả về 200 kèm JWT; Đăng nhập sai mật khẩu trả về 401; Input thiếu trường trả về 400 kèm lỗi validation [COMPLETED]**
 
 #### Module 3C: User Profile Vertical Slice
-* **Task 3C.1:** DTOs (`UserProfileResponse`, `UpdateProfileRequest`), `UserProfileService` và `UserProfileController` (`GET /api/v1/users/profile`, `PUT /api/v1/users/profile` lấy và cập nhật profile của user đang đăng nhập qua `ApiResponse`).
-* **Checkpoint 3C:** MockMvc test: Truy cập profile khi có JWT hợp lệ trả về 200; truy cập khi không có JWT trả về 401 Unauthorized.
+* **Task 3C.1: DTOs (`UserProfileResponse`, `UpdateProfileRequest`), `UserProfileService` và `UserProfileController` (`GET /api/v1/users/profile`, `PUT /api/v1/users/profile` lấy và cập nhật profile của user đang đăng nhập qua `ApiResponse`) [COMPLETED]**
+* **Checkpoint 3C: MockMvc test: Truy cập profile khi có JWT hợp lệ trả về 200; truy cập khi không có JWT trả về 401 Unauthorized [COMPLETED]**
 
 #### Module 3D: Security & RBAC Verification
 * **Task 3D.1:** Bộ kiểm thử tích hợp tự động cho phân quyền RBAC 4 vai trò (Learner, Creator, Moderator, Admin).
