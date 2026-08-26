@@ -219,8 +219,14 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `backend/src/test/java/com/elearning/LessonPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, foreign key `created_by`, composite PK semantics, sắp xếp `@OrderBy("orderIndex ASC")`, shared vocab không trùng lặp, và cascade delete bảo toàn `Account`/`Vocabulary` PASS 5/5 tests.
   * `backend/src/test/java/com/elearning/LessonRepositoryTests.java`: 7 tests kiểm chứng Spring Data JPA proxy, truy vấn lọc theo creator, lọc theo status, lọc kết hợp creator + status, sắp xếp `order_index ASC`, cách ly bài học và chia sẻ từ vựng PASS 7/7 tests.
 
+* `Module 2D [IN_PROGRESS: Task 2D.1 COMPLETED, Task 2D.2 NOT_STARTED, Task 2D.3 NOT_STARTED]`:
+  * `backend/src/main/java/com/elearning/entity/UserSrsSetting.java`: JPA Entity cho bảng `USER_SRS_SETTING` (1:1 với `UserProfile`, `new_cards_per_day`, `max_review_per_day`).
+  * `backend/src/main/java/com/elearning/entity/PersonalNote.java`: JPA Entity cho bảng `PERSONAL_NOTE` (`user_id` $\rightarrow$ `UserProfile`, `vocab_id` $\rightarrow$ `Vocabulary`, `content` VARCHAR 500, không giới hạn 5 notes).
+  * `backend/src/main/java/com/elearning/entity/ModerationLog.java`: JPA Entity cho bảng `MODERATION_LOG` (nhật ký bất biến, `lesson_id` $\rightarrow$ `Lesson` `ON DELETE RESTRICT`, `moderator_id` $\rightarrow$ `Account` `ON DELETE RESTRICT`).
+  * `backend/src/test/java/com/elearning/ProgressAuditPersistenceTests.java`: 7 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, 1:1 SRS settings, ghi chú độ dài 500 ký tự, nhiều ghi chú không giới hạn 5, không cascade delete `Vocabulary`, và bảo toàn `ON DELETE RESTRICT` của `Lesson` PASS 7/7 tests.
+
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 2D [NOT_STARTED]`: Chưa viết JPA Entities cho SRS, Ghi chú, Kiểm toán (`Task 2D.1`, `Task 2D.2`) và Repositories (`Task 2D.3`).
+* `Module 2D [IN_PROGRESS]`: Chưa viết JPA Entities cho `CARD_PROGRESS`, `REVIEW_LOG` (Task 2D.2) và Repositories Cụm SRS (Task 2D.3).
 * `Module 2E [NOT_STARTED]`: Chưa tạo seed data Flyway `V2__seed_roles.sql` và `V3__seed_radicals.sql`.
 * `Phase 3-8 [NOT_STARTED]`: Chưa có bất kỳ Service, Controller hay Security/JWT configuration nào.
 * `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
@@ -229,16 +235,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả nghiệm thu hoàn tất trọn vẹn Module 2C (2C.1 + 2C.2 với 62/62 tests PASS):
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 2D.1`:
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 2 — Persistence Layer & Database Seed Data`**
 * **Phân hệ hiện tại (Current Module):** **`Module 2D — Learning Progress, Audit & Personalization Persistence Mapping`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2D.1 — JPA Entity Mapping: USER_SRS_SETTING, PERSONAL_NOTE, MODERATION_LOG`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2D.2 — JPA Entity Mapping: CARD_PROGRESS, REVIEW_LOG (Tham chiếu đa hình)`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn thành dứt điểm Module 2A, 2B, 2C:* Cả ba phân hệ Định danh (2A), Từ điển (2B) và Bài học (2C) đã hoàn tất cả Entity lẫn Repository và được nghiệm thu kiểm chứng vật lý trên MySQL (62/62 tests PASS).
-  2. *Đầy đủ điều kiện tiên quyết cho Module 2D:* `Task 2D.1` cần liên kết khóa ngoại với `UserProfile` (hoàn thành ở `2A.1`), `Vocabulary` (hoàn thành ở `2B.1`), và `Lesson` (hoàn thành ở `2C.1`).
-  3. *Không vi phạm ranh giới:* Triển khai tuần tự theo roadmap kiến trúc, không nhảy cóc sang Service hay Controller.
-  4. *Nhiệm vụ tiếp sau đó:* `Task 2D.2` (JPA Entity Mapping: `CARD_PROGRESS`, `REVIEW_LOG` với tham chiếu đa hình).
+  1. *Tuân thủ thứ tự phân rã Module 2D:* `Task 2D.1` đã hoàn thành các Entity cấu hình SRS, ghi chú và nhật ký kiểm duyệt. `Task 2D.2` là nhiệm vụ tiếp theo hoàn thiện 2 bảng còn lại trong Module 2D (`CARD_PROGRESS`, `REVIEW_LOG`) sử dụng mẫu thiết kế tham chiếu đa hình (`item_type` + `item_id`).
+  2. *Bảo toàn kiến trúc đa hình:* `CARD_PROGRESS` và `REVIEW_LOG` tham chiếu đa hình tới `RADICAL` hoặc `VOCABULARY` mà **tuyệt đối không tạo FK vật lý ở MySQL** theo đúng Quyết định Phương án A đã chốt.
+  3. *Không vi phạm ranh giới:* Triển khai đúng thứ tự module hóa, không nhảy cóc sang Repository hay Service.
+  4. *Nhiệm vụ tiếp sau đó:* `Task 2D.3` (Spring Data JPA Repositories Cụm SRS, Ghi chú & Kiểm toán).
 
 ---
 
@@ -254,53 +260,49 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2D.1
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2D.2
 
 ### 1. What (Làm gì)
-Xây dựng các lớp JPA Entity cho Cụm Ghi chú & Kiểm toán: `UserSrsSetting` (cấu hình SRS 1:1 với UserProfile), `PersonalNote` (ghi chú cá nhân độ dài $\le 500$ ký tự), và `ModerationLog` (nhật ký kiểm duyệt bất biến, `ON DELETE RESTRICT` với Lesson/Account), kèm bộ kiểm thử persistence mapping tương ứng.
+Xây dựng các lớp JPA Entity cho Cụm SRS tiến độ học tập: `CardProgress` và `ReviewLog` ánh xạ cặp trường tham chiếu đa hình `item_type` (`VARCHAR(20)`) và `item_id` (`BIGINT UNSIGNED`), kèm bộ kiểm thử persistence mapping tương ứng.
 
 ### 2. Why (Tại sao cần)
-Để thiết lập mô hình đối tượng dữ liệu cho cấu hình học tập cá nhân hóa, ghi chú người học trên từ vựng, và lịch sử kiểm duyệt bài học của kiểm duyệt viên phục vụ Phase 6 và Phase 7.
+Để hỗ trợ thuật toán lặp lại ngắt quãng SM-2 trên cả hai loại thẻ học (`Vocabulary` và `Radical`) trên cùng cấu trúc bảng mà không làm phức tạp hóa quan hệ vật lý trong cơ sở dữ liệu.
 
 ### 3. In-Scope (Phạm vi thực hiện)
 * Tạo các Entity classes trong package `com.elearning.entity`:
-  * `UserSrsSetting.java`: Bảng `USER_SRS_SETTING`, khóa chính `user_id` (vừa là PK vừa là FK trỏ tới `user_profile.user_id`), các trường `daily_new_cards`, `daily_review_cards`, `review_interval_preset`, timestamps.
-  * `PersonalNote.java`: Bảng `PERSONAL_NOTE`, khóa chính `note_id` (BIGINT AUTO_INCREMENT), các trường `user_id` (`@ManyToOne UserProfile`), `vocab_id` (`@ManyToOne Vocabulary`), `content` (VARCHAR 500), unique key `(user_id, vocab_id)`, timestamps.
-  * `ModerationLog.java`: Bảng `MODERATION_LOG`, khóa chính `log_id` (BIGINT AUTO_INCREMENT), các trường `lesson_id` (`@ManyToOne Lesson`), `moderator_id` (`@ManyToOne Account`), `action` (VARCHAR 20), `rejection_reason` (VARCHAR 500), `flagged_fields` (JSON/VARCHAR 500), `created_at` (bất biến, không có `updated_at`).
-* Viết test `ProgressAuditPersistenceTests.java` kiểm chứng mapping với Hibernate `ddl-auto=validate`.
+  * `CardProgress.java`: Bảng `CARD_PROGRESS`, khóa chính `card_id` (BIGINT AUTO_INCREMENT), các trường `user_id` (`@ManyToOne Account` hoặc `UserProfile`), `item_type` (VARCHAR 20 - 'Vocabulary'/'Radical'), `item_id` (Long), `box_level`, `interval_days`, `ease_factor`, `next_review_at`, timestamps. Ràng buộc unique `(user_id, item_type, item_id)`.
+  * `ReviewLog.java`: Bảng `REVIEW_LOG`, khóa chính `log_id` (BIGINT AUTO_INCREMENT), các trường `user_id`, `item_type`, `item_id`, `rating`, `review_time`, `interval_before`, `interval_after`, `ease_factor_before`, `ease_factor_after`, `created_at`.
+* Viết test `SrsProgressPersistenceTests.java` kiểm chứng mapping với Hibernate `ddl-auto=validate`.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2D.1)
-* Không viết JPA Entities cho `CARD_PROGRESS` và `REVIEW_LOG` (thuộc Task 2D.2).
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2D.2)
+* **Tuyệt đối KHÔNG tạo foreign key vật lý** giữa `CARD_PROGRESS`/`REVIEW_LOG` với `VOCABULARY` hoặc `RADICAL`.
 * Không viết Repository interfaces (thuộc Task 2D.3).
-* Không viết Service logic, Controller, DTOs, SRS algorithm.
+* Không viết Service logic, SM-2 algorithm, Controller hay DTOs.
 * Không sửa đổi schema database hay Flyway migrations.
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 2A.1` (`UserProfile`, `Account`), `Task 2B.1` (`Vocabulary`), `Task 2C.1` (`Lesson`).
+* `depends_on`: `Task 2A.1` (`Account` / `UserProfile`).
 
 ### 6. Files/Modules Likely Affected
-* `backend/src/main/java/com/elearning/entity/UserSrsSetting.java` [NEW]
-* `backend/src/main/java/com/elearning/entity/PersonalNote.java` [NEW]
-* `backend/src/main/java/com/elearning/entity/ModerationLog.java` [NEW]
-* `backend/src/test/java/com/elearning/ProgressAuditPersistenceTests.java` [NEW]
+* `backend/src/main/java/com/elearning/entity/CardProgress.java` [NEW]
+* `backend/src/main/java/com/elearning/entity/ReviewLog.java` [NEW]
+* `backend/src/test/java/com/elearning/SrsProgressPersistenceTests.java` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `Given` cấu hình Hibernate `ddl-auto: validate`, `When` ứng dụng khởi động và chạy test, `Then` các Entity mappings của `UserSrsSetting`, `PersonalNote`, `ModerationLog` hoàn toàn tương thích với schema trong MySQL.
-* `UserSrsSetting` ánh xạ đúng quan hệ 1:1 chia sẻ khóa chính với `UserProfile`.
-* `PersonalNote` bảo toàn ràng buộc unique `(user_id, vocab_id)`.
-* `ModerationLog` là entity bất biến lưu giữ đúng lịch sử kiểm duyệt.
+* `Given` cấu hình Hibernate `ddl-auto: validate`, `When` ứng dụng khởi động và chạy test, `Then` các Entity mappings của `CardProgress`, `ReviewLog` hoàn toàn tương thích với schema trong MySQL.
+* Lưu thẻ học tiến độ với `item_type = 'Vocabulary'` và `item_type = 'Radical'` thành công, không phát sinh lỗi khóa ngoại.
 
 ### 8. Verification Command
-* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=ProgressAuditPersistenceTests`
+* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=SrsProgressPersistenceTests`
 * Kiểm thử hồi quy: `mvn -f backend/pom.xml clean test`
 
 ### 9. Completion Condition
 * Toàn bộ persistence test pass.
 * `mvn clean test` tiếp tục PASS 100%.
-* Cập nhật `Task 2D.1` thành `COMPLETED` trong `PROGRESS.md`.
+* Cập nhật `Task 2D.2` thành `COMPLETED` trong `PROGRESS.md`.
 
 ### 10. Next Task
-* `Task 2D.2 — JPA Entity Mapping: CARD_PROGRESS, REVIEW_LOG (Tham chiếu đa hình)`.
+* `Task 2D.3 — Spring Data JPA Repositories Cụm SRS, Ghi chú & Kiểm toán`.
 
 ---
 

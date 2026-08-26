@@ -138,9 +138,9 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
   - *depends_on (Repository Test):* `Task 2C.1`, `Task 2A.2` (AccountRepository), `Task 2B.2` (VocabularyRepository) để tạo test fixture.
 * **Checkpoint 2C [VERIFIED]:** Chạy `@DataJpaTest` tạo Lesson, thêm từ vựng kèm `order_index` và truy vấn danh sách sắp xếp đúng thứ tự; `LessonRepositoryTests` PASS 7/7 tests, `LessonPersistenceTests` PASS 5/5 tests.
 
-#### Module 2D: Learning Progress, Audit & Personalization Persistence Mapping
-* **Task 2D.1: JPA Entities Cụm Ghi chú & Kiểm toán (`USER_SRS_SETTING`, `PERSONAL_NOTE`, `MODERATION_LOG`)**
-  - *Phạm vi:* Entity cho `UserSrsSetting` (1:1 với UserProfile), `PersonalNote` (ràng buộc độ dài $\le 500$ ký tự), `ModerationLog` (bất biến, quan hệ RESTRICT với Lesson).
+#### Module 2D: Learning Progress, Audit & Personalization Persistence Mapping [IN_PROGRESS]
+* **Task 2D.1: JPA Entities Cụm Ghi chú & Kiểm toán (`USER_SRS_SETTING`, `PERSONAL_NOTE`, `MODERATION_LOG`) [COMPLETED]**
+  - *Phạm vi:* Entity cho `UserSrsSetting` (1:1 với UserProfile), `PersonalNote` (ràng buộc độ dài $\le 500$ ký tự, không giới hạn 5 notes), `ModerationLog` (bất biến, quan hệ RESTRICT với Lesson và Account).
   - *depends_on:* `Task 2A.1` (UserProfile), `Task 2B.1` (Vocabulary), `Task 2C.1` (Lesson).
 * **Task 2D.2: JPA Entities Cụm SRS với Tham chiếu Đa hình (`CARD_PROGRESS`, `REVIEW_LOG`)**
   - *Phạm vi:* Ánh xạ cặp trường `item_type` (`VARCHAR(20)`) và `item_id` (`BIGINT UNSIGNED`). **Tuyệt đối không tạo FK vật lý ở MySQL** theo đúng Phương án A đã duyệt.
