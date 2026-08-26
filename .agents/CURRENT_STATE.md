@@ -203,14 +203,17 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `backend/src/main/java/com/elearning/repository/RoleRepository.java`: Spring Data JPA Repository cho `Role`, hỗ trợ `findByRoleName`.
   * `backend/src/test/java/com/elearning/IdentityPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, association 1:1, N:N junction table `account_role`, composite PK semantics, cascade delete PASS 5/5 tests.
   * `backend/src/test/java/com/elearning/IdentityRepositoryTests.java`: 7 tests kiểm chứng Spring Data JPA proxy, truy vấn tìm kiếm `email_or_phone`, `role_name`, `account` profile PASS 7/7 tests.
-* `Module 2B [IN_PROGRESS: Task 2B.1 COMPLETED, Task 2B.2 NOT_STARTED]`:
+* `Module 2B [COMPLETED]`:
   * `backend/src/main/java/com/elearning/entity/Radical.java`: JPA Entity cho bảng `RADICAL` (INT AUTO_INCREMENT, `character` UNIQUE, `pinyin`, `meaning_han_viet`, `meaning_vi`, timestamps, N:N `vocabularies`).
   * `backend/src/main/java/com/elearning/entity/Vocabulary.java`: JPA Entity cho bảng `VOCABULARY` (BIGINT AUTO_INCREMENT, `hanzi`, `pinyin`, `pinyin_raw` lưu độc lập, `meaning_han_viet`, `meaning_vi`, timestamps, N:N `@JoinTable(name = "vocab_radical")` với `radicals`).
+  * `backend/src/main/java/com/elearning/repository/RadicalRepository.java`: Spring Data JPA Repository cho `Radical`, hỗ trợ `findByCharacter` và `existsByCharacter`.
+  * `backend/src/main/java/com/elearning/repository/VocabularyRepository.java`: Spring Data JPA Repository cho `Vocabulary`, hỗ trợ `findByHanziAndPinyinRaw`, `findByHanzi`, `findByPinyinRaw`, `searchByKeyword` kèm phân trang `Pageable`.
   * `backend/src/test/java/com/elearning/DictionaryPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, association 2 chiều, composite PK junction table, và Set deduplication PASS 5/5 tests.
+  * `backend/src/test/java/com/elearning/DictionaryRepositoryTests.java`: 8 tests kiểm chứng Spring Data JPA proxy, truy vấn tìm kiếm `character`, `hanzi`, `pinyin_raw`, tìm kiếm kết hợp đa tiêu chí, phân trang metadata PASS 8/8 tests.
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 2B [IN_PROGRESS]`: Chưa tạo Spring Data JPA Repositories (`RadicalRepository`, `VocabularyRepository`) tại `Task 2B.2`.
-* `Module 2C-2E [NOT_STARTED]`: Chưa viết JPA Entities/Repositories cho Bài học, SRS, và chưa tạo seed data `V2`/`V3`.
+* `Module 2C [NOT_STARTED]`: Chưa viết JPA Entities cho Bài học (`LESSON`, `LESSON_VOCABULARY`) và Repositories tại `Task 2C.1` và `Task 2C.2`.
+* `Module 2D-2E [NOT_STARTED]`: Chưa viết JPA Entities/Repositories cho SRS, Notes, Logs, và chưa tạo seed data `V2`/`V3`.
 * `Phase 3-8 [NOT_STARTED]`: Chưa có bất kỳ Service, Controller hay Security/JWT configuration nào.
 * `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
 
@@ -218,16 +221,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 2B.1`:
+Dựa trên kết quả nghiệm thu hoàn tất trọn vẹn Module 2B (2B.1 + 2B.2 với 50/50 tests PASS):
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 2 — Persistence Layer & Database Seed Data`**
-* **Phân hệ hiện tại (Current Module):** **`Module 2B — Dictionary Catalog Persistence Mapping`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2B.2 — Spring Data JPA Repositories Cụm Từ điển (RadicalRepository, VocabularyRepository)`**
+* **Phân hệ hiện tại (Current Module):** **`Module 2C — Lesson & Content Persistence Mapping`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2C.1 — JPA Entity Mapping: LESSON, LESSON_VOCABULARY`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Tuân thủ thứ tự phân rã Module 2B:* `Task 2B.1` đã cung cấp đầy đủ các lớp Entity Cụm Từ điển (`Radical`, `Vocabulary`). `Task 2B.2` là bước tự nhiên tiếp theo xây dựng tầng DAO/Repository interface kế thừa `JpaRepository` cho các entity này.
-  2. *Cung cấp hạ tầng tìm kiếm cho Phase 4 & Phase 5:* `VocabularyRepository` (tìm theo `hanzi`, `pinyin`, `pinyin_raw` với phân trang `Pageable`) và `RadicalRepository` là thành phần phụ thuộc cốt lõi cho các tính năng tra cứu từ điển và nhập dữ liệu bài học.
-  3. *Ngữ cảnh rõ ràng, độc lập:* Chỉ bao gồm repository interfaces và repository slice tests, không kéo logic Service hay Web Controller vào.
-  4. *Nhiệm vụ tiếp sau đó:* Nghiệm thu Checkpoint 2B $\rightarrow$ Hoàn thành Module 2B $\rightarrow$ Bắt đầu `Module 2C` (`Task 2C.1 — JPA Entity Mapping: LESSON, LESSON_VOCABULARY`).
+  1. *Hoàn thành dứt điểm Module 2A và 2B:* Cả phân hệ Định danh (Module 2A) và Từ điển (Module 2B) đã hoàn tất cả Entity lẫn Repository và được nghiệm thu kiểm chứng vật lý trên MySQL (50/50 tests PASS).
+  2. *Đầy đủ điều kiện tiên quyết cho Module 2C:* `Task 2C.1` cần quan hệ với `Account` (tác giả bài học) và `Vocabulary` (từ vựng trong bài học). Cả hai Entity này đã hoàn thành ở `2A.1` và `2B.1`.
+  3. *Không vi phạm ranh giới:* Triển khai đúng thứ tự module hóa, không nhảy cóc sang Service hay Controller.
+  4. *Nhiệm vụ tiếp sau đó:* `Task 2C.2` (Spring Data JPA Repositories Cụm Bài học).
 
 ---
 
@@ -243,53 +246,49 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2B.2
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2C.1
 
 ### 1. What (Làm gì)
-Xây dựng các interface Spring Data JPA Repository cho Cụm Từ điển: `RadicalRepository`, `VocabularyRepository` kèm các derived query methods / query có phân trang `Pageable` cần thiết và bộ kiểm thử repository tương ứng.
+Xây dựng các lớp JPA Entity cho Cụm Bài học: `Lesson` và `LessonVocabulary` (bảng liên kết có trường thuộc tính thứ tự `order_index`), kèm bộ kiểm thử persistence mapping tương ứng.
 
 ### 2. Why (Tại sao cần)
-Để cung cấp tầng truy xuất dữ liệu an toàn kiểu (type-safe data access) cho Cụm Từ điển, hỗ trợ tìm kiếm bộ thủ theo `character`, tìm kiếm từ vựng theo `hanzi`, `pinyin`, `pinyin_raw` phục vụ tra cứu không dấu và phân trang dữ liệu cho Phase 4.
+Để thiết lập mô hình đối tượng dữ liệu cho bài học, tác giả bài học (`Account`), và danh sách từ vựng được sắp xếp theo thứ tự hiển thị trong bài học (`order_index`), làm nền tảng cho `LessonRepository` ở `Task 2C.2` và quy trình kiểm duyệt bài học ở Phase 6.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo các repository interfaces trong package `com.elearning.repository`:
-  * `RadicalRepository`: Kế thừa `JpaRepository<Radical, Integer>`, có derived query `Optional<Radical> findByCharacter(String character)`.
-  * `VocabularyRepository`: Kế thừa `JpaRepository<Vocabulary, Long>`, có các phương thức:
-    * `Optional<Vocabulary> findByHanziAndPinyinRaw(String hanzi, String pinyinRaw)` (khớp unique constraint).
-    * `Page<Vocabulary> findByPinyinRawContainingIgnoreCase(String pinyinRaw, Pageable pageable)` (tra cứu không dấu).
-    * `Page<Vocabulary> findByHanziContaining(String hanzi, Pageable pageable)` (tra cứu chữ Hán).
-* Viết test `DictionaryRepositoryTests.java` kiểm chứng các derived queries và phân trang trên MySQL.
+* Tạo các Entity classes trong package `com.elearning.entity`:
+  * `Lesson.java`: Bảng `LESSON`, khóa chính `lesson_id` (BIGINT AUTO_INCREMENT), các trường `title`, `excel_file_url`, `created_by` (liên kết `@ManyToOne` với `Account`), `status` (Enum/String `Draft`, `Pending`, `Approved`, `Rejected`), `rejection_reason`, timestamps.
+  * `LessonVocabulary.java` kèm composite ID `@IdClass` hoặc `@EmbeddedId`: Bảng `LESSON_VOCABULARY`, khóa chính phức hợp `(lesson_id, vocab_id)`, trường thuộc tính thứ tự `order_index` (`INT NOT NULL`).
+* Viết test `LessonPersistenceTests.java` kiểm chứng mapping với Hibernate `ddl-auto=validate`.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2B.2)
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2C.1)
+* Không viết Repository interfaces (thuộc Task 2C.2).
 * Không viết Service logic, Controller, DTOs, hay Excel import.
-* Không nạp seed data 214 bộ thủ (thuộc Task 2E.2).
-* Không viết Repositories của Cụm Bài học (`Module 2C`).
 * Không sửa đổi schema database hay Flyway migrations.
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 2B.1` (ĐÃ HOÀN THÀNH — cung cấp `Radical`, `Vocabulary` entities).
+* `depends_on`: `Task 2A.1` (`Account`), `Task 2B.1` (`Vocabulary`).
 
 ### 6. Files/Modules Likely Affected
-* `backend/src/main/java/com/elearning/repository/RadicalRepository.java` [NEW]
-* `backend/src/main/java/com/elearning/repository/VocabularyRepository.java` [NEW]
-* `backend/src/test/java/com/elearning/DictionaryRepositoryTests.java` [NEW]
+* `backend/src/main/java/com/elearning/entity/Lesson.java` [NEW]
+* `backend/src/main/java/com/elearning/entity/LessonVocabulary.java` [NEW]
+* `backend/src/main/java/com/elearning/entity/LessonVocabularyId.java` [NEW]
+* `backend/src/test/java/com/elearning/LessonPersistenceTests.java` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `Given` một bộ thủ đã lưu, `When` gọi `findByCharacter`, `Then` trả về đúng `Optional<Radical>`.
-* `Given` các từ vựng đã lưu, `When` gọi tìm kiếm theo `pinyin_raw` kèm `PageRequest`, `Then` trả về đúng `Page<Vocabulary>` với phân trang chính xác.
-* `Given` từ vựng và pinyin_raw, `When` gọi `findByHanziAndPinyinRaw`, `Then` trả về đúng bản ghi tương ứng.
+* `Given` cấu hình Hibernate `ddl-auto: validate`, `When` ứng dụng khởi động và chạy test, `Then` các Entity mappings của `Lesson`, `LessonVocabulary` hoàn toàn tương thích với schema `LESSON`, `LESSON_VOCABULARY` trong MySQL.
+* Lưu bài học và các từ vựng kèm `order_index` nạp lại bảo toàn đúng thứ tự.
 
 ### 8. Verification Command
-* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=DictionaryRepositoryTests`
+* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=LessonPersistenceTests`
 * Kiểm thử hồi quy: `mvn -f backend/pom.xml clean test`
 
 ### 9. Completion Condition
-* Toàn bộ repository queries chạy thành công, không phát sinh lỗi hay cảnh báo.
+* Toàn bộ persistence test pass.
 * `mvn clean test` tiếp tục PASS 100%.
-* Cập nhật `Task 2B.2` thành `COMPLETED` trong `PROGRESS.md`.
+* Cập nhật `Task 2C.1` thành `COMPLETED` trong `PROGRESS.md`.
 
 ### 10. Next Task
-* `Task 2C.1 — JPA Entity Mapping: LESSON, LESSON_VOCABULARY`.
+* `Task 2C.2 — Spring Data JPA Repositories Cụm Bài học (LessonRepository, LessonVocabularyRepository)`.
 
 ---
 
