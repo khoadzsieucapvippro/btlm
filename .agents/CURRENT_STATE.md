@@ -234,8 +234,11 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `backend/src/test/java/com/elearning/SrsProgressPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, tham chiếu đa hình `VOCABULARY` và `RADICAL` không FK vật lý, `review_time_seconds`, `rating` `Byte` (TINYINT), và `uk_card_progress_user_item` PASS 5/5 tests.
   * `backend/src/test/java/com/elearning/SrsProgressRepositoryTests.java`: 7 tests kiểm chứng các derived queries, due-card boundary `<= now`, user isolation, không giới hạn 5 notes, ownership isolation, và audit order PASS 7/7 tests.
 
+* `Module 2E [IN_PROGRESS: Task 2E.1 COMPLETED, Task 2E.2 NOT_STARTED]`:
+  * `backend/src/main/resources/db/migration/V2__seed_roles.sql`: Flyway migration nạp 4 vai trò cố định của hệ thống (`1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`). Đã nạp thành công vào MySQL, `flyway_schema_history` ghi nhận version 2 (checksum `449376763`, `success=1`).
+
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 2E [NOT_STARTED]`: Chưa tạo seed data Flyway `V2__seed_roles.sql` và `V3__seed_radicals.sql`.
+* `Module 2E [IN_PROGRESS]`: Chưa tạo seed data Flyway `V3__seed_radicals.sql` (Task 2E.2).
 * `Phase 3-8 [NOT_STARTED]`: Chưa có bất kỳ Service, Controller hay Security/JWT configuration nào.
 * `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
 
@@ -243,16 +246,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 2D.3` cùng `Checkpoint 2D`:
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 2E.1`:
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 2 — Persistence Layer & Database Seed Data`**
 * **Phân hệ hiện tại (Current Module):** **`Module 2E — Database Seed Migrations (Flyway)`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2E.1 — Flyway Seed Data V2: 4 Vai trò hệ thống (V2__seed_roles.sql)`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2E.2 — Flyway Seed Data V3: 214 Bộ thủ Khang Hy (V3__seed_radicals.sql)`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn tất toàn bộ Module 2D:* Cả 3 tasks của Module 2D (2D.1, 2D.2, 2D.3) đã hoàn thành xuất sắc và vượt qua Checkpoint 2D với 81/81 tests PASS.
-  2. *Tuân thủ lộ trình ROADMAP.md:* Module 2E (Database Seed Migrations) là phân hệ tiếp theo của Phase 2, bắt đầu bằng `Task 2E.1` tạo migration `V2__seed_roles.sql` seed 4 vai trò cố định của hệ thống (`1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`).
-  3. *Không vi phạm ranh giới:* Triển khai đúng thứ tự module hóa, chuẩn bị dữ liệu vai trò để phục vụ các module sau (Spring Security, Seed Radicals, v.v.).
-  4. *Nhiệm vụ tiếp sau đó:* `Task 2E.2` (Flyway Seed Data V3: 214 Bộ thủ Khang Hy `V3__seed_radicals.sql`).
+  1. *Hoàn thành nạp vai trò nền tảng:* `Task 2E.1` đã hoàn thành nạp 4 vai trò cố định và được kiểm chứng qua 81/81 tests PASS.
+  2. *Tuân thủ lộ trình Module 2E:* `Task 2E.2` là nhiệm vụ tiếp theo của Module 2E, chuẩn bị toàn bộ 214 bộ thủ Khang Hy từ dataset thẩm quyền `.agents/references/radicals.json` vào bảng `radical`.
+  3. *Điều kiện tiên quyết cho Checkpoint 2E:* Hoàn tất `Task 2E.2` sẽ giúp nghiệm thu trọn vẹn `Checkpoint 2E` (`role_count = 4` và `radical_count = 214`).
+  4. *Nhiệm vụ tiếp sau đó:* `Module 2F — Persistence Layer Verification & Schema Validation` (`Task 2F.1`).
 
 ---
 
@@ -268,47 +271,49 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2E.1
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2E.2
 
 ### 1. What (Làm gì)
-Tạo file migration Flyway `backend/src/main/resources/db/migration/V2__seed_roles.sql` để nạp 4 vai trò cố định của hệ thống vào bảng `role` (`1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`) kèm mô tả chuẩn.
+Tạo file migration Flyway `backend/src/main/resources/db/migration/V3__seed_radicals.sql` nạp toàn bộ 214 bộ thủ Khang Hy từ dataset thẩm quyền `.agents/references/radicals.json` vào bảng `radical` trong MySQL.
 
 ### 2. Why (Tại sao cần)
-Để đảm bảo cơ sở dữ liệu luôn có sẵn các vai trò chuẩn hóa phục vụ phân quyền tài khoản ở Phase 3 (Spring Security & JWT) và logic nghiệp vụ xuyên suốt dự án.
+214 bộ thủ Khang Hy là từ điển cốt lõi và dữ liệu tham chiếu cơ bản cho toàn bộ ứng dụng học tiếng Trung, là nền tảng để phân tích từ vựng (`vocab_radical`), tạo flashcard và bài học.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo file `backend/src/main/resources/db/migration/V2__seed_roles.sql`:
-  * Sử dụng câu lệnh `INSERT INTO role (role_id, role_name, description)` (hoặc `INSERT IGNORE` / `ON DUPLICATE KEY UPDATE` bảo đảm tính idempotent).
-  * 4 vai trò: `1: Learner`, `2: Creator`, `3: Moderator`, `4: Admin`.
-* Chạy kiểm tra Flyway migration và test tích hợp.
+* Trích xuất dữ liệu chuẩn từ `.agents/references/radicals.json`.
+* Tạo file migration `backend/src/main/resources/db/migration/V3__seed_radicals.sql` với 214 lệnh INSERT tương ứng đúng các trường: `radical_id`, `radical_char`, `pinyin`, `pinyin_raw`, `meaning_hanviet`, `meaning_vi`, `stroke_count`.
+* Chạy migration và xác minh `SELECT COUNT(*) FROM radical;` trả về đúng 214.
+* Chạy toàn bộ regression suite đảm bảo 100% tests PASS.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2E.1)
-* Không tạo migration V3 (seed radicals thuộc Task 2E.2).
-* Không sửa `V1__init_schema.sql`.
-* Không viết Service, Controller hay Spring Security.
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2E.2)
+* Không sửa đổi `V1__init_schema.sql` hay `V2__seed_roles.sql`.
+* Không sửa đổi schema hay tạo thêm cột/bảng.
+* Không seed dữ liệu từ vựng (`vocabulary`) hay bài học (`lesson`).
+* Không viết Service, Controller hay API endpoints.
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 1A.4` (Flyway setup), `Task 2A.1` (`Role` entity / table).
+* `depends_on`: `Task 1A.4` (Flyway setup), `Task 2B.1` (`Radical` entity / table), `.agents/references/radicals.json`.
 
 ### 6. Files/Modules Likely Affected
-* `backend/src/main/resources/db/migration/V2__seed_roles.sql` [NEW]
+* `backend/src/main/resources/db/migration/V3__seed_radicals.sql` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* File migration `V2__seed_roles.sql` được Flyway migrate thành công khi khởi động hoặc chạy migration.
-* Bảng `role` có đúng 4 bản ghi với ID từ 1 đến 4.
-* Toàn bộ 81 test hiện tại tiếp tục PASS.
+* `V3__seed_radicals.sql` áp dụng thành công qua Flyway.
+* Bảng `radical` chứa đúng 214 bản ghi (`radical_id` từ 1 đến 214).
+* Ký tự UTF-8 bộ thủ hiển thị chuẩn xác, không bị lỗi font hay mã hóa.
+* Toàn bộ test suite tiếp tục PASS 100%.
 
 ### 8. Verification Command
-* Lệnh chạy: `mvn -f backend/pom.xml clean test`
-* Kiểm tra dữ liệu: `SELECT * FROM role;`
+* Lệnh chạy test: `mvn -f backend/pom.xml clean test`
+* Kiểm tra dữ liệu: `SELECT COUNT(*) FROM radical;`
 
 ### 9. Completion Condition
-* Flyway migrate thành công version 2.
-* Toàn bộ test suite PASS 100%.
-* Cập nhật `Task 2E.1` thành `COMPLETED` trong `PROGRESS.md`.
+* Flyway migrate thành công version 3.
+* Đếm đủ 214 bản ghi trong bảng `radical`.
+* Cập nhật `Task 2E.2` thành `COMPLETED` trong `PROGRESS.md`.
 
 ### 10. Next Task
-* `Task 2E.2 — Flyway Seed Data V3: 214 Bộ thủ Khang Hy (V3__seed_radicals.sql)`.
+* `Task 2F.1 — Kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation`.
 
 ---
 

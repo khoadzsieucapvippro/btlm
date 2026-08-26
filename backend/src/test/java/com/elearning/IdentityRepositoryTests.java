@@ -88,17 +88,13 @@ class IdentityRepositoryTests {
     class RoleRepositoryTests {
 
         @Test
-        @DisplayName("GIVEN existing role WHEN findByRoleName THEN returns correct Role in Optional")
+        @DisplayName("GIVEN seeded role WHEN findByRoleName THEN returns correct Role in Optional")
         void testFindByRoleNameExisting() {
-            Role role = new Role(1, "ROLE_LEARNER");
-            entityManager.persistAndFlush(role);
-            entityManager.clear();
-
-            Optional<Role> found = roleRepository.findByRoleName("ROLE_LEARNER");
+            Optional<Role> found = roleRepository.findByRoleName("Learner");
 
             assertThat(found).isPresent();
             assertThat(found.get().getRoleId()).isEqualTo(1);
-            assertThat(found.get().getRoleName()).isEqualTo("ROLE_LEARNER");
+            assertThat(found.get().getRoleName()).isEqualTo("Learner");
         }
 
         @Test

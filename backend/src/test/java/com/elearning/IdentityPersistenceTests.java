@@ -93,12 +93,9 @@ class IdentityPersistenceTests {
         @Test
         @DisplayName("GIVEN Account with multiple Roles WHEN persisted THEN ACCOUNT_ROLE junction rows are created and reloaded correctly")
         void testPersistAccountWithRoles() {
-            // GIVEN: Persist static roles (simulating seed roles)
-            Role roleLearner = new Role(1, "ROLE_LEARNER");
-            Role roleCreator = new Role(2, "ROLE_CREATOR");
-            entityManager.persist(roleLearner);
-            entityManager.persist(roleCreator);
-            entityManager.flush();
+            // GIVEN: Obtain seeded roles from database (seeded via V2__seed_roles.sql)
+            Role roleLearner = entityManager.find(Role.class, 1);
+            Role roleCreator = entityManager.find(Role.class, 2);
 
             Account account = new Account();
             account.setEmailOrPhone("multi_role_user@example.com");
@@ -117,7 +114,7 @@ class IdentityPersistenceTests {
             assertThat(reloaded.getRoles()).hasSize(2);
             assertThat(reloaded.getRoles())
                     .extracting(Role::getRoleName)
-                    .containsExactlyInAnyOrder("ROLE_LEARNER", "ROLE_CREATOR");
+                    .containsExactlyInAnyOrder("Learner", "Creator");
 
             // AND: Verify physical composite key rows in ACCOUNT_ROLE junction table
             @SuppressWarnings("unchecked")
@@ -136,9 +133,7 @@ class IdentityPersistenceTests {
         @Test
         @DisplayName("GIVEN Account adding duplicate Role WHEN persisted THEN Set semantics prevent duplicate junction rows")
         void testRoleSetSemanticsPreventDuplicates() {
-            Role roleAdmin = new Role(4, "ROLE_ADMIN");
-            entityManager.persist(roleAdmin);
-            entityManager.flush();
+            Role roleAdmin = entityManager.find(Role.class, 4);
 
             Account account = new Account();
             account.setEmailOrPhone("admin_unique@example.com");
@@ -167,8 +162,7 @@ class IdentityPersistenceTests {
         @Test
         @DisplayName("GIVEN Account with Profile and Roles WHEN Account is deleted THEN Profile and junction rows are removed, but Roles remain")
         void testDeleteAccountPreservesRoles() {
-            Role roleModerator = new Role(3, "ROLE_MODERATOR");
-            entityManager.persist(roleModerator);
+            Role roleModerator = entityManager.find(Role.class, 3);
 
             Account account = new Account();
             account.setEmailOrPhone("mod_to_delete@example.com");

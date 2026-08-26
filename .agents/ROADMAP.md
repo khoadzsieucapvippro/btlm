@@ -152,7 +152,7 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 * **Checkpoint 2D: [COMPLETED]** Chạy `@DataJpaTest` kiểm tra lưu trữ thẻ học đa hình, truy vấn thẻ đến hạn ôn tập và lưu ghi chú cá nhân PASS 100%.
 
 #### Module 2E: Database Seed Migrations (Flyway) [PARALLEL với Mod 2A..2D]
-* **Task 2E.1: Flyway Seed Data V2: 4 Vai trò hệ thống (`V2__seed_roles.sql`)**
+* **Task 2E.1: Flyway Seed Data V2: 4 Vai trò hệ thống (`V2__seed_roles.sql`) [COMPLETED]**
   - *Phạm vi:* Script seed 4 vai trò cố định: `1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`.
   - *depends_on:* `Task 1A.4`.
 * **Task 2E.2: Flyway Seed Data V3: 214 Bộ thủ Khang Hy (`V3__seed_radicals.sql`)**
