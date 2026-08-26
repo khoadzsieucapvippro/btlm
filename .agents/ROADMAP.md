@@ -110,15 +110,15 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 - **Ranh giới phụ thuộc:** Phụ thuộc vào `Module 1A` (Flyway V1 schema). **KHÔNG phụ thuộc vào `Module 1B`** (có thể triển khai song song).
 - **Trạng thái:** **`IN_PROGRESS`** (Module 2A: `IN_PROGRESS`, Mod 2B-2E: `NOT_STARTED`).
 
-#### Module 2A: Identity & Role Persistence Mapping [IN_PROGRESS] [PARALLEL với Mod 2B]
+#### Module 2A: Identity & Role Persistence Mapping [COMPLETED] [PARALLEL với Mod 2B]
 * **Task 2A.1: JPA Entities Cụm Định danh (`ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE`) [COMPLETED]**
   - *Phạm vi:* Entity cho `Account`, `UserProfile` (quan hệ 1:1 qua `@OneToOne`), `Role`, và ánh xạ quan hệ nhiều-nhiều N:N tài khoản - vai trò qua `@ManyToMany` kèm `@JoinTable(name = "account_role")`.
   - *Không làm:* Không viết logic đăng ký, đăng nhập hay Spring Security.
   - *depends_on:* `Task 1A.4`.
-* **Task 2A.2: Spring Data JPA Repositories Cụm Định danh**
-  - *Phạm vi:* `AccountRepository` (tìm theo `email_or_phone`), `UserProfileRepository`, `RoleRepository` (tìm theo `role_name`).
+* **Task 2A.2: Spring Data JPA Repositories Cụm Định danh [COMPLETED]**
+  - *Phạm vi:* `AccountRepository` (tìm theo `email_or_phone`, kiểm tra `existsByEmailOrPhone`), `UserProfileRepository` (tìm theo `account`), `RoleRepository` (tìm theo `role_name`).
   - *depends_on:* `Task 2A.1`.
-* **Checkpoint 2A:** Chạy `@DataJpaTest` lưu và truy vấn thành công Account kèm UserProfile và Roles.
+* **Checkpoint 2A [VERIFIED]:** Chạy `@DataJpaTest` lưu và truy vấn thành công Account kèm UserProfile và Roles; `IdentityRepositoryTests` PASS 7/7 tests, `IdentityPersistenceTests` PASS 5/5 tests.
 
 #### Module 2B: Dictionary Catalog Persistence Mapping [PARALLEL với Mod 2A]
 * **Task 2B.1: JPA Entities Cụm Từ điển (`RADICAL`, `VOCABULARY`, `VOCAB_RADICAL`)**
