@@ -264,15 +264,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 3B.2` và `Checkpoint 3B`:
-* **Giai đoạn hiện tại (Current Phase):** **`Phase 3 — Authentication, Authorization & User Management`**
-* **Phân hệ hiện tại (Current Module):** **`Module 3C — User Profile Vertical Slice`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 3D.1 — Kiểm thử tự động MockMvc cho Auth & RBAC 4 vai trò`**
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 3D.1` và `Checkpoint Phase 3`:
+* **Giai đoạn vừa hoàn thành:** **`Phase 3 — Authentication, Authorization & User Management (COMPLETED)`**
+* **Giai đoạn tiếp theo (Next Phase):** **`Phase 4 — Radical and Vocabulary Catalog Domain`**
+* **Phân hệ tiếp theo (Next Module):** **`Module 4A — Radical Catalog Vertical Slice`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 4A.1 — Radical DTOs & RadicalService tra cứu Bộ thủ`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn tất toàn diện Module 3C:* Toàn bộ vertical slice hồ sơ người dùng (`GET /api/v1/users/profile`, `PUT /api/v1/users/profile`, DTOs, Service, Controller, SecurityContext-based ownership isolation) đã hoàn thiện 100% và vượt qua `Checkpoint 3C` với 167/167 tests PASS.
-  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Mod 3A, 3B, 3C`), `Task 3D.1` là bước chốt chặn cuối cùng của Phase 3 để kiểm thử tự động ma trận phân quyền 4 vai trò (`Learner`, `Creator`, `Moderator`, `Admin`) và xác minh các kịch bản 401/403 trên các endpoint bảo vệ.
-  3. *Nhiệm vụ tiếp sau đó:* `Checkpoint Phase 3` $\rightarrow$ `Phase 4: Radical and Vocabulary Catalog Domain` (`Task 4A.1`).
+  1. *Hoàn tất toàn diện Phase 3:* Toàn bộ các module bảo mật Phase 3 (`Mod 3A`: Security foundation & JWT, `Mod 3B`: Auth slice, `Mod 3C`: User profile, `Mod 3D`: RBAC verification 4 vai trò) đã hoàn thiện 100% và vượt qua `Checkpoint Phase 3` với 187/187 tests PASS.
+  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Task 1B.1, 2B.2, 2E.2`), `Task 4A.1` là bước khởi đầu của Phase 4 nhằm xây dựng DTOs và Service tra cứu 214 bộ thủ Khang Hy (đã được seed authoritative từ V3__seed_radicals.sql).
+  3. *Nhiệm vụ tiếp sau đó:* `Task 4A.2` (`RadicalController` công khai & Admin CRUD).
 
 ---
 
@@ -288,45 +289,53 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 3D.1
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 4A.1
 
 ### 1. What (Làm gì)
-Xây dựng bộ kiểm thử tự động tích hợp MockMvc cho xác thực Auth và ma trận phân quyền RBAC 4 vai trò (`Learner`, `Creator`, `Moderator`, `Admin`).
-- Kiểm tra toàn diện luồng: Register, Login đúng/sai, Token hết hạn, 401 khi không có Bearer token.
-- Kiểm tra ma trận phân quyền 403 Forbidden khi vai trò không đủ thẩm quyền truy cập các endpoint tác giả/kiểm duyệt/quản trị.
+Xây dựng Radical DTOs (`RadicalResponse`, `RadicalDetailResponse`) và `RadicalService` tra cứu danh mục 214 Bộ thủ Khang Hy.
+- DTOs hiển thị thông tin bộ thủ (`radicalId`, `radicalNumber`, `radicalChar`, `strokeCount`, `pinyin`, `meaning`).
+- `RadicalService` cung cấp:
+  - Lấy danh sách toàn bộ 214 bộ thủ Khang Hy.
+  - Tra cứu chi tiết bộ thủ theo `radicalId` hoặc `radicalChar`.
+  - Tra cứu danh sách từ vựng liên quan cấu thành từ bộ thủ này.
 
 ### 2. Why (Tại sao cần)
-Để khóa chặt toàn bộ bề mặt bảo mật của Phase 3 (Authentication & Authorization) trước khi bước sang các Phase nghiệp vụ (Phase 4: Bộ thủ & Từ vựng, Phase 5: Bài học, Phase 6: Creator/Moderator).
+Khởi động phân hệ tra cứu danh mục cốt lõi của ứng dụng học tiếng Trung, cung cấp dữ liệu nền tảng phục vụ học viên tra cứu và hỗ trợ soạn thảo bài học.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo các test cases MockMvc kiểm thử 4 vai trò hệ thống (`Learner`, `Creator`, `Moderator`, `Admin`).
-* Kiểm thử chặn 401 Unauthorized khi thiếu hoặc sai token JWT.
-* Kiểm thử chặn 403 Forbidden khi role không đúng theo ma trận phân quyền.
-* Nghiệm thu `Checkpoint Phase 3`.
+* Tạo DTOs trong package `com.elearning.dto.radical` (hoặc `com.elearning.dto.response`).
+* Tạo `RadicalService` và `RadicalServiceImpl` trong `com.elearning.service`.
+* Viết unit/integration tests cho `RadicalService` với Mockito/DataJpaTest.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 3D.1)
-* Không code các tính năng Phase 4 (Bộ thủ, Từ vựng).
-* Không sửa cấu trúc Flyway migration cũ.
-* Không thêm endpoint quản trị RBAC động.
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 4A.1)
+* Không tạo `RadicalController` (thuộc Task 4A.2).
+* Không tạo endpoint Admin CRUD (thuộc Task 4A.2).
+* Không can thiệp sang phân hệ Từ vựng (thuộc Module 4B).
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Mod 3A`, `Mod 3B`, `Mod 3C`.
+* `depends_on`: `Task 1B.1`, `Task 2B.2`, `Task 2E.2` (data 214 bộ thủ Khang Hy).
 
-### 6. Acceptance Criteria (Tiêu chí nghiệm thu)
-* Kiểm thử tự động chứng minh 100% các role truy cập đúng quyền và bị từ chối 403 khi vượt quyền.
-* Nghiệm thu đạt `Checkpoint Phase 3`.
+### 6. Files/Modules Likely Affected
+* `backend/src/main/java/com/elearning/dto/radical/RadicalResponse.java` [NEW]
+* `backend/src/main/java/com/elearning/dto/radical/RadicalDetailResponse.java` [NEW]
+* `backend/src/main/java/com/elearning/service/RadicalService.java` [NEW]
+* `backend/src/main/java/com/elearning/service/impl/RadicalServiceImpl.java` [NEW]
+* `backend/src/test/java/com/elearning/RadicalServiceTests.java` [NEW]
+
+### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
+* `RadicalService` trả về chính xác 214 bộ thủ Khang Hy đã seed từ CSDL.
+* Tra cứu chi tiết bộ thủ theo ID/ký tự thành công.
 * Toàn bộ test suite tiếp tục PASS 100%.
 
-### 7. Verification Command
-* Lệnh chạy: `mvn -f backend/pom.xml clean test`
+### 8. Verification Command
+* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=RadicalServiceTests`
 
-### 8. Completion Condition
-* Toàn bộ các kịch bản RBAC & Auth tests PASS.
-* Nghiệm thu `Checkpoint Phase 3`.
-* Cập nhật `Task 3D.1` thành `COMPLETED` trong `PROGRESS.md`.
+### 9. Completion Condition
+* `RadicalService` và DTOs hoàn tất, các unit tests PASS.
+* Cập nhật `Task 4A.1` thành `COMPLETED` trong `PROGRESS.md`.
 
-### 9. Next Task
-* `Phase 4: Radical and Vocabulary Catalog Domain` (`Task 4A.1 — Radical DTOs & RadicalService tra cứu Bộ thủ`).
+### 10. Next Task
+* `Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ`.
 
 ---
 

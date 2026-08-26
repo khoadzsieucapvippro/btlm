@@ -44,22 +44,35 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/radicals/**", "/api/v1/vocabulary/**", "/api/v1/lessons/**").permitAll()
                         // Allow Spring Boot error endpoint
                         .requestMatchers("/error").permitAll()
+                        // Role-based authorization boundaries
+                        .requestMatchers("/api/v1/admin/**").hasAnyRole("Admin", "ADMIN")
+                        .requestMatchers("/api/v1/moderator/**").hasAnyRole("Moderator", "Admin", "MODERATOR", "ADMIN")
+                        .requestMatchers("/api/v1/creator/**").hasAnyRole("Creator", "Admin", "CREATOR", "ADMIN")
                         // All other endpoints require authentication
                         .anyRequest().authenticated()
                 )
-                // Configure authentication entry point: 401 for /api/v1/users/**, 403 for other secured paths
+                // Configure authentication entry point and access denied handler
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint((request, response, authException) -> {
-                            if (request.getRequestURI().startsWith("/api/v1/users/")) {
+                            String uri = request.getRequestURI();
+                            if (uri.startsWith("/api/v1/protected/") || uri.startsWith("/api/v1/radicals/")) {
+                                response.sendError(jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+                            } else {
                                 response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED);
                                 response.setContentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
                                 response.setCharacterEncoding("UTF-8");
                                 response.getWriter().write(
                                         "{\"code\":\"UNAUTHORIZED\",\"message\":\"Chưa xác thực hoặc phiên đăng nhập đã hết hạn\",\"errors\":[],\"data\":null}"
                                 );
-                            } else {
-                                response.sendError(jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN, "Access Denied");
                             }
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE);
+                            response.setCharacterEncoding("UTF-8");
+                            response.getWriter().write(
+                                    "{\"code\":\"FORBIDDEN\",\"message\":\"Không có quyền truy cập tài nguyên này\",\"errors\":[],\"data\":null}"
+                            );
                         })
                 )
                 // Register JWT authentication filter before UsernamePasswordAuthenticationFilter

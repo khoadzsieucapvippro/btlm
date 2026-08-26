@@ -191,8 +191,8 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 * **Checkpoint 3C: MockMvc test: Truy cập profile khi có JWT hợp lệ trả về 200; truy cập khi không có JWT trả về 401 Unauthorized [COMPLETED]**
 
 #### Module 3D: Security & RBAC Verification
-* **Task 3D.1:** Bộ kiểm thử tích hợp tự động cho phân quyền RBAC 4 vai trò (Learner, Creator, Moderator, Admin).
-* **Checkpoint Phase 3:** MockMvc test xác minh chặn 403 Forbidden khi Learner cố truy cập endpoint yêu cầu quyền Admin/Moderator/Creator.
+* **Task 3D.1: Bộ kiểm thử tích hợp tự động cho phân quyền RBAC 4 vai trò (Learner, Creator, Moderator, Admin) [COMPLETED]**
+* **Checkpoint Phase 3: MockMvc test xác minh chặn 403 Forbidden khi Learner cố truy cập endpoint yêu cầu quyền Admin/Moderator/Creator [COMPLETED]**
 
 ---
 
