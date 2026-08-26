@@ -1,0 +1,1928 @@
+[
+  {
+    "radical_id": 1,
+    "character": "一",
+    "pinyin": "yī",
+    "meaning_han_viet": "Nhất",
+    "meaning_vi": "",
+    "meaning_en": "one",
+    "hanviet_en": "nhất"
+  },
+  {
+    "radical_id": 2,
+    "character": "丨",
+    "pinyin": "gǔn",
+    "meaning_han_viet": "Cổn",
+    "meaning_vi": "",
+    "meaning_en": "line",
+    "hanviet_en": "cổn"
+  },
+  {
+    "radical_id": 3,
+    "character": "丶",
+    "pinyin": "zhǔ",
+    "meaning_han_viet": "Chủ",
+    "meaning_vi": "",
+    "meaning_en": "dot",
+    "hanviet_en": "chủ"
+  },
+  {
+    "radical_id": 4,
+    "character": "丿",
+    "pinyin": "piě",
+    "meaning_han_viet": "Phiệt",
+    "meaning_vi": "",
+    "meaning_en": "slash",
+    "hanviet_en": "phiệt"
+  },
+  {
+    "radical_id": 5,
+    "character": "乙",
+    "pinyin": "yǐ",
+    "meaning_han_viet": "Ất",
+    "meaning_vi": "",
+    "meaning_en": "second",
+    "hanviet_en": "ất"
+  },
+  {
+    "radical_id": 6,
+    "character": "亅",
+    "pinyin": "jué",
+    "meaning_han_viet": "Quyết",
+    "meaning_vi": "",
+    "meaning_en": "hook",
+    "hanviet_en": "quyết"
+  },
+  {
+    "radical_id": 7,
+    "character": "二",
+    "pinyin": "èr",
+    "meaning_han_viet": "Nhị",
+    "meaning_vi": "",
+    "meaning_en": "two",
+    "hanviet_en": "nhị"
+  },
+  {
+    "radical_id": 8,
+    "character": "亠",
+    "pinyin": "tóu",
+    "meaning_han_viet": "Đầu",
+    "meaning_vi": "",
+    "meaning_en": "lid",
+    "hanviet_en": "đầu"
+  },
+  {
+    "radical_id": 9,
+    "character": "人(亻)",
+    "pinyin": "rén",
+    "meaning_han_viet": "Nhân (Nhân đứng)",
+    "meaning_vi": "",
+    "meaning_en": "man",
+    "hanviet_en": "nhân (nhân đứng)"
+  },
+  {
+    "radical_id": 10,
+    "character": "儿",
+    "pinyin": "ér",
+    "meaning_han_viet": "Nhân (Nhân đi)",
+    "meaning_vi": "",
+    "meaning_en": "son, legs",
+    "hanviet_en": "nhân (nhân đi)"
+  },
+  {
+    "radical_id": 11,
+    "character": "入",
+    "pinyin": "rù",
+    "meaning_han_viet": "Nhập",
+    "meaning_vi": "",
+    "meaning_en": "enter",
+    "hanviet_en": "nhập"
+  },
+  {
+    "radical_id": 12,
+    "character": "八",
+    "pinyin": "bā",
+    "meaning_han_viet": "Bát",
+    "meaning_vi": "",
+    "meaning_en": "eight",
+    "hanviet_en": "bát"
+  },
+  {
+    "radical_id": 13,
+    "character": "冂",
+    "pinyin": "jiōng",
+    "meaning_han_viet": "Quynh",
+    "meaning_vi": "",
+    "meaning_en": "wide",
+    "hanviet_en": "quynh<br>khuynh"
+  },
+  {
+    "radical_id": 14,
+    "character": "冖",
+    "pinyin": "mì",
+    "meaning_han_viet": "Mịch",
+    "meaning_vi": "",
+    "meaning_en": "cloth cover",
+    "hanviet_en": "mịch"
+  },
+  {
+    "radical_id": 15,
+    "character": "冫",
+    "pinyin": "bīng",
+    "meaning_han_viet": "Băng",
+    "meaning_vi": "",
+    "meaning_en": "ice",
+    "hanviet_en": "băng"
+  },
+  {
+    "radical_id": 16,
+    "character": "几",
+    "pinyin": "jī",
+    "meaning_han_viet": "Kỷ",
+    "meaning_vi": "",
+    "meaning_en": "table",
+    "hanviet_en": "kỷ"
+  },
+  {
+    "radical_id": 17,
+    "character": "凵",
+    "pinyin": "kǎn",
+    "meaning_han_viet": "Khảm",
+    "meaning_vi": "",
+    "meaning_en": "receptacle",
+    "hanviet_en": "khảm"
+  },
+  {
+    "radical_id": 18,
+    "character": "刀(刂)",
+    "pinyin": "dāo",
+    "meaning_han_viet": "Đao",
+    "meaning_vi": "",
+    "meaning_en": "knife",
+    "hanviet_en": "đao"
+  },
+  {
+    "radical_id": 19,
+    "character": "力",
+    "pinyin": "lì",
+    "meaning_han_viet": "Lực",
+    "meaning_vi": "",
+    "meaning_en": "power",
+    "hanviet_en": "lực"
+  },
+  {
+    "radical_id": 20,
+    "character": "勹",
+    "pinyin": "bāo",
+    "meaning_han_viet": "Bao",
+    "meaning_vi": "",
+    "meaning_en": "wrap",
+    "hanviet_en": "bao"
+  },
+  {
+    "radical_id": 21,
+    "character": "匕",
+    "pinyin": "bǐ",
+    "meaning_han_viet": "Chủy",
+    "meaning_vi": "",
+    "meaning_en": "spoon",
+    "hanviet_en": "chủy"
+  },
+  {
+    "radical_id": 22,
+    "character": "匚",
+    "pinyin": "fāng",
+    "meaning_han_viet": "Phương",
+    "meaning_vi": "",
+    "meaning_en": "box",
+    "hanviet_en": "phương"
+  },
+  {
+    "radical_id": 23,
+    "character": "匸",
+    "pinyin": "xǐ/xì",
+    "meaning_han_viet": "Hệ",
+    "meaning_vi": "",
+    "meaning_en": "hiding enclosure",
+    "hanviet_en": "hệ"
+  },
+  {
+    "radical_id": 24,
+    "character": "十",
+    "pinyin": "shí",
+    "meaning_han_viet": "Thập",
+    "meaning_vi": "",
+    "meaning_en": "ten",
+    "hanviet_en": "thập"
+  },
+  {
+    "radical_id": 25,
+    "character": "卜",
+    "pinyin": "bǔ",
+    "meaning_han_viet": "Bốc",
+    "meaning_vi": "",
+    "meaning_en": "divination",
+    "hanviet_en": "bốc"
+  },
+  {
+    "radical_id": 26,
+    "character": "卩",
+    "pinyin": "jié",
+    "meaning_han_viet": "Tiết",
+    "meaning_vi": "",
+    "meaning_en": "seal (device)",
+    "hanviet_en": "tiết"
+  },
+  {
+    "radical_id": 27,
+    "character": "厂",
+    "pinyin": "hǎn",
+    "meaning_han_viet": "Hán",
+    "meaning_vi": "",
+    "meaning_en": "cliff",
+    "hanviet_en": "hán"
+  },
+  {
+    "radical_id": 28,
+    "character": "厶",
+    "pinyin": "sī",
+    "meaning_han_viet": "Tư (Khư)",
+    "meaning_vi": "",
+    "meaning_en": "private",
+    "hanviet_en": "tư (khư)"
+  },
+  {
+    "radical_id": 29,
+    "character": "又",
+    "pinyin": "yòu",
+    "meaning_han_viet": "Hựu",
+    "meaning_vi": "",
+    "meaning_en": "again",
+    "hanviet_en": "hựu"
+  },
+  {
+    "radical_id": 30,
+    "character": "口",
+    "pinyin": "kǒu",
+    "meaning_han_viet": "Khẩu",
+    "meaning_vi": "",
+    "meaning_en": "mouth",
+    "hanviet_en": "khẩu"
+  },
+  {
+    "radical_id": 31,
+    "character": "囗",
+    "pinyin": "wéi",
+    "meaning_han_viet": "Vi",
+    "meaning_vi": "",
+    "meaning_en": "enclosure",
+    "hanviet_en": "vi"
+  },
+  {
+    "radical_id": 32,
+    "character": "土",
+    "pinyin": "tǔ",
+    "meaning_han_viet": "Thổ",
+    "meaning_vi": "",
+    "meaning_en": "earth",
+    "hanviet_en": "thổ"
+  },
+  {
+    "radical_id": 33,
+    "character": "士",
+    "pinyin": "shì",
+    "meaning_han_viet": "Sĩ",
+    "meaning_vi": "",
+    "meaning_en": "scholar",
+    "hanviet_en": "sĩ"
+  },
+  {
+    "radical_id": 34,
+    "character": "夂",
+    "pinyin": "zhǐ",
+    "meaning_han_viet": "Trĩ",
+    "meaning_vi": "",
+    "meaning_en": "go",
+    "hanviet_en": "trĩ (truy)"
+  },
+  {
+    "radical_id": 35,
+    "character": "夊",
+    "pinyin": "suī",
+    "meaning_han_viet": "Tuy",
+    "meaning_vi": "",
+    "meaning_en": "go slowly",
+    "hanviet_en": "tuy"
+  },
+  {
+    "radical_id": 36,
+    "character": "夕",
+    "pinyin": "xī",
+    "meaning_han_viet": "Tịch",
+    "meaning_vi": "",
+    "meaning_en": "evening",
+    "hanviet_en": "tịch"
+  },
+  {
+    "radical_id": 37,
+    "character": "大",
+    "pinyin": "dà",
+    "meaning_han_viet": "Đại",
+    "meaning_vi": "",
+    "meaning_en": "big",
+    "hanviet_en": "đại"
+  },
+  {
+    "radical_id": 38,
+    "character": "女",
+    "pinyin": "nǚ",
+    "meaning_han_viet": "Nữ",
+    "meaning_vi": "",
+    "meaning_en": "woman",
+    "hanviet_en": "nữ"
+  },
+  {
+    "radical_id": 39,
+    "character": "子",
+    "pinyin": "zǐ",
+    "meaning_han_viet": "Tử",
+    "meaning_vi": "",
+    "meaning_en": "child",
+    "hanviet_en": "tử"
+  },
+  {
+    "radical_id": 40,
+    "character": "宀",
+    "pinyin": "mián",
+    "meaning_han_viet": "Miên",
+    "meaning_vi": "",
+    "meaning_en": "roof",
+    "hanviet_en": "miên"
+  },
+  {
+    "radical_id": 41,
+    "character": "寸",
+    "pinyin": "cùn",
+    "meaning_han_viet": "Thốn",
+    "meaning_vi": "",
+    "meaning_en": "inch",
+    "hanviet_en": "thốn"
+  },
+  {
+    "radical_id": 42,
+    "character": "小",
+    "pinyin": "xiǎo",
+    "meaning_han_viet": "Tiểu",
+    "meaning_vi": "",
+    "meaning_en": "small",
+    "hanviet_en": "tiểu"
+  },
+  {
+    "radical_id": 43,
+    "character": "尢",
+    "pinyin": "wāng",
+    "meaning_han_viet": "Uông",
+    "meaning_vi": "",
+    "meaning_en": "lame",
+    "hanviet_en": "uông"
+  },
+  {
+    "radical_id": 44,
+    "character": "尸",
+    "pinyin": "shī",
+    "meaning_han_viet": "Thi",
+    "meaning_vi": "",
+    "meaning_en": "corpse",
+    "hanviet_en": "thi"
+  },
+  {
+    "radical_id": 45,
+    "character": "屮",
+    "pinyin": "chè",
+    "meaning_han_viet": "Triệt",
+    "meaning_vi": "",
+    "meaning_en": "sprout",
+    "hanviet_en": "triệt"
+  },
+  {
+    "radical_id": 46,
+    "character": "山",
+    "pinyin": "shān",
+    "meaning_han_viet": "Sơn",
+    "meaning_vi": "",
+    "meaning_en": "mountain",
+    "hanviet_en": "sơn"
+  },
+  {
+    "radical_id": 47,
+    "character": "巛",
+    "pinyin": "chuān",
+    "meaning_han_viet": "Xuyên",
+    "meaning_vi": "",
+    "meaning_en": "river",
+    "hanviet_en": "xuyên"
+  },
+  {
+    "radical_id": 48,
+    "character": "工",
+    "pinyin": "gōng",
+    "meaning_han_viet": "Công",
+    "meaning_vi": "",
+    "meaning_en": "work",
+    "hanviet_en": "công"
+  },
+  {
+    "radical_id": 49,
+    "character": "己",
+    "pinyin": "",
+    "meaning_han_viet": "Kỷ",
+    "meaning_vi": "",
+    "meaning_en": "oneself",
+    "hanviet_en": "kỷ"
+  },
+  {
+    "radical_id": 50,
+    "character": "巾",
+    "pinyin": "jīn",
+    "meaning_han_viet": "Cân",
+    "meaning_vi": "",
+    "meaning_en": "turban",
+    "hanviet_en": "cân"
+  },
+  {
+    "radical_id": 51,
+    "character": "干",
+    "pinyin": "gān",
+    "meaning_han_viet": "Can",
+    "meaning_vi": "",
+    "meaning_en": "dry",
+    "hanviet_en": "can"
+  },
+  {
+    "radical_id": 52,
+    "character": "幺",
+    "pinyin": "yāo",
+    "meaning_han_viet": "Yêu",
+    "meaning_vi": "",
+    "meaning_en": "short thread",
+    "hanviet_en": "yêu"
+  },
+  {
+    "radical_id": 53,
+    "character": "广",
+    "pinyin": "yǎn",
+    "meaning_han_viet": "Nghiễm",
+    "meaning_vi": "",
+    "meaning_en": "dotted cliff",
+    "hanviet_en": "nghiễm"
+  },
+  {
+    "radical_id": 54,
+    "character": "廴",
+    "pinyin": "yǐn",
+    "meaning_han_viet": "Dẫn",
+    "meaning_vi": "",
+    "meaning_en": "long stride",
+    "hanviet_en": "dẫn"
+  },
+  {
+    "radical_id": 55,
+    "character": "廾",
+    "pinyin": "gǒng",
+    "meaning_han_viet": "Củng",
+    "meaning_vi": "",
+    "meaning_en": "arch",
+    "hanviet_en": "củng"
+  },
+  {
+    "radical_id": 56,
+    "character": "弋",
+    "pinyin": "yì",
+    "meaning_han_viet": "Dặc",
+    "meaning_vi": "",
+    "meaning_en": "shoot",
+    "hanviet_en": "dặc"
+  },
+  {
+    "radical_id": 57,
+    "character": "弓",
+    "pinyin": "gōng",
+    "meaning_han_viet": "Cung",
+    "meaning_vi": "",
+    "meaning_en": "bow",
+    "hanviet_en": "cung"
+  },
+  {
+    "radical_id": 58,
+    "character": "彐",
+    "pinyin": "jì",
+    "meaning_han_viet": "Kệ",
+    "meaning_vi": "",
+    "meaning_en": "snout",
+    "hanviet_en": "ký/kệ"
+  },
+  {
+    "radical_id": 59,
+    "character": "彡",
+    "pinyin": "shān",
+    "meaning_han_viet": "Sam",
+    "meaning_vi": "",
+    "meaning_en": "bristle",
+    "hanviet_en": "sam"
+  },
+  {
+    "radical_id": 60,
+    "character": "彳",
+    "pinyin": "chì",
+    "meaning_han_viet": "Sách",
+    "meaning_vi": "",
+    "meaning_en": "step",
+    "hanviet_en": "sách"
+  },
+  {
+    "radical_id": 61,
+    "character": "心(忄)",
+    "pinyin": "xīn",
+    "meaning_han_viet": "Tâm (Tâm đứng)",
+    "meaning_vi": "",
+    "meaning_en": "heart",
+    "hanviet_en": "tâm"
+  },
+  {
+    "radical_id": 62,
+    "character": "戈",
+    "pinyin": "gē",
+    "meaning_han_viet": "Qua",
+    "meaning_vi": "",
+    "meaning_en": "halberd",
+    "hanviet_en": "qua"
+  },
+  {
+    "radical_id": 63,
+    "character": "戶",
+    "pinyin": "hù",
+    "meaning_han_viet": "Hộ",
+    "meaning_vi": "",
+    "meaning_en": "door",
+    "hanviet_en": "hộ"
+  },
+  {
+    "radical_id": 64,
+    "character": "手(扌)",
+    "pinyin": "shǒu",
+    "meaning_han_viet": "Thủ",
+    "meaning_vi": "",
+    "meaning_en": "hand",
+    "hanviet_en": "thủ"
+  },
+  {
+    "radical_id": 65,
+    "character": "支",
+    "pinyin": "zhī",
+    "meaning_han_viet": "Chi",
+    "meaning_vi": "",
+    "meaning_en": "branch",
+    "hanviet_en": "chi"
+  },
+  {
+    "radical_id": 66,
+    "character": "攴(攵)",
+    "pinyin": "pū",
+    "meaning_han_viet": "Phộc",
+    "meaning_vi": "",
+    "meaning_en": "rap, tap",
+    "hanviet_en": "phộc"
+  },
+  {
+    "radical_id": 67,
+    "character": "文",
+    "pinyin": "wén",
+    "meaning_han_viet": "Văn",
+    "meaning_vi": "",
+    "meaning_en": "script",
+    "hanviet_en": "văn"
+  },
+  {
+    "radical_id": 68,
+    "character": "斗",
+    "pinyin": "dǒu",
+    "meaning_han_viet": "Đẩu",
+    "meaning_vi": "",
+    "meaning_en": "dipper",
+    "hanviet_en": "đẩu"
+  },
+  {
+    "radical_id": 69,
+    "character": "斤",
+    "pinyin": "jīn",
+    "meaning_han_viet": "Cẩn",
+    "meaning_vi": "",
+    "meaning_en": "axe",
+    "hanviet_en": "cân"
+  },
+  {
+    "radical_id": 70,
+    "character": "方",
+    "pinyin": "fāng",
+    "meaning_han_viet": "Phương",
+    "meaning_vi": "",
+    "meaning_en": "square",
+    "hanviet_en": "phương"
+  },
+  {
+    "radical_id": 71,
+    "character": "无",
+    "pinyin": "wú",
+    "meaning_han_viet": "Vô",
+    "meaning_vi": "",
+    "meaning_en": "not",
+    "hanviet_en": "vô"
+  },
+  {
+    "radical_id": 72,
+    "character": "日",
+    "pinyin": "rì",
+    "meaning_han_viet": "Nhật",
+    "meaning_vi": "",
+    "meaning_en": "sun",
+    "hanviet_en": "nhật"
+  },
+  {
+    "radical_id": 73,
+    "character": "曰",
+    "pinyin": "yuē",
+    "meaning_han_viet": "Viết",
+    "meaning_vi": "",
+    "meaning_en": "say",
+    "hanviet_en": "viết"
+  },
+  {
+    "radical_id": 74,
+    "character": "月",
+    "pinyin": "yuè",
+    "meaning_han_viet": "Nguyệt",
+    "meaning_vi": "",
+    "meaning_en": "moon",
+    "hanviet_en": "nguyệt"
+  },
+  {
+    "radical_id": 75,
+    "character": "木",
+    "pinyin": "mù",
+    "meaning_han_viet": "Mộc",
+    "meaning_vi": "",
+    "meaning_en": "tree",
+    "hanviet_en": "mộc"
+  },
+  {
+    "radical_id": 76,
+    "character": "欠",
+    "pinyin": "qiàn",
+    "meaning_han_viet": "Khiếm",
+    "meaning_vi": "",
+    "meaning_en": "lack",
+    "hanviet_en": "khiếm"
+  },
+  {
+    "radical_id": 77,
+    "character": "止",
+    "pinyin": "zhǐ",
+    "meaning_han_viet": "Chỉ",
+    "meaning_vi": "",
+    "meaning_en": "stop",
+    "hanviet_en": "chỉ"
+  },
+  {
+    "radical_id": 78,
+    "character": "歹",
+    "pinyin": "dǎi",
+    "meaning_han_viet": "Đãi",
+    "meaning_vi": "",
+    "meaning_en": "death",
+    "hanviet_en": "đãi (ngạt)"
+  },
+  {
+    "radical_id": 79,
+    "character": "殳",
+    "pinyin": "shū",
+    "meaning_han_viet": "Thù",
+    "meaning_vi": "",
+    "meaning_en": "weapon",
+    "hanviet_en": "thù"
+  },
+  {
+    "radical_id": 80,
+    "character": "毋",
+    "pinyin": "wú",
+    "meaning_han_viet": "Vô",
+    "meaning_vi": "",
+    "meaning_en": "do not",
+    "hanviet_en": "vô"
+  },
+  {
+    "radical_id": 81,
+    "character": "比",
+    "pinyin": "bǐ",
+    "meaning_han_viet": "Tỷ",
+    "meaning_vi": "",
+    "meaning_en": "compare",
+    "hanviet_en": "tỷ/tỵ/tị"
+  },
+  {
+    "radical_id": 82,
+    "character": "毛",
+    "pinyin": "máo",
+    "meaning_han_viet": "Mao",
+    "meaning_vi": "",
+    "meaning_en": "fur",
+    "hanviet_en": "mao"
+  },
+  {
+    "radical_id": 83,
+    "character": "氏",
+    "pinyin": "shì",
+    "meaning_han_viet": "Thị",
+    "meaning_vi": "",
+    "meaning_en": "clan",
+    "hanviet_en": "thị"
+  },
+  {
+    "radical_id": 84,
+    "character": "气",
+    "pinyin": "qì",
+    "meaning_han_viet": "Khí",
+    "meaning_vi": "",
+    "meaning_en": "steam",
+    "hanviet_en": "khí"
+  },
+  {
+    "radical_id": 85,
+    "character": "水(氵)",
+    "pinyin": "shuǐ",
+    "meaning_han_viet": "Thủy",
+    "meaning_vi": "",
+    "meaning_en": "water",
+    "hanviet_en": "thủy"
+  },
+  {
+    "radical_id": 86,
+    "character": "火(灬)",
+    "pinyin": "huǒ",
+    "meaning_han_viet": "Hỏa",
+    "meaning_vi": "",
+    "meaning_en": "fire",
+    "hanviet_en": "hỏa"
+  },
+  {
+    "radical_id": 87,
+    "character": "爪",
+    "pinyin": "zhǎo",
+    "meaning_han_viet": "Trảo",
+    "meaning_vi": "",
+    "meaning_en": "claw",
+    "hanviet_en": "trảo"
+  },
+  {
+    "radical_id": 88,
+    "character": "父",
+    "pinyin": "fù",
+    "meaning_han_viet": "Phụ",
+    "meaning_vi": "",
+    "meaning_en": "father",
+    "hanviet_en": "phụ"
+  },
+  {
+    "radical_id": 89,
+    "character": "爻",
+    "pinyin": "yáo",
+    "meaning_han_viet": "Hào",
+    "meaning_vi": "",
+    "meaning_en": "trigrams",
+    "hanviet_en": "hào"
+  },
+  {
+    "radical_id": 90,
+    "character": "爿(丬)",
+    "pinyin": "qiáng",
+    "meaning_han_viet": "Tường",
+    "meaning_vi": "",
+    "meaning_en": "split wood",
+    "hanviet_en": "tường"
+  },
+  {
+    "radical_id": 91,
+    "character": "片",
+    "pinyin": "piàn",
+    "meaning_han_viet": "Phiến",
+    "meaning_vi": "",
+    "meaning_en": "slice",
+    "hanviet_en": "phiến"
+  },
+  {
+    "radical_id": 92,
+    "character": "牙",
+    "pinyin": "yá",
+    "meaning_han_viet": "Nha",
+    "meaning_vi": "",
+    "meaning_en": "fang",
+    "hanviet_en": "nha"
+  },
+  {
+    "radical_id": 93,
+    "character": "牛(牜)",
+    "pinyin": "niú",
+    "meaning_han_viet": "Ngưu",
+    "meaning_vi": "",
+    "meaning_en": "cow",
+    "hanviet_en": "ngưu"
+  },
+  {
+    "radical_id": 94,
+    "character": "犬(犭)",
+    "pinyin": "quǎn",
+    "meaning_han_viet": "Khuyển",
+    "meaning_vi": "",
+    "meaning_en": "dog",
+    "hanviet_en": "khuyển"
+  },
+  {
+    "radical_id": 95,
+    "character": "玄",
+    "pinyin": "xuán",
+    "meaning_han_viet": "Huyền",
+    "meaning_vi": "",
+    "meaning_en": "profound",
+    "hanviet_en": "huyền"
+  },
+  {
+    "radical_id": 96,
+    "character": "玉",
+    "pinyin": "yù",
+    "meaning_han_viet": "Ngọc",
+    "meaning_vi": "",
+    "meaning_en": "jade",
+    "hanviet_en": "ngọc"
+  },
+  {
+    "radical_id": 97,
+    "character": "瓜",
+    "pinyin": "guā",
+    "meaning_han_viet": "Qua",
+    "meaning_vi": "",
+    "meaning_en": "melon",
+    "hanviet_en": "qua"
+  },
+  {
+    "radical_id": 98,
+    "character": "瓦",
+    "pinyin": "wǎ",
+    "meaning_han_viet": "Ngõa",
+    "meaning_vi": "",
+    "meaning_en": "tile",
+    "hanviet_en": "ngõa"
+  },
+  {
+    "radical_id": 99,
+    "character": "甘",
+    "pinyin": "gān",
+    "meaning_han_viet": "Cam",
+    "meaning_vi": "",
+    "meaning_en": "sweet",
+    "hanviet_en": "cam"
+  },
+  {
+    "radical_id": 100,
+    "character": "生",
+    "pinyin": "shēng",
+    "meaning_han_viet": "Sinh",
+    "meaning_vi": "",
+    "meaning_en": "life",
+    "hanviet_en": "sinh"
+  },
+  {
+    "radical_id": 101,
+    "character": "用",
+    "pinyin": "yòng",
+    "meaning_han_viet": "Dụng",
+    "meaning_vi": "",
+    "meaning_en": "use",
+    "hanviet_en": "dụng"
+  },
+  {
+    "radical_id": 102,
+    "character": "田",
+    "pinyin": "tián",
+    "meaning_han_viet": "Điền",
+    "meaning_vi": "",
+    "meaning_en": "field",
+    "hanviet_en": "điền"
+  },
+  {
+    "radical_id": 103,
+    "character": "疋(匹)",
+    "pinyin": "pǐ",
+    "meaning_han_viet": "Thất",
+    "meaning_vi": "",
+    "meaning_en": "bolt of cloth",
+    "hanviet_en": "thất/sơ"
+  },
+  {
+    "radical_id": 104,
+    "character": "疒",
+    "pinyin": "nè",
+    "meaning_han_viet": "Nạch",
+    "meaning_vi": "",
+    "meaning_en": "sickness",
+    "hanviet_en": "nạch"
+  },
+  {
+    "radical_id": 105,
+    "character": "癶",
+    "pinyin": "bō",
+    "meaning_han_viet": "Bát",
+    "meaning_vi": "",
+    "meaning_en": "footsteps",
+    "hanviet_en": "bát"
+  },
+  {
+    "radical_id": 106,
+    "character": "白",
+    "pinyin": "bái",
+    "meaning_han_viet": "Bạch",
+    "meaning_vi": "",
+    "meaning_en": "white",
+    "hanviet_en": "bạch"
+  },
+  {
+    "radical_id": 107,
+    "character": "皮",
+    "pinyin": "pí",
+    "meaning_han_viet": "Bì",
+    "meaning_vi": "",
+    "meaning_en": "skin",
+    "hanviet_en": "bì"
+  },
+  {
+    "radical_id": 108,
+    "character": "皿",
+    "pinyin": "mǐn",
+    "meaning_han_viet": "Mãnh",
+    "meaning_vi": "",
+    "meaning_en": "dish",
+    "hanviet_en": "mãnh"
+  },
+  {
+    "radical_id": 109,
+    "character": "目",
+    "pinyin": "mù",
+    "meaning_han_viet": "Mục",
+    "meaning_vi": "",
+    "meaning_en": "eye",
+    "hanviet_en": "mục"
+  },
+  {
+    "radical_id": 110,
+    "character": "矛",
+    "pinyin": "máo",
+    "meaning_han_viet": "Mâu",
+    "meaning_vi": "",
+    "meaning_en": "spear",
+    "hanviet_en": "mâu"
+  },
+  {
+    "radical_id": 111,
+    "character": "矢",
+    "pinyin": "shǐ",
+    "meaning_han_viet": "Thỉ",
+    "meaning_vi": "",
+    "meaning_en": "arrow",
+    "hanviet_en": "thỉ"
+  },
+  {
+    "radical_id": 112,
+    "character": "石",
+    "pinyin": "shí",
+    "meaning_han_viet": "Thạch",
+    "meaning_vi": "",
+    "meaning_en": "stone",
+    "hanviet_en": "thạch"
+  },
+  {
+    "radical_id": 113,
+    "character": "示(礻)",
+    "pinyin": "shì",
+    "meaning_han_viet": "Thị",
+    "meaning_vi": "",
+    "meaning_en": "spirit",
+    "hanviet_en": "thị (kỳ)"
+  },
+  {
+    "radical_id": 114,
+    "character": "禸",
+    "pinyin": "róu",
+    "meaning_han_viet": "Nhựu",
+    "meaning_vi": "",
+    "meaning_en": "track",
+    "hanviet_en": "nhựu"
+  },
+  {
+    "radical_id": 115,
+    "character": "禾",
+    "pinyin": "hé",
+    "meaning_han_viet": "Hòa",
+    "meaning_vi": "",
+    "meaning_en": "grain",
+    "hanviet_en": "hòa"
+  },
+  {
+    "radical_id": 116,
+    "character": "穴",
+    "pinyin": "xué",
+    "meaning_han_viet": "Huyệt",
+    "meaning_vi": "",
+    "meaning_en": "cave",
+    "hanviet_en": "huyệt"
+  },
+  {
+    "radical_id": 117,
+    "character": "立",
+    "pinyin": "lì",
+    "meaning_han_viet": "Lập",
+    "meaning_vi": "",
+    "meaning_en": "stand",
+    "hanviet_en": "lập"
+  },
+  {
+    "radical_id": 118,
+    "character": "竹(⺮)",
+    "pinyin": "zhú",
+    "meaning_han_viet": "Trúc",
+    "meaning_vi": "",
+    "meaning_en": "bamboo",
+    "hanviet_en": "trúc"
+  },
+  {
+    "radical_id": 119,
+    "character": "米",
+    "pinyin": "mǐ",
+    "meaning_han_viet": "Mễ",
+    "meaning_vi": "",
+    "meaning_en": "rice",
+    "hanviet_en": "mễ"
+  },
+  {
+    "radical_id": 120,
+    "character": "糸(糹/纟)",
+    "pinyin": "mì",
+    "meaning_han_viet": "Mịch",
+    "meaning_vi": "",
+    "meaning_en": "silk",
+    "hanviet_en": "mịch"
+  },
+  {
+    "radical_id": 121,
+    "character": "缶",
+    "pinyin": "fǒu",
+    "meaning_han_viet": "Phẫu",
+    "meaning_vi": "",
+    "meaning_en": "jar",
+    "hanviet_en": "phẫu"
+  },
+  {
+    "radical_id": 122,
+    "character": "网(罒/罓)",
+    "pinyin": "wǎng",
+    "meaning_han_viet": "Võng",
+    "meaning_vi": "",
+    "meaning_en": "net",
+    "hanviet_en": "võng"
+  },
+  {
+    "radical_id": 123,
+    "character": "羊",
+    "pinyin": "yáng",
+    "meaning_han_viet": "Dương",
+    "meaning_vi": "",
+    "meaning_en": "sheep",
+    "hanviet_en": "dương"
+  },
+  {
+    "radical_id": 124,
+    "character": "羽",
+    "pinyin": "yǔ",
+    "meaning_han_viet": "Vũ",
+    "meaning_vi": "",
+    "meaning_en": "feather",
+    "hanviet_en": "vũ"
+  },
+  {
+    "radical_id": 125,
+    "character": "老",
+    "pinyin": "lǎo",
+    "meaning_han_viet": "Lão",
+    "meaning_vi": "",
+    "meaning_en": "old",
+    "hanviet_en": "lão"
+  },
+  {
+    "radical_id": 126,
+    "character": "而",
+    "pinyin": "ér",
+    "meaning_han_viet": "Nhi",
+    "meaning_vi": "",
+    "meaning_en": "and",
+    "hanviet_en": "nhi"
+  },
+  {
+    "radical_id": 127,
+    "character": "耒",
+    "pinyin": "lěi",
+    "meaning_han_viet": "Lỗi",
+    "meaning_vi": "",
+    "meaning_en": "plough",
+    "hanviet_en": "lỗi"
+  },
+  {
+    "radical_id": 128,
+    "character": "耳",
+    "pinyin": "ěr",
+    "meaning_han_viet": "Nhĩ",
+    "meaning_vi": "",
+    "meaning_en": "ear",
+    "hanviet_en": "nhĩ"
+  },
+  {
+    "radical_id": 129,
+    "character": "聿",
+    "pinyin": "yù",
+    "meaning_han_viet": "Duật",
+    "meaning_vi": "",
+    "meaning_en": "brush",
+    "hanviet_en": "duật"
+  },
+  {
+    "radical_id": 130,
+    "character": "肉",
+    "pinyin": "ròu",
+    "meaning_han_viet": "Nhục",
+    "meaning_vi": "",
+    "meaning_en": "meat",
+    "hanviet_en": "nhục"
+  },
+  {
+    "radical_id": 131,
+    "character": "臣",
+    "pinyin": "chén",
+    "meaning_han_viet": "Thần",
+    "meaning_vi": "",
+    "meaning_en": "minister",
+    "hanviet_en": "thần"
+  },
+  {
+    "radical_id": 132,
+    "character": "自",
+    "pinyin": "zì",
+    "meaning_han_viet": "Tự",
+    "meaning_vi": "",
+    "meaning_en": "self",
+    "hanviet_en": "tự"
+  },
+  {
+    "radical_id": 133,
+    "character": "至",
+    "pinyin": "zhì",
+    "meaning_han_viet": "Chí",
+    "meaning_vi": "",
+    "meaning_en": "arrive",
+    "hanviet_en": "chí"
+  },
+  {
+    "radical_id": 134,
+    "character": "臼",
+    "pinyin": "jiù",
+    "meaning_han_viet": "Cữu",
+    "meaning_vi": "",
+    "meaning_en": "mortar",
+    "hanviet_en": "cữu"
+  },
+  {
+    "radical_id": 135,
+    "character": "舌",
+    "pinyin": "shé",
+    "meaning_han_viet": "Thiệt",
+    "meaning_vi": "",
+    "meaning_en": "tongue",
+    "hanviet_en": "thiệt"
+  },
+  {
+    "radical_id": 136,
+    "character": "舛",
+    "pinyin": "chuǎn",
+    "meaning_han_viet": "Suyễn",
+    "meaning_vi": "",
+    "meaning_en": "oppose",
+    "hanviet_en": "suyễn"
+  },
+  {
+    "radical_id": 137,
+    "character": "舟",
+    "pinyin": "zhōu",
+    "meaning_han_viet": "Chu",
+    "meaning_vi": "",
+    "meaning_en": "boat",
+    "hanviet_en": "chu"
+  },
+  {
+    "radical_id": 138,
+    "character": "艮",
+    "pinyin": "gèn",
+    "meaning_han_viet": "Cấn",
+    "meaning_vi": "",
+    "meaning_en": "stopping",
+    "hanviet_en": "cấn"
+  },
+  {
+    "radical_id": 139,
+    "character": "色",
+    "pinyin": "sè",
+    "meaning_han_viet": "Sắc",
+    "meaning_vi": "",
+    "meaning_en": "color",
+    "hanviet_en": "sắc"
+  },
+  {
+    "radical_id": 140,
+    "character": "艸(艹)",
+    "pinyin": "cǎo",
+    "meaning_han_viet": "Thảo",
+    "meaning_vi": "",
+    "meaning_en": "grass",
+    "hanviet_en": "thảo"
+  },
+  {
+    "radical_id": 141,
+    "character": "虍",
+    "pinyin": "hū",
+    "meaning_han_viet": "Hô",
+    "meaning_vi": "",
+    "meaning_en": "tiger",
+    "hanviet_en": "hổ"
+  },
+  {
+    "radical_id": 142,
+    "character": "虫",
+    "pinyin": "chóng",
+    "meaning_han_viet": "Trùng",
+    "meaning_vi": "",
+    "meaning_en": "insect",
+    "hanviet_en": "trùng"
+  },
+  {
+    "radical_id": 143,
+    "character": "血",
+    "pinyin": "xuè",
+    "meaning_han_viet": "Huyết",
+    "meaning_vi": "",
+    "meaning_en": "blood",
+    "hanviet_en": "huyết"
+  },
+  {
+    "radical_id": 144,
+    "character": "行",
+    "pinyin": "xíng",
+    "meaning_han_viet": "Hành/Hàng",
+    "meaning_vi": "",
+    "meaning_en": "walk enclosure",
+    "hanviet_en": "hành/hàng"
+  },
+  {
+    "radical_id": 145,
+    "character": "衣(衤)",
+    "pinyin": "yī",
+    "meaning_han_viet": "Y",
+    "meaning_vi": "",
+    "meaning_en": "clothes",
+    "hanviet_en": "y"
+  },
+  {
+    "radical_id": 146,
+    "character": "襾",
+    "pinyin": "yà",
+    "meaning_han_viet": "Á",
+    "meaning_vi": "",
+    "meaning_en": "cover",
+    "hanviet_en": "á"
+  },
+  {
+    "radical_id": 147,
+    "character": "見(见)",
+    "pinyin": "jiàn",
+    "meaning_han_viet": "Kiến",
+    "meaning_vi": "",
+    "meaning_en": "see",
+    "hanviet_en": "kiến"
+  },
+  {
+    "radical_id": 148,
+    "character": "角",
+    "pinyin": "jiǎo",
+    "meaning_han_viet": "Giác",
+    "meaning_vi": "",
+    "meaning_en": "horn",
+    "hanviet_en": "giác"
+  },
+  {
+    "radical_id": 149,
+    "character": "言(訁/讠)",
+    "pinyin": "yán",
+    "meaning_han_viet": "Ngôn",
+    "meaning_vi": "",
+    "meaning_en": "speech",
+    "hanviet_en": "ngôn"
+  },
+  {
+    "radical_id": 150,
+    "character": "谷",
+    "pinyin": "gǔ",
+    "meaning_han_viet": "Cốc",
+    "meaning_vi": "",
+    "meaning_en": "valley",
+    "hanviet_en": "cốc"
+  },
+  {
+    "radical_id": 151,
+    "character": "豆",
+    "pinyin": "dòu",
+    "meaning_han_viet": "Đậu",
+    "meaning_vi": "",
+    "meaning_en": "bean",
+    "hanviet_en": "đậu"
+  },
+  {
+    "radical_id": 152,
+    "character": "豕",
+    "pinyin": "shǐ",
+    "meaning_han_viet": "Thỉ",
+    "meaning_vi": "",
+    "meaning_en": "pig",
+    "hanviet_en": "thỉ"
+  },
+  {
+    "radical_id": 153,
+    "character": "豸",
+    "pinyin": "zhì",
+    "meaning_han_viet": "Trãi",
+    "meaning_vi": "",
+    "meaning_en": "badger",
+    "hanviet_en": "trãi"
+  },
+  {
+    "radical_id": 154,
+    "character": "貝(贝)",
+    "pinyin": "bèi",
+    "meaning_han_viet": "Bối",
+    "meaning_vi": "",
+    "meaning_en": "shell",
+    "hanviet_en": "bối"
+  },
+  {
+    "radical_id": 155,
+    "character": "赤",
+    "pinyin": "chì",
+    "meaning_han_viet": "Xích",
+    "meaning_vi": "",
+    "meaning_en": "red",
+    "hanviet_en": "xích"
+  },
+  {
+    "radical_id": 156,
+    "character": "走",
+    "pinyin": "zǒu",
+    "meaning_han_viet": "Tẩu",
+    "meaning_vi": "",
+    "meaning_en": "run",
+    "hanviet_en": "tẩu"
+  },
+  {
+    "radical_id": 157,
+    "character": "足(𧾷)",
+    "pinyin": "zú",
+    "meaning_han_viet": "Túc",
+    "meaning_vi": "",
+    "meaning_en": "foot",
+    "hanviet_en": "túc"
+  },
+  {
+    "radical_id": 158,
+    "character": "身",
+    "pinyin": "shēn",
+    "meaning_han_viet": "Thân",
+    "meaning_vi": "",
+    "meaning_en": "body",
+    "hanviet_en": "thân"
+  },
+  {
+    "radical_id": 159,
+    "character": "車(车)",
+    "pinyin": "chē",
+    "meaning_han_viet": "Xa",
+    "meaning_vi": "",
+    "meaning_en": "cart",
+    "hanviet_en": "xa"
+  },
+  {
+    "radical_id": 160,
+    "character": "辛",
+    "pinyin": "xīn",
+    "meaning_han_viet": "Tân",
+    "meaning_vi": "",
+    "meaning_en": "bitter",
+    "hanviet_en": "tân"
+  },
+  {
+    "radical_id": 161,
+    "character": "辰",
+    "pinyin": "chén",
+    "meaning_han_viet": "Thần",
+    "meaning_vi": "",
+    "meaning_en": "morning",
+    "hanviet_en": "thần/thìn"
+  },
+  {
+    "radical_id": 162,
+    "character": "辵(辶)",
+    "pinyin": "chuò",
+    "meaning_han_viet": "Sước",
+    "meaning_vi": "",
+    "meaning_en": "walk",
+    "hanviet_en": "sước"
+  },
+  {
+    "radical_id": 163,
+    "character": "邑(阝)",
+    "pinyin": "yì",
+    "meaning_han_viet": "Ấp",
+    "meaning_vi": "",
+    "meaning_en": "city",
+    "hanviet_en": "ấp"
+  },
+  {
+    "radical_id": 164,
+    "character": "酉",
+    "pinyin": "yǒu",
+    "meaning_han_viet": "Dậu",
+    "meaning_vi": "",
+    "meaning_en": "wine",
+    "hanviet_en": "dậu"
+  },
+  {
+    "radical_id": 165,
+    "character": "釆",
+    "pinyin": "biàn",
+    "meaning_han_viet": "Biện",
+    "meaning_vi": "",
+    "meaning_en": "distinguish",
+    "hanviet_en": "biện"
+  },
+  {
+    "radical_id": 166,
+    "character": "里",
+    "pinyin": "lǐ",
+    "meaning_han_viet": "Lý",
+    "meaning_vi": "",
+    "meaning_en": "village",
+    "hanviet_en": "lý"
+  },
+  {
+    "radical_id": 167,
+    "character": "金(釒/钅)",
+    "pinyin": "jīn",
+    "meaning_han_viet": "Kim",
+    "meaning_vi": "",
+    "meaning_en": "gold",
+    "hanviet_en": "kim"
+  },
+  {
+    "radical_id": 168,
+    "character": "長(镸/长)",
+    "pinyin": "cháng",
+    "meaning_han_viet": "Trường/Trưởng",
+    "meaning_vi": "",
+    "meaning_en": "long",
+    "hanviet_en": "trường/trưởng"
+  },
+  {
+    "radical_id": 169,
+    "character": "門(门)",
+    "pinyin": "mén",
+    "meaning_han_viet": "Môn",
+    "meaning_vi": "",
+    "meaning_en": "gate",
+    "hanviet_en": "môn"
+  },
+  {
+    "radical_id": 170,
+    "character": "阜(阝)",
+    "pinyin": "fù",
+    "meaning_han_viet": "Phụ",
+    "meaning_vi": "",
+    "meaning_en": "mound",
+    "hanviet_en": "phụ"
+  },
+  {
+    "radical_id": 171,
+    "character": "隶",
+    "pinyin": "lì",
+    "meaning_han_viet": "Đãi",
+    "meaning_vi": "",
+    "meaning_en": "slave",
+    "hanviet_en": "lệ"
+  },
+  {
+    "radical_id": 172,
+    "character": "隹",
+    "pinyin": "",
+    "meaning_han_viet": "Chuy",
+    "meaning_vi": "",
+    "meaning_en": "short-tailed bird",
+    "hanviet_en": "chuy"
+  },
+  {
+    "radical_id": 173,
+    "character": "雨",
+    "pinyin": "yǔ",
+    "meaning_han_viet": "Vũ",
+    "meaning_vi": "",
+    "meaning_en": "rain",
+    "hanviet_en": "vũ"
+  },
+  {
+    "radical_id": 174,
+    "character": "青(靑)",
+    "pinyin": "qīng",
+    "meaning_han_viet": "Thanh",
+    "meaning_vi": "",
+    "meaning_en": "blue",
+    "hanviet_en": "thanh"
+  },
+  {
+    "radical_id": 175,
+    "character": "非",
+    "pinyin": "fēi",
+    "meaning_han_viet": "Phi",
+    "meaning_vi": "",
+    "meaning_en": "wrong",
+    "hanviet_en": "phi"
+  },
+  {
+    "radical_id": 176,
+    "character": "面(靣)",
+    "pinyin": "miàn",
+    "meaning_han_viet": "Diện",
+    "meaning_vi": "",
+    "meaning_en": "face",
+    "hanviet_en": "diện"
+  },
+  {
+    "radical_id": 177,
+    "character": "革",
+    "pinyin": "gé",
+    "meaning_han_viet": "Cách",
+    "meaning_vi": "",
+    "meaning_en": "leather",
+    "hanviet_en": "cách"
+  },
+  {
+    "radical_id": 178,
+    "character": "韋(韦)",
+    "pinyin": "wéi",
+    "meaning_han_viet": "Vi",
+    "meaning_vi": "",
+    "meaning_en": "tanned leather",
+    "hanviet_en": "vi"
+  },
+  {
+    "radical_id": 179,
+    "character": "韭",
+    "pinyin": "jiǔ",
+    "meaning_han_viet": "Cửu",
+    "meaning_vi": "",
+    "meaning_en": "leek",
+    "hanviet_en": "cửu"
+  },
+  {
+    "radical_id": 180,
+    "character": "音",
+    "pinyin": "yīn",
+    "meaning_han_viet": "Âm",
+    "meaning_vi": "",
+    "meaning_en": "sound",
+    "hanviet_en": "âm"
+  },
+  {
+    "radical_id": 181,
+    "character": "頁(页)",
+    "pinyin": "yè",
+    "meaning_han_viet": "Hiệt",
+    "meaning_vi": "",
+    "meaning_en": "leaf",
+    "hanviet_en": "hiệt"
+  },
+  {
+    "radical_id": 182,
+    "character": "風(凬/风)",
+    "pinyin": "fēng",
+    "meaning_han_viet": "Phong",
+    "meaning_vi": "",
+    "meaning_en": "wind",
+    "hanviet_en": "phong"
+  },
+  {
+    "radical_id": 183,
+    "character": "飛(飞)",
+    "pinyin": "fēi",
+    "meaning_han_viet": "Phi",
+    "meaning_vi": "",
+    "meaning_en": "fly",
+    "hanviet_en": "phi"
+  },
+  {
+    "radical_id": 184,
+    "character": "食(飠/饣)",
+    "pinyin": "shí",
+    "meaning_han_viet": "Thực",
+    "meaning_vi": "",
+    "meaning_en": "eat",
+    "hanviet_en": "thực"
+  },
+  {
+    "radical_id": 185,
+    "character": "首",
+    "pinyin": "shǒu",
+    "meaning_han_viet": "Thủ",
+    "meaning_vi": "",
+    "meaning_en": "head",
+    "hanviet_en": "thủ"
+  },
+  {
+    "radical_id": 186,
+    "character": "香",
+    "pinyin": "xiāng",
+    "meaning_han_viet": "Hương",
+    "meaning_vi": "",
+    "meaning_en": "fragrant",
+    "hanviet_en": "hương"
+  },
+  {
+    "radical_id": 187,
+    "character": "馬",
+    "pinyin": "mǎ",
+    "meaning_han_viet": "Mã",
+    "meaning_vi": "",
+    "meaning_en": "horse",
+    "hanviet_en": "mã"
+  },
+  {
+    "radical_id": 188,
+    "character": "骨",
+    "pinyin": "gǔ",
+    "meaning_han_viet": "Cốt",
+    "meaning_vi": "",
+    "meaning_en": "bone",
+    "hanviet_en": "cốt"
+  },
+  {
+    "radical_id": 189,
+    "character": "高",
+    "pinyin": "gāo",
+    "meaning_han_viet": "Cao",
+    "meaning_vi": "",
+    "meaning_en": "tall",
+    "hanviet_en": "cao"
+  },
+  {
+    "radical_id": 190,
+    "character": "髟",
+    "pinyin": "biāo",
+    "meaning_han_viet": "Tiêu",
+    "meaning_vi": "",
+    "meaning_en": "hair",
+    "hanviet_en": "bưu/tiêu"
+  },
+  {
+    "radical_id": 191,
+    "character": "鬥",
+    "pinyin": "dòu",
+    "meaning_han_viet": "Đấu",
+    "meaning_vi": "",
+    "meaning_en": "fight",
+    "hanviet_en": "đấu"
+  },
+  {
+    "radical_id": 192,
+    "character": "鬯",
+    "pinyin": "chàng",
+    "meaning_han_viet": "Sưởng",
+    "meaning_vi": "",
+    "meaning_en": "sacrificial wine",
+    "hanviet_en": "sưởng"
+  },
+  {
+    "radical_id": 193,
+    "character": "鬲",
+    "pinyin": "lì",
+    "meaning_han_viet": "Cách",
+    "meaning_vi": "",
+    "meaning_en": "cauldron",
+    "hanviet_en": "cách"
+  },
+  {
+    "radical_id": 194,
+    "character": "鬼",
+    "pinyin": "guǐ",
+    "meaning_han_viet": "Quỷ",
+    "meaning_vi": "",
+    "meaning_en": "ghost",
+    "hanviet_en": "quỷ"
+  },
+  {
+    "radical_id": 195,
+    "character": "魚(鱼)",
+    "pinyin": "yú",
+    "meaning_han_viet": "Ngư",
+    "meaning_vi": "",
+    "meaning_en": "fish",
+    "hanviet_en": "ngư"
+  },
+  {
+    "radical_id": 196,
+    "character": "鳥(鸟)",
+    "pinyin": "niǎo",
+    "meaning_han_viet": "Điểu",
+    "meaning_vi": "",
+    "meaning_en": "bird",
+    "hanviet_en": "điểu"
+  },
+  {
+    "radical_id": 197,
+    "character": "鹵",
+    "pinyin": "lǔ",
+    "meaning_han_viet": "Lỗ",
+    "meaning_vi": "",
+    "meaning_en": "salt",
+    "hanviet_en": "lỗ"
+  },
+  {
+    "radical_id": 198,
+    "character": "鹿",
+    "pinyin": "lù",
+    "meaning_han_viet": "Lộc",
+    "meaning_vi": "",
+    "meaning_en": "deer",
+    "hanviet_en": "lộc"
+  },
+  {
+    "radical_id": 199,
+    "character": "麥(麦)",
+    "pinyin": "mài",
+    "meaning_han_viet": "Mạch",
+    "meaning_vi": "",
+    "meaning_en": "wheat",
+    "hanviet_en": "mạch"
+  },
+  {
+    "radical_id": 200,
+    "character": "麻",
+    "pinyin": "má",
+    "meaning_han_viet": "Ma",
+    "meaning_vi": "",
+    "meaning_en": "hemp",
+    "hanviet_en": "ma"
+  },
+  {
+    "radical_id": 201,
+    "character": "黄",
+    "pinyin": "huáng",
+    "meaning_han_viet": "Hoàng",
+    "meaning_vi": "",
+    "meaning_en": "yellow",
+    "hanviet_en": "hoàng"
+  },
+  {
+    "radical_id": 202,
+    "character": "黍",
+    "pinyin": "shǔ",
+    "meaning_han_viet": "Thử",
+    "meaning_vi": "",
+    "meaning_en": "millet",
+    "hanviet_en": "thử"
+  },
+  {
+    "radical_id": 203,
+    "character": "黑(黒)",
+    "pinyin": "hēi",
+    "meaning_han_viet": "Hắc",
+    "meaning_vi": "",
+    "meaning_en": "black",
+    "hanviet_en": "hắc"
+  },
+  {
+    "radical_id": 204,
+    "character": "黹",
+    "pinyin": "zhǐ",
+    "meaning_han_viet": "Chỉ",
+    "meaning_vi": "",
+    "meaning_en": "embroidery",
+    "hanviet_en": "chỉ"
+  },
+  {
+    "radical_id": 205,
+    "character": "黽",
+    "pinyin": "mǐn",
+    "meaning_han_viet": "Mãnh",
+    "meaning_vi": "",
+    "meaning_en": "frog",
+    "hanviet_en": "mãnh"
+  },
+  {
+    "radical_id": 206,
+    "character": "鼎",
+    "pinyin": "dǐng",
+    "meaning_han_viet": "Đỉnh",
+    "meaning_vi": "",
+    "meaning_en": "tripod",
+    "hanviet_en": "đỉnh"
+  },
+  {
+    "radical_id": 207,
+    "character": "鼓",
+    "pinyin": "gǔ",
+    "meaning_han_viet": "Cổ",
+    "meaning_vi": "",
+    "meaning_en": "drum",
+    "hanviet_en": "cổ"
+  },
+  {
+    "radical_id": 208,
+    "character": "鼠",
+    "pinyin": "shǔ",
+    "meaning_han_viet": "Thử",
+    "meaning_vi": "",
+    "meaning_en": "rat",
+    "hanviet_en": "thử"
+  },
+  {
+    "radical_id": 209,
+    "character": "鼻",
+    "pinyin": "bí",
+    "meaning_han_viet": "Tỵ",
+    "meaning_vi": "",
+    "meaning_en": "nose",
+    "hanviet_en": "tị"
+  },
+  {
+    "radical_id": 210,
+    "character": "齊(斉/齐)",
+    "pinyin": "qí",
+    "meaning_han_viet": "Tề",
+    "meaning_vi": "",
+    "meaning_en": "even",
+    "hanviet_en": "tề"
+  },
+  {
+    "radical_id": 211,
+    "character": "齒(歯/齿)",
+    "pinyin": "chǐ",
+    "meaning_han_viet": "Xỉ",
+    "meaning_vi": "",
+    "meaning_en": "tooth",
+    "hanviet_en": "xỉ"
+  },
+  {
+    "radical_id": 212,
+    "character": "龍(龙/竜)",
+    "pinyin": "lóng",
+    "meaning_han_viet": "Long",
+    "meaning_vi": "",
+    "meaning_en": "dragon",
+    "hanviet_en": "long"
+  },
+  {
+    "radical_id": 213,
+    "character": "龜(亀/龟)",
+    "pinyin": "guī",
+    "meaning_han_viet": "Quy",
+    "meaning_vi": "",
+    "meaning_en": "turtle",
+    "hanviet_en": "quy"
+  },
+  {
+    "radical_id": 214,
+    "character": "龠",
+    "pinyin": "yuè",
+    "meaning_han_viet": "Dược",
+    "meaning_vi": "",
+    "meaning_en": "flute",
+    "hanviet_en": "dược"
+  }
+]
