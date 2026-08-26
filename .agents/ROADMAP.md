@@ -81,7 +81,7 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 
 ### Phase 1 — Spring Boot Foundation & Web Infrastructure
 - **Mục tiêu:** Khởi tạo khung dự án Spring Boot 3, kết nối MySQL, kích hoạt schema Flyway V1, và thiết lập chuẩn phong bì phản hồi API tập trung.
-- **Trạng thái:** **`IN_PROGRESS`** (Module 1A: `COMPLETED`, Module 1B: `NOT_STARTED`).
+- **Trạng thái:** **`COMPLETED`** (Module 1A: `COMPLETED`, Module 1B: `COMPLETED`).
 
 #### Module 1A: Application Scaffold & Database Infrastructure [COMPLETED]
 * **Task 1A.1:** Khởi tạo cấu trúc Spring Boot 3.3.5 với Java 21 LTS trong `backend/pom.xml`.
@@ -90,7 +90,7 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 * **Task 1A.4:** Class khởi động `ElearningApplication.java` và kiểm thử `ElearningApplicationTests.java`.
 * **Checkpoint 1A [VERIFIED]:** `mvn clean test` trả về `BUILD SUCCESS`, schema `elearning_db` chứa đúng 15 bảng (14 bảng nghiệp vụ + `flyway_schema_history` version 1).
 
-#### Module 1B: Web API Response Envelope & Global Error Handling [NOT_STARTED]
+#### Module 1B: Web API Response Envelope & Global Error Handling [COMPLETED]
 * **Task 1B.1: Base Response Models (`ApiResponse<T>`, `PageResponse<T>`, `ErrorCode` enum)**
   - *Mục đích:* Chuẩn hóa định dạng JSON trả về client theo Mục 1.2 và 1.3 của `API.md`.
   - *Phạm vi:* `com.elearning.dto.response.ApiResponse`, `PageResponse`, `com.elearning.common.ErrorCode`.
@@ -98,10 +98,10 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
   - *depends_on:* `Task 1A.4`.
 * **Task 1B.2: Global Exception Handler (`GlobalExceptionHandler`)**
   - *Mục đích:* Bắt toàn diện ngoại lệ tại `@RestControllerAdvice` và chuyển thành `ApiResponse` chuẩn.
-  - *Phạm vi:* Xử lý `MethodArgumentNotValidException` (400), `BusinessException` (dynamic code), `AccessDeniedException` (403), `BadCredentialsException` (401), fallback `Exception` (500).
+  - *Phạm vi:* Xử lý `MethodArgumentNotValidException` (400), `BusinessException` (dynamic code/status), fallback `Exception` (500).
   - *depends_on:* `Task 1B.1`.
-* **Checkpoint 1B:** Chạy Unit Test kiểm chứng serialize JSON của `ApiResponse<T>`, `PageResponse<T>` và kịch bản bắt lỗi validation trả về đúng HTTP 400 kèm mảng `errors[]`.
-* **Phase 1 Integration Checkpoint:** Ứng dụng nạp context thành công, kết nối MySQL ổn định, cấu trúc phong bì API sẵn sàng phục vụ các Controller.
+* **Checkpoint 1B [VERIFIED]:** `ApiResponseTests` và `GlobalExceptionHandlerTests` PASS 24/24 tests; kiểm chứng serialize JSON của `ApiResponse<T>`, `PageResponse<T>`, bắt lỗi validation trả về HTTP 400 kèm `errors[]`, `BusinessException` bảo toàn mã lỗi và HTTP status.
+* **Phase 1 Integration Checkpoint [VERIFIED]:** `mvn clean test` PASS 25/25 tests (1 context test, 12 ApiResponse tests, 12 ExceptionHandler tests), ứng dụng nạp context thành công, kết nối MySQL ổn định, cấu trúc phong bì API và cơ chế bắt lỗi sẵn sàng cho các giai đoạn tiếp theo.
 
 ---
 

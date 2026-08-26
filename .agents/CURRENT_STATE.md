@@ -164,7 +164,7 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
                BẢNG TỔNG HỢP HIỆN TRẠNG TRIỂN KHAI
 ================================================================
 [x] Phase 0 — Project Specification & Physical Database Design  [COMPLETED]
-[~] Phase 1 — Spring Boot Foundation & Web Infrastructure       [IN_PROGRESS: Mod 1A Done, Mod 1B Pending]
+[x] Phase 1 — Spring Boot Foundation & Web Infrastructure       [COMPLETED]
 [ ] Phase 2 — Persistence Layer & Database Seed Data            [NOT_STARTED]
 [ ] Phase 3 — Authentication, Security & RBAC                   [NOT_STARTED]
 [ ] Phase 4 — Radical & Vocabulary Catalog Domain               [NOT_STARTED]
@@ -186,14 +186,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `backend/src/main/java/com/elearning/ElearningApplication.java`: Class khởi động chuẩn của ứng dụng.
   * `backend/src/test/java/com/elearning/ElearningApplicationTests.java`: Test khởi động context, kích hoạt migration tự động thành công (1 test, 0 failure).
   * `.gitignore`: Đã hiệu chỉnh loại trừ đúng `target/`, các file IDE, secrets, và đưa thư mục `db/migration` vào Git an toàn.
-* `Module 1B [IN_PROGRESS: Task 1B.1 COMPLETED, Task 1B.2 NOT_STARTED]`:
+* `Module 1B [COMPLETED]`:
   * `backend/src/main/java/com/elearning/dto/response/ApiResponse.java`: Phong bì JSON chuẩn theo `API.md` Mục 1.2 (`code`, `message`, `errors`, `data`), 4 factory methods (`success(T)`, `success(msg, T)`, `error(code, msg)`, `error(code, msg, errors)`).
   * `backend/src/main/java/com/elearning/dto/response/PageResponse.java`: Mô hình phân trang chuẩn theo `API.md` Mục 1.3 (`page`, `size`, `totalElements`, `totalPages`, `items`), factory method chuyển đổi từ Spring Data `Page<T>`.
   * `backend/src/main/java/com/elearning/common/ErrorCode.java`: Enum 12 mã lỗi chuẩn theo `API.md` Mục 1.4 (`code`, `defaultMessage`, `httpStatus`).
+  * `backend/src/main/java/com/elearning/exception/BusinessException.java`: Custom runtime exception hỗ trợ dynamic `ErrorCode` và custom message.
+  * `backend/src/main/java/com/elearning/exception/GlobalExceptionHandler.java`: Lớp `@RestControllerAdvice` tập trung bắt và chuẩn hóa `MethodArgumentNotValidException` (400), `BusinessException` (dynamic status/code), fallback `Exception` (500).
   * `backend/src/test/java/com/elearning/ApiResponseTests.java`: 12 unit tests kiểm chứng serialization Jackson, mapping Spring Data Page, và ErrorCode mapping PASS 12/12 tests.
+  * `backend/src/test/java/com/elearning/GlobalExceptionHandlerTests.java`: 12 unit & slice tests kiểm chứng validation errors, dynamic business exceptions, generic fallback, và MockMvc precedence PASS 12/12 tests.
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 1B [IN_PROGRESS]`: Chưa tạo `GlobalExceptionHandler` (`@RestControllerAdvice`) tại `Task 1B.2`.
 * `Phase 2 [NOT_STARTED]`: Chưa viết bất kỳ JPA Entity class nào (`backend/src/main/java/com/elearning/entity` chưa tồn tại).
 * `Phase 2 [NOT_STARTED]`: Chưa viết bất kỳ Spring Data JPA Repository interface nào.
 * `Phase 2 [NOT_STARTED]`: Chưa có file seed data `V2__seed_roles.sql` hay `V3__seed_radicals.sql`.
@@ -204,16 +206,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 1B.1`:
-* **Giai đoạn hiện tại (Current Phase):** **`Phase 1 — Spring Boot Foundation & Web Infrastructure`**
-* **Phân hệ hiện tại (Current Module):** **`Module 1B — Web API Response Envelope & Global Error Handling`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 1B.2 — Global Exception Handler (GlobalExceptionHandler)`**
+Dựa trên kết quả nghiệm thu hoàn tất trọn vẹn Phase 1 (1A + 1B với 25/25 tests PASS):
+* **Giai đoạn hiện tại (Current Phase):** **`Phase 2 — Persistence Layer & Database Seed Data`**
+* **Phân hệ hiện tại (Current Module):** **`Module 2A — Identity & Role Persistence Mapping`** (Song song với Module 2B)
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2A.1 — JPA Entity Mapping: ACCOUNT, USER_PROFILE, ROLE, ACCOUNT_ROLE`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Khép lại dứt điểm Phase 1:* `Task 1B.1` đã cung cấp `ApiResponse<T>` và `ErrorCode`. `Task 1B.2` là mảnh ghép còn lại để hoàn thành trọn vẹn `Module 1B` và nghiệm thu Phase 1.
-  2. *Hạ tầng bắt lỗi tập trung:* Xử lý ngoại lệ toàn cục (`@RestControllerAdvice`) cho phép mọi Controller sau này tự động trả về `ApiResponse` khi xảy ra lỗi validation hoặc lỗi nghiệp vụ.
-  3. *Ngữ cảnh rõ ràng, độc lập:* Chỉ bao gồm class xử lý ngoại lệ và MockMvc slice test tương ứng, không làm xáo trộn các tầng khác.
-  4. *Nhiệm vụ tiếp sau đó:* Hoàn thành `1B.2` $\rightarrow$ Phase 1 `COMPLETED` $\rightarrow$ Bắt đầu `Phase 2` với `Task 2A.1` (JPA Entity Mapping Cụm Định danh).
+  1. *Khép lại dứt điểm Phase 1:* Cả Module 1A và 1B đã hoàn thành và được kiểm chứng vật lý qua automated tests. Toàn bộ nền móng Walking Skeleton và Response Envelope đã sẵn sàng.
+  2. *Bắt đầu tầng lưu trữ dữ liệu nghiệp vụ:* `Task 2A.1` ánh xạ các bảng cốt lõi của CSDL (`ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE`) sang JPA Entities trên schema 14 bảng MySQL đã tạo ở `V1__init_schema.sql`.
+  3. *Không vi phạm ranh giới:* Triển khai đúng thứ tự module hóa của Phase 2, không kéo logic Service hay Controller vào tầng Entity.
+  4. *Nhiệm vụ tiếp sau đó:* `Task 2A.2` (Spring Data JPA Repositories Cụm Định danh).
 
 ---
 
@@ -229,51 +231,50 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 1B.2
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2A.1
 
 ### 1. What (Làm gì)
-Xây dựng lớp xử lý ngoại lệ toàn cục `GlobalExceptionHandler` (`@RestControllerAdvice`) để bắt và chuẩn hóa các ngoại lệ phát sinh trong ứng dụng thành đối tượng `ApiResponse<Void>` thống nhất.
+Xây dựng các lớp JPA Entity cho Cụm Định danh: `Account`, `UserProfile`, `Role`, và ánh xạ quan hệ N:N `AccountRole` trên schema MySQL do Flyway quản lý.
 
 ### 2. Why (Tại sao cần)
-Để client luôn nhận được phản hồi lỗi JSON đồng nhất theo đúng cấu trúc tại Mục 1.2 của `.agents/API.md` thay vì phản hồi lỗi mặc định (Whitelabel Error Page) của Spring Boot.
+Để thiết lập mô hình đối tượng dữ liệu trong Java tương thích với schema 14 bảng MySQL của Flyway V1, phục vụ cho tầng Repositories ở `Task 2A.2` và phân hệ Xác thực ở Phase 3.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo class `com.elearning.exception.GlobalExceptionHandler` với annotation `@RestControllerAdvice`:
-  * Xử lý `MethodArgumentNotValidException` (HTTP 400): Trích xuất chi tiết lỗi validation từng trường vào danh sách `errors[]`.
-  * Xử lý `BusinessException` (HTTP tương ứng): Xử lý ngoại lệ nghiệp vụ tùy biến dựa trên `ErrorCode`.
-  * Xử lý `AccessDeniedException` (HTTP 403): Chuẩn hóa lỗi từ chối truy cập.
-  * Xử lý `Exception` fallback (HTTP 500): Bắt lỗi không mong muốn, trả về `ErrorCode.INTERNAL_ERROR`.
-* Tạo custom exception `com.elearning.exception.BusinessException`:
-  * Kế thừa `RuntimeException`, chứa trường `ErrorCode`.
-* Viết test `GlobalExceptionHandlerTests.java` kiểm chứng hành vi bắt ngoại lệ.
+* Tạo các Entity classes trong package `com.elearning.entity`:
+  * `Account.java`: Bảng `ACCOUNT`, khóa chính `account_id` (BIGINT AUTO_INCREMENT), quan hệ 1:1 với `UserProfile`, quan hệ N:N với `Role`.
+  * `UserProfile.java`: Bảng `USER_PROFILE`, khóa chính `user_id` liên kết `account_id`.
+  * `Role.java`: Bảng `ROLE`, khóa chính `role_id` (INT AUTO_INCREMENT), trường `role_name` (`ROLE_LEARNER`, `ROLE_CREATOR`, `ROLE_MODERATOR`, `ROLE_ADMIN`).
+  * Ánh xạ quan hệ N:N `account_role` qua `@ManyToMany` kèm `@JoinTable` hoặc Entity liên kết với composite key `@IdClass` / `@EmbeddedId`.
+* Sử dụng đúng các kiểu dữ liệu và ràng buộc cột khớp chính xác với `V1__init_schema.sql` và `.agents/DATABASE_DESIGN.md`.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 1B.2)
-* Không viết Controller, Service hay Repository nghiệp vụ của Phase 3-8.
-* Không viết JPA Entity hay sửa đổi CSDL MySQL.
-* Không cấu hình Spring Security FilterChain (thuộc Phase 3).
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2A.1)
+* Không viết Repository interfaces (thuộc Task 2A.2).
+* Không viết Service logic, Controller, hay Spring Security code (thuộc Phase 3).
+* Không sửa đổi file migration `V1__init_schema.sql` hay CSDL MySQL.
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 1B.1` (ĐÃ HOÀN THÀNH — cung cấp `ApiResponse<T>` và `ErrorCode`).
+* `depends_on`: `Task 1A.4` (Flyway V1 schema trong MySQL đã được tạo).
+* [PARALLEL với Module 2B].
 
 ### 6. Files/Modules Likely Affected
-* `backend/src/main/java/com/elearning/exception/GlobalExceptionHandler.java` [NEW]
-* `backend/src/main/java/com/elearning/exception/BusinessException.java` [NEW]
-* `backend/src/test/java/com/elearning/GlobalExceptionHandlerTests.java` [NEW]
+* `backend/src/main/java/com/elearning/entity/Account.java` [NEW]
+* `backend/src/main/java/com/elearning/entity/UserProfile.java` [NEW]
+* `backend/src/main/java/com/elearning/entity/Role.java` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `Given` một request kích hoạt lỗi validation, `When` ngoại lệ ném ra, `Then` trả về HTTP 400 kèm `ApiResponse` có `code: "VALIDATION_ERROR"` và mảng `errors[]` chứa thông điệp lỗi.
-* `Given` một `BusinessException(ErrorCode.NOT_FOUND)`, `When` ném ra, `Then` trả về HTTP 404 kèm `code: "NOT_FOUND"`.
+* `Given` cấu hình Hibernate `ddl-auto: validate`, `When` ứng dụng compile và chạy test, `Then` các Entity mappings của `Account`, `UserProfile`, `Role` hoàn toàn tương thích với schema `ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE` trong MySQL.
 
 ### 8. Verification Command
-* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=GlobalExceptionHandlerTests`
-* Kiểm thử hồi quy: `mvn -f backend/pom.xml clean test`
+* Lệnh chạy: `mvn -f backend/pom.xml test-compile`
+* Kiểm thử toàn hệ thống: `mvn -f backend/pom.xml clean test`
 
 ### 9. Completion Condition
-* Toàn bộ test pass, HTTP status code và JSON envelope chuẩn xác.
-* Cập nhật `Task 1B.2` thành `COMPLETED` trong `PROGRESS.md` và nghiệm thu hoàn tất Phase 1.
+* Các Entity compile thành công, đúng package và kiểu dữ liệu.
+* `mvn clean test` tiếp tục PASS.
+* Cập nhật `Task 2A.1` trong `PROGRESS.md`.
 
 ### 10. Next Task
-* `Task 2A.1 — JPA Entity Mapping: ACCOUNT, USER_PROFILE, ROLE, ACCOUNT_ROLE`.
+* `Task 2A.2 — Spring Data JPA Repositories Cụm Định danh`.
 
 ---
 
