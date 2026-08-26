@@ -103,20 +103,9 @@ class DictionaryPersistenceTests {
         @Test
         @DisplayName("GIVEN Vocabulary linked to multiple Radicals WHEN persisted THEN VOCAB_RADICAL rows are created and associations reloaded")
         void testVocabularyMultipleRadicalsAssociation() {
-            Radical radKou = new Radical();
-            radKou.setCharacter("口");
-            radKou.setPinyin("kǒu");
-            radKou.setMeaningHanViet("Khẩu");
-            radKou.setMeaningVi("Miệng");
-            entityManager.persist(radKou);
-
-            Radical radMu = new Radical();
-            radMu.setCharacter("木");
-            radMu.setPinyin("mù");
-            radMu.setMeaningHanViet("Mộc");
-            radMu.setMeaningVi("Cây, gỗ");
-            entityManager.persist(radMu);
-            entityManager.flush();
+            // GIVEN: Obtain seeded radicals from database (seeded via V3__seed_radicals.sql)
+            Radical radKou = entityManager.find(Radical.class, 30);
+            Radical radMu = entityManager.find(Radical.class, 75);
 
             Vocabulary vocabXing = new Vocabulary();
             vocabXing.setHanzi("杏");
@@ -151,13 +140,8 @@ class DictionaryPersistenceTests {
         @Test
         @DisplayName("GIVEN Radical linked to multiple Vocabularies WHEN reloaded from reverse side THEN associations are correct")
         void testReverseAssociationFromRadicalToVocabularies() {
-            Radical radMu = new Radical();
-            radMu.setCharacter("木");
-            radMu.setPinyin("mù");
-            radMu.setMeaningHanViet("Mộc");
-            radMu.setMeaningVi("Cây");
-            entityManager.persist(radMu);
-            entityManager.flush();
+            // GIVEN: Obtain seeded radical from database (seeded via V3__seed_radicals.sql)
+            Radical radMu = entityManager.find(Radical.class, 75);
 
             Vocabulary vocabLin = new Vocabulary();
             vocabLin.setHanzi("林");

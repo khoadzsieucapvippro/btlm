@@ -234,11 +234,13 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `backend/src/test/java/com/elearning/SrsProgressPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, tham chiếu đa hình `VOCABULARY` và `RADICAL` không FK vật lý, `review_time_seconds`, `rating` `Byte` (TINYINT), và `uk_card_progress_user_item` PASS 5/5 tests.
   * `backend/src/test/java/com/elearning/SrsProgressRepositoryTests.java`: 7 tests kiểm chứng các derived queries, due-card boundary `<= now`, user isolation, không giới hạn 5 notes, ownership isolation, và audit order PASS 7/7 tests.
 
-* `Module 2E [IN_PROGRESS: Task 2E.1 COMPLETED, Task 2E.2 NOT_STARTED]`:
-  * `backend/src/main/resources/db/migration/V2__seed_roles.sql`: Flyway migration nạp 4 vai trò cố định của hệ thống (`1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`). Đã nạp thành công vào MySQL, `flyway_schema_history` ghi nhận version 2 (checksum `449376763`, `success=1`).
+* `Module 2E [COMPLETED]`:
+  * `backend/src/main/resources/db/migration/V2__seed_roles.sql`: Flyway migration nạp 4 vai trò cố định của hệ thống (`1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`). Checksum `449376763`, `success=1`.
+  * `backend/src/main/resources/db/migration/V3__seed_radicals.sql`: Flyway migration nạp 214 bộ thủ Khang Hy chuẩn từ dataset authoritative `.agents/references/radicals.json`. Checksum `-1949280069`, `success=1`.
+  * `Checkpoint 2E [COMPLETED]`: `role_count = 4`, `radical_count = 214`.
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 2E [IN_PROGRESS]`: Chưa tạo seed data Flyway `V3__seed_radicals.sql` (Task 2E.2).
+* `Module 2F [NOT_STARTED]`: Chưa chạy kiểm thử tích hợp toàn diện tầng Persistence với Hibernate `ddl-auto: validate` chốt hạ Phase 2 (Task 2F.1).
 * `Phase 3-8 [NOT_STARTED]`: Chưa có bất kỳ Service, Controller hay Security/JWT configuration nào.
 * `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
 
@@ -246,16 +248,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 2E.1`:
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 2E.2` cùng `Checkpoint 2E`:
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 2 — Persistence Layer & Database Seed Data`**
-* **Phân hệ hiện tại (Current Module):** **`Module 2E — Database Seed Migrations (Flyway)`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2E.2 — Flyway Seed Data V3: 214 Bộ thủ Khang Hy (V3__seed_radicals.sql)`**
+* **Phân hệ hiện tại (Current Module):** **`Module 2F — Persistence Layer Verification & Schema Validation`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2F.1 — Kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn thành nạp vai trò nền tảng:* `Task 2E.1` đã hoàn thành nạp 4 vai trò cố định và được kiểm chứng qua 81/81 tests PASS.
-  2. *Tuân thủ lộ trình Module 2E:* `Task 2E.2` là nhiệm vụ tiếp theo của Module 2E, chuẩn bị toàn bộ 214 bộ thủ Khang Hy từ dataset thẩm quyền `.agents/references/radicals.json` vào bảng `radical`.
-  3. *Điều kiện tiên quyết cho Checkpoint 2E:* Hoàn tất `Task 2E.2` sẽ giúp nghiệm thu trọn vẹn `Checkpoint 2E` (`role_count = 4` và `radical_count = 214`).
-  4. *Nhiệm vụ tiếp sau đó:* `Module 2F — Persistence Layer Verification & Schema Validation` (`Task 2F.1`).
+  1. *Hoàn tất toàn bộ Module 2E và Checkpoint 2E:* Cả 2 tasks của Module 2E (2E.1, 2E.2) đã hoàn thành xuất sắc, nghiệm thu Checkpoint 2E với `role_count = 4`, `radical_count = 214`, đối chiếu 100% field-by-field và 81/81 tests PASS.
+  2. *Tuân thủ lộ trình ROADMAP.md:* Module 2F là phân hệ cuối cùng của Phase 2, với nhiệm vụ duy nhất `Task 2F.1` để chốt hạ toàn bộ tầng Persistence và xác minh schema validation của 14 bảng quan hệ.
+  3. *Điều kiện tiên quyết chuyển sang Phase 3:* Vượt qua `Task 2F.1` và `Checkpoint Phase 2` sẽ kết thúc trọn vẹn Phase 2, mở đường cho Phase 3 (Authentication, Authorization & Spring Security 6).
+  4. *Nhiệm vụ tiếp sau đó:* `Phase 3 — Authentication, Authorization & User Management` (`Module 3A` / `Task 3A.1`).
 
 ---
 
@@ -271,49 +273,44 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2E.2
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2F.1
 
 ### 1. What (Làm gì)
-Tạo file migration Flyway `backend/src/main/resources/db/migration/V3__seed_radicals.sql` nạp toàn bộ 214 bộ thủ Khang Hy từ dataset thẩm quyền `.agents/references/radicals.json` vào bảng `radical` trong MySQL.
+Thực hiện kiểm thử tích hợp toàn diện tầng Persistence và Schema Validation cho toàn bộ 14 bảng quan hệ của hệ thống với cấu hình Hibernate `spring.jpa.hibernate.ddl-auto: validate`.
 
 ### 2. Why (Tại sao cần)
-214 bộ thủ Khang Hy là từ điển cốt lõi và dữ liệu tham chiếu cơ bản cho toàn bộ ứng dụng học tiếng Trung, là nền tảng để phân tích từ vựng (`vocab_radical`), tạo flashcard và bài học.
+Để chốt hạ toàn bộ Phase 2, chứng minh 100% rằng toàn bộ JPA entities và quan hệ (1:1, 1:N, N:N, đa hình) hoàn toàn tương thích và khớp chính xác với physical schema MySQL do Flyway quản lý (V1 + V2 + V3), không có bất kỳ schema drift nào.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Trích xuất dữ liệu chuẩn từ `.agents/references/radicals.json`.
-* Tạo file migration `backend/src/main/resources/db/migration/V3__seed_radicals.sql` với 214 lệnh INSERT tương ứng đúng các trường: `radical_id`, `radical_char`, `pinyin`, `pinyin_raw`, `meaning_hanviet`, `meaning_vi`, `stroke_count`.
-* Chạy migration và xác minh `SELECT COUNT(*) FROM radical;` trả về đúng 214.
-* Chạy toàn bộ regression suite đảm bảo 100% tests PASS.
+* Kiểm tra cấu hình `spring.jpa.hibernate.ddl-auto: validate` trên toàn bộ persistence unit.
+* Chạy toàn bộ test suite `@DataJpaTest` của tất cả các module: 2A (Identity), 2B (Dictionary), 2C (Lesson), 2D (SRS & Moderation).
+* Xác minh không có cảnh báo hay lỗi schema validation nào từ Hibernate 6.
+* Nghiệm thu `Checkpoint Phase 2`.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2E.2)
-* Không sửa đổi `V1__init_schema.sql` hay `V2__seed_roles.sql`.
-* Không sửa đổi schema hay tạo thêm cột/bảng.
-* Không seed dữ liệu từ vựng (`vocabulary`) hay bài học (`lesson`).
-* Không viết Service, Controller hay API endpoints.
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2F.1)
+* Không tạo entity mới hoặc thay đổi migration SQL.
+* Không viết Service, Controller, Spring Security hay JWT (thuộc Phase 3).
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 1A.4` (Flyway setup), `Task 2B.1` (`Radical` entity / table), `.agents/references/radicals.json`.
+* `depends_on`: `Module 2A`, `Module 2B`, `Module 2C`, `Module 2D`, `Module 2E`.
 
 ### 6. Files/Modules Likely Affected
-* `backend/src/main/resources/db/migration/V3__seed_radicals.sql` [NEW]
+* Toàn bộ test suite trong `backend/src/test/java/com/elearning/`.
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `V3__seed_radicals.sql` áp dụng thành công qua Flyway.
-* Bảng `radical` chứa đúng 214 bản ghi (`radical_id` từ 1 đến 214).
-* Ký tự UTF-8 bộ thủ hiển thị chuẩn xác, không bị lỗi font hay mã hóa.
-* Toàn bộ test suite tiếp tục PASS 100%.
+* `mvn clean test` PASS 100% với `ddl-auto: validate`.
+* Không có bất kỳ cảnh báo sai khác kiểu dữ liệu, khóa chính hoặc khóa ngoại.
+* Nghiệm thu thành công `Checkpoint Phase 2`.
 
 ### 8. Verification Command
-* Lệnh chạy test: `mvn -f backend/pom.xml clean test`
-* Kiểm tra dữ liệu: `SELECT COUNT(*) FROM radical;`
+* Lệnh chạy: `mvn -f backend/pom.xml clean test`
 
 ### 9. Completion Condition
-* Flyway migrate thành công version 3.
-* Đếm đủ 214 bản ghi trong bảng `radical`.
-* Cập nhật `Task 2E.2` thành `COMPLETED` trong `PROGRESS.md`.
+* Toàn bộ test suite PASS.
+* Cập nhật `Task 2F.1` và `Checkpoint Phase 2` thành `COMPLETED` trong `PROGRESS.md` và `ROADMAP.md`.
 
 ### 10. Next Task
-* `Task 2F.1 — Kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation`.
+* `Phase 3 — Authentication, Authorization & User Management` (`Task 3A.1 — Cấu hình Spring Security 6 FilterChain, BCrypt & Stateless Session`).
 
 ---
 

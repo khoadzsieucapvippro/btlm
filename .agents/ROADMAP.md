@@ -155,10 +155,10 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 * **Task 2E.1: Flyway Seed Data V2: 4 Vai trò hệ thống (`V2__seed_roles.sql`) [COMPLETED]**
   - *Phạm vi:* Script seed 4 vai trò cố định: `1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`.
   - *depends_on:* `Task 1A.4`.
-* **Task 2E.2: Flyway Seed Data V3: 214 Bộ thủ Khang Hy (`V3__seed_radicals.sql`)**
+* **Task 2E.2: Flyway Seed Data V3: 214 Bộ thủ Khang Hy (`V3__seed_radicals.sql`) [COMPLETED]**
   - *Phạm vi:* Script seed 214 bộ thủ Khang Hy chuẩn từ dataset thẩm quyền `.agents/references/radicals.json`.
   - *depends_on:* `Task 1A.4`.
-* **Checkpoint 2E:** Flyway migration V2 và V3 chạy thành công. Kiểm tra `SELECT COUNT(*) FROM role` trả về 4; `SELECT COUNT(*) FROM radical` trả về 214.
+* **Checkpoint 2E: [COMPLETED]** Flyway migration V2 và V3 chạy thành công. Kiểm tra `SELECT COUNT(*) FROM role` trả về 4; `SELECT COUNT(*) FROM radical` trả về 214.
 
 #### Module 2F: Persistence Layer Verification & Schema Validation
 * **Task 2F.1: Kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation**
