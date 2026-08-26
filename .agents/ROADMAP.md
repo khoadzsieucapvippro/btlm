@@ -55,7 +55,7 @@ Phase 11: Final Integration and Validation (Full User Journey E2E, Deployment De
   - Xóa sạch mã nguồn cũ trong `backend/`, `frontend/`, `scripts/`, `temp/`, `docs/`.
   - Giữ nguyên và xác minh 19 Agent Skills trong `.agents/skills/`.
   - Rebuild bộ tài liệu đặc tả chuẩn trong `.agents/` (`PROJECT_CONTEXT`, `ARCHITECTURE`, `DATABASE`, `API`, `DECISIONS`, `OPEN_QUESTIONS`, `WORKFLOW`, `ROADMAP`, `PROGRESS`).
-- **Trạng thái:** `IN_PROGRESS` (Hoàn tất tại task hiện tại).
+- **Trạng thái:** `COMPLETED`.
 
 ---
 
@@ -67,7 +67,7 @@ Phase 11: Final Integration and Validation (Full User Journey E2E, Deployment De
   - Tạo class khởi động chính `ElearningApplication.java` và cấu hình `application.yml` trỏ tới MySQL.
   - Cấu hình chuẩn phong bì `ApiResponse<T>`, `PageResponse<T>`, và `GlobalExceptionHandler` bắt toàn diện các exception.
   - Khởi tạo thư mục `backend/src/test` với kiểm thử kiểm tra nạp Spring Context cơ bản.
-- **Trạng thái:** `NOT_STARTED`.
+- **Trạng thái:** `COMPLETED`.
 
 ---
 
