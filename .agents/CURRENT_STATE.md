@@ -219,17 +219,22 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `backend/src/test/java/com/elearning/LessonPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, foreign key `created_by`, composite PK semantics, sắp xếp `@OrderBy("orderIndex ASC")`, shared vocab không trùng lặp, và cascade delete bảo toàn `Account`/`Vocabulary` PASS 5/5 tests.
   * `backend/src/test/java/com/elearning/LessonRepositoryTests.java`: 7 tests kiểm chứng Spring Data JPA proxy, truy vấn lọc theo creator, lọc theo status, lọc kết hợp creator + status, sắp xếp `order_index ASC`, cách ly bài học và chia sẻ từ vựng PASS 7/7 tests.
 
-* `Module 2D [IN_PROGRESS: Task 2D.1 COMPLETED, Task 2D.2 COMPLETED, Task 2D.3 NOT_STARTED]`:
+* `Module 2D [COMPLETED: Task 2D.1 COMPLETED, Task 2D.2 COMPLETED, Task 2D.3 COMPLETED]`:
   * `backend/src/main/java/com/elearning/entity/UserSrsSetting.java`: JPA Entity cho bảng `USER_SRS_SETTING` (1:1 với `UserProfile`, `new_cards_per_day`, `max_review_per_day`).
   * `backend/src/main/java/com/elearning/entity/PersonalNote.java`: JPA Entity cho bảng `PERSONAL_NOTE` (`user_id` $\rightarrow$ `UserProfile`, `vocab_id` $\rightarrow$ `Vocabulary`, `content` VARCHAR 500, không giới hạn 5 notes).
   * `backend/src/main/java/com/elearning/entity/ModerationLog.java`: JPA Entity cho bảng `MODERATION_LOG` (nhật ký bất biến, `lesson_id` $\rightarrow$ `Lesson` `ON DELETE RESTRICT`, `moderator_id` $\rightarrow$ `Account` `ON DELETE RESTRICT`).
   * `backend/src/main/java/com/elearning/entity/CardProgress.java`: JPA Entity cho bảng `CARD_PROGRESS` (`user_id` $\rightarrow$ `UserProfile`, `item_type` `VARCHAR(20)`, `item_id` `BIGINT UNSIGNED`, `ease_factor` DECIMAL(4,2), `interval_days`, `repetitions`, `next_review_at`, unique `uk_card_progress_user_item`).
   * `backend/src/main/java/com/elearning/entity/ReviewLog.java`: JPA Entity cho bảng `REVIEW_LOG` (`user_id` $\rightarrow$ `UserProfile`, `item_type` `VARCHAR(20)`, `item_id` `BIGINT UNSIGNED`, `rating` `Byte`, `interval_before`, `interval_after`, `review_time_seconds`, `reviewed_at`).
+  * `backend/src/main/java/com/elearning/repository/CardProgressRepository.java`: Repository cho `CardProgress` (`findByUserAndNextReviewAtLessThanEqualOrderByNextReviewAtAsc`, `countByUserAndNextReviewAtLessThanEqual`, `findByUserAndItemTypeAndItemId`).
+  * `backend/src/main/java/com/elearning/repository/ReviewLogRepository.java`: Repository cho `ReviewLog` (`findByUserOrderByReviewedAtDesc`, phân trang `Pageable`, tìm theo thẻ `findByUserAndItemTypeAndItemIdOrderByReviewedAtDesc`).
+  * `backend/src/main/java/com/elearning/repository/PersonalNoteRepository.java`: Repository cho `PersonalNote` (`findByUserAndVocabularyOrderByCreatedAtDesc`, `findByNoteIdAndUser`, không giới hạn 5 notes).
+  * `backend/src/main/java/com/elearning/repository/ModerationLogRepository.java`: Repository cho `ModerationLog` (`findByLessonOrderByCreatedAtDesc`, `findByLesson_LessonIdOrderByCreatedAtDesc`, bảo toàn audit trail bất biến không custom delete).
+  * `backend/src/main/java/com/elearning/repository/UserSrsSettingRepository.java`: Repository cho `UserSrsSetting` (`findByUser`, `findByUser_UserId`, `existsByUser`).
   * `backend/src/test/java/com/elearning/ProgressAuditPersistenceTests.java`: 7 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, 1:1 SRS settings, ghi chú độ dài 500 ký tự, nhiều ghi chú không giới hạn 5, không cascade delete `Vocabulary`, và bảo toàn `ON DELETE RESTRICT` của `Lesson` PASS 7/7 tests.
   * `backend/src/test/java/com/elearning/SrsProgressPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, tham chiếu đa hình `VOCABULARY` và `RADICAL` không FK vật lý, `review_time_seconds`, `rating` `Byte` (TINYINT), và `uk_card_progress_user_item` PASS 5/5 tests.
+  * `backend/src/test/java/com/elearning/SrsProgressRepositoryTests.java`: 7 tests kiểm chứng các derived queries, due-card boundary `<= now`, user isolation, không giới hạn 5 notes, ownership isolation, và audit order PASS 7/7 tests.
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 2D [IN_PROGRESS]`: Chưa tạo Spring Data JPA Repositories (`CardProgressRepository`, `ReviewLogRepository`, `PersonalNoteRepository`, `ModerationLogRepository`, `UserSrsSettingRepository`) tại `Task 2D.3`.
 * `Module 2E [NOT_STARTED]`: Chưa tạo seed data Flyway `V2__seed_roles.sql` và `V3__seed_radicals.sql`.
 * `Phase 3-8 [NOT_STARTED]`: Chưa có bất kỳ Service, Controller hay Security/JWT configuration nào.
 * `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
@@ -238,16 +243,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 2D.2`:
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 2D.3` cùng `Checkpoint 2D`:
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 2 — Persistence Layer & Database Seed Data`**
-* **Phân hệ hiện tại (Current Module):** **`Module 2D — Learning Progress, Audit & Personalization Persistence Mapping`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2D.3 — Spring Data JPA Repositories Cụm SRS, Ghi chú & Kiểm toán`**
+* **Phân hệ hiện tại (Current Module):** **`Module 2E — Database Seed Migrations (Flyway)`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2E.1 — Flyway Seed Data V2: 4 Vai trò hệ thống (V2__seed_roles.sql)`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Đã hoàn tất toàn bộ Entity của Module 2D:* `Task 2D.1` (UserSrsSetting, PersonalNote, ModerationLog) và `Task 2D.2` (CardProgress, ReviewLog) đã hoàn thành trọn vẹn và xác minh khớp schema MySQL (74/74 tests PASS).
-  2. *Đầy đủ điều kiện tiên quyết cho Task 2D.3:* `Task 2D.3` kế thừa `JpaRepository` cho cả 5 Entity này, hỗ trợ các truy vấn quan trọng như tìm thẻ đến hạn (`next_review_at <= NOW()`), tra cứu ghi chú theo người dùng và từ vựng, và lịch sử kiểm duyệt bài học.
-  3. *Không vi phạm ranh giới:* Triển khai đúng thứ tự persistence layer, chưa nhảy cóc sang Service hay Controller.
-  4. *Nhiệm vụ tiếp sau đó:* Nghiệm thu Checkpoint 2D $\rightarrow$ Hoàn thành Module 2D $\rightarrow$ Triển khai `Module 2E` (Flyway Seed Data V2 & V3).
+  1. *Hoàn tất toàn bộ Module 2D:* Cả 3 tasks của Module 2D (2D.1, 2D.2, 2D.3) đã hoàn thành xuất sắc và vượt qua Checkpoint 2D với 81/81 tests PASS.
+  2. *Tuân thủ lộ trình ROADMAP.md:* Module 2E (Database Seed Migrations) là phân hệ tiếp theo của Phase 2, bắt đầu bằng `Task 2E.1` tạo migration `V2__seed_roles.sql` seed 4 vai trò cố định của hệ thống (`1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`).
+  3. *Không vi phạm ranh giới:* Triển khai đúng thứ tự module hóa, chuẩn bị dữ liệu vai trò để phục vụ các module sau (Spring Security, Seed Radicals, v.v.).
+  4. *Nhiệm vụ tiếp sau đó:* `Task 2E.2` (Flyway Seed Data V3: 214 Bộ thủ Khang Hy `V3__seed_radicals.sql`).
 
 ---
 
@@ -263,55 +268,47 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2D.3
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2E.1
 
 ### 1. What (Làm gì)
-Xây dựng các interface Spring Data JPA Repository cho Cụm SRS, Ghi chú & Kiểm toán: `CardProgressRepository`, `ReviewLogRepository`, `PersonalNoteRepository`, `ModerationLogRepository`, `UserSrsSettingRepository` kèm các derived query methods / custom `@Query` và bộ kiểm thử repository tương ứng.
+Tạo file migration Flyway `backend/src/main/resources/db/migration/V2__seed_roles.sql` để nạp 4 vai trò cố định của hệ thống vào bảng `role` (`1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`) kèm mô tả chuẩn.
 
 ### 2. Why (Tại sao cần)
-Để cung cấp tầng truy xuất dữ liệu an toàn kiểu (type-safe data access) cho tiến độ ôn tập SRS (tìm thẻ đến hạn `next_review_at <= NOW()`), lịch sử ôn tập, ghi chú người học, cấu hình SRS cá nhân hóa và nhật ký kiểm duyệt bài học.
+Để đảm bảo cơ sở dữ liệu luôn có sẵn các vai trò chuẩn hóa phục vụ phân quyền tài khoản ở Phase 3 (Spring Security & JWT) và logic nghiệp vụ xuyên suốt dự án.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo các repository interfaces trong package `com.elearning.repository`:
-  * `CardProgressRepository`: Kế thừa `JpaRepository<CardProgress, Long>`, hỗ trợ tìm thẻ theo `(user, itemType, itemId)` và tìm thẻ đến hạn `findByUserAndNextReviewAtLessThanEqual(UserProfile user, LocalDateTime now)`.
-  * `ReviewLogRepository`: Kế thừa `JpaRepository<ReviewLog, Long>`, hỗ trợ tìm lịch sử ôn tập theo user có phân trang.
-  * `PersonalNoteRepository`: Kế thừa `JpaRepository<PersonalNote, Long>`, hỗ trợ tìm ghi chú theo user và vocab `findByUserAndVocabularyOrderByCreatedAtDesc`.
-  * `ModerationLogRepository`: Kế thừa `JpaRepository<ModerationLog, Long>`, hỗ trợ tìm log theo lesson `findByLessonOrderByCreatedAtDesc`.
-  * `UserSrsSettingRepository`: Kế thừa `JpaRepository<UserSrsSetting, Long>`, hỗ trợ tìm cấu hình theo user `findByUser`.
-* Viết test `SrsProgressRepositoryTests.java` kiểm chứng các derived queries và behavior thực tế trên MySQL.
+* Tạo file `backend/src/main/resources/db/migration/V2__seed_roles.sql`:
+  * Sử dụng câu lệnh `INSERT INTO role (role_id, role_name, description)` (hoặc `INSERT IGNORE` / `ON DUPLICATE KEY UPDATE` bảo đảm tính idempotent).
+  * 4 vai trò: `1: Learner`, `2: Creator`, `3: Moderator`, `4: Admin`.
+* Chạy kiểm tra Flyway migration và test tích hợp.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2D.3)
-* Không viết Service logic, SM-2 algorithm (`SrsCalculator`), Controller hay DTOs.
-* Không viết Seed data Flyway (`Module 2E`).
-* Không sửa đổi schema database hay Flyway migrations.
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2E.1)
+* Không tạo migration V3 (seed radicals thuộc Task 2E.2).
+* Không sửa `V1__init_schema.sql`.
+* Không viết Service, Controller hay Spring Security.
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 2D.1`, `Task 2D.2`.
+* `depends_on`: `Task 1A.4` (Flyway setup), `Task 2A.1` (`Role` entity / table).
 
 ### 6. Files/Modules Likely Affected
-* `backend/src/main/java/com/elearning/repository/CardProgressRepository.java` [NEW]
-* `backend/src/main/java/com/elearning/repository/ReviewLogRepository.java` [NEW]
-* `backend/src/main/java/com/elearning/repository/PersonalNoteRepository.java` [NEW]
-* `backend/src/main/java/com/elearning/repository/ModerationLogRepository.java` [NEW]
-* `backend/src/main/java/com/elearning/repository/UserSrsSettingRepository.java` [NEW]
-* `backend/src/test/java/com/elearning/SrsProgressRepositoryTests.java` [NEW]
+* `backend/src/main/resources/db/migration/V2__seed_roles.sql` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `Given` các thẻ học của người dùng, `When` gọi `findByUserAndNextReviewAtLessThanEqual`, `Then` trả về đúng danh sách thẻ đã đến hạn hoặc quá hạn ôn tập.
-* `Given` các ghi chú của người dùng, `When` gọi tìm kiếm theo `user` và `vocabulary`, `Then` trả về đúng danh sách ghi chú sắp xếp `createdAt DESC`.
-* `Given` nhật ký kiểm duyệt của bài học, `When` gọi tìm kiếm theo `lesson`, `Then` trả về toàn bộ lịch sử kiểm duyệt của bài học đó.
+* File migration `V2__seed_roles.sql` được Flyway migrate thành công khi khởi động hoặc chạy migration.
+* Bảng `role` có đúng 4 bản ghi với ID từ 1 đến 4.
+* Toàn bộ 81 test hiện tại tiếp tục PASS.
 
 ### 8. Verification Command
-* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=SrsProgressRepositoryTests`
-* Kiểm thử hồi quy: `mvn -f backend/pom.xml clean test`
+* Lệnh chạy: `mvn -f backend/pom.xml clean test`
+* Kiểm tra dữ liệu: `SELECT * FROM role;`
 
 ### 9. Completion Condition
-* Toàn bộ repository queries chạy thành công, không phát sinh lỗi.
-* `mvn clean test` tiếp tục PASS 100%.
-* Cập nhật `Task 2D.3` thành `COMPLETED` trong `PROGRESS.md`.
+* Flyway migrate thành công version 2.
+* Toàn bộ test suite PASS 100%.
+* Cập nhật `Task 2E.1` thành `COMPLETED` trong `PROGRESS.md`.
 
 ### 10. Next Task
-* `Task 2E.1 — Flyway Seed Data V2: 4 Vai trò hệ thống (V2__seed_roles.sql)`.
+* `Task 2E.2 — Flyway Seed Data V3: 214 Bộ thủ Khang Hy (V3__seed_radicals.sql)`.
 
 ---
 

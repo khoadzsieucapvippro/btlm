@@ -146,10 +146,10 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
   - *Phạm vi:* Ánh xạ cặp trường `item_type` (`VARCHAR(20)`) và `item_id` (`BIGINT UNSIGNED`). **Tuyệt đối không tạo FK vật lý ở MySQL** theo đúng Phương án A đã duyệt.
   - *Lưu ý kỹ thuật:* Ràng buộc kiểm tra sự tồn tại của từ vựng hoặc bộ thủ là **Service/Business dependency**, không phải physical FK dependency. Do đó Entity mapping chỉ phụ thuộc vào `UserProfile`.
   - *depends_on:* `Task 2A.1` (UserProfile).
-* **Task 2D.3: Spring Data JPA Repositories Cụm SRS, Ghi chú & Kiểm toán**
+* **Task 2D.3: Spring Data JPA Repositories Cụm SRS, Ghi chú & Kiểm toán [COMPLETED]**
   - *Phạm vi:* `CardProgressRepository` (tìm thẻ đến hạn `next_review_at <= NOW()`), `ReviewLogRepository`, `PersonalNoteRepository`, `ModerationLogRepository`, `UserSrsSettingRepository`.
   - *depends_on:* `Task 2D.1`, `Task 2D.2`.
-* **Checkpoint 2D:** Chạy `@DataJpaTest` kiểm tra lưu trữ thẻ học đa hình, truy vấn thẻ đến hạn ôn tập và lưu ghi chú cá nhân.
+* **Checkpoint 2D: [COMPLETED]** Chạy `@DataJpaTest` kiểm tra lưu trữ thẻ học đa hình, truy vấn thẻ đến hạn ôn tập và lưu ghi chú cá nhân PASS 100%.
 
 #### Module 2E: Database Seed Migrations (Flyway) [PARALLEL với Mod 2A..2D]
 * **Task 2E.1: Flyway Seed Data V2: 4 Vai trò hệ thống (`V2__seed_roles.sql`)**
