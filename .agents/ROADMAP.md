@@ -108,11 +108,11 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 ### Phase 2 — Persistence Layer & Database Seed Data
 - **Mục tiêu:** Xây dựng tầng ánh xạ thực thể JPA (JPA Domain Mappings), Spring Data Repositories, và nạp dữ liệu danh mục ban đầu qua Flyway seed data (Roles, Radicals).
 - **Ranh giới phụ thuộc:** Phụ thuộc vào `Module 1A` (Flyway V1 schema). **KHÔNG phụ thuộc vào `Module 1B`** (có thể triển khai song song).
-- **Trạng thái:** **`NOT_STARTED`**.
+- **Trạng thái:** **`IN_PROGRESS`** (Module 2A: `IN_PROGRESS`, Mod 2B-2E: `NOT_STARTED`).
 
-#### Module 2A: Identity & Role Persistence Mapping [PARALLEL với Mod 2B]
-* **Task 2A.1: JPA Entities Cụm Định danh (`ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE`)**
-  - *Phạm vi:* Entity cho `Account`, `UserProfile` (quan hệ 1:1 qua `@OneToOne`), `Role`, và ánh xạ quan hệ nhiều-nhiều N:N tài khoản - vai trò (sử dụng `@ManyToMany` kèm `@JoinTable` hoặc Entity trung gian với `@EmbeddedId`).
+#### Module 2A: Identity & Role Persistence Mapping [IN_PROGRESS] [PARALLEL với Mod 2B]
+* **Task 2A.1: JPA Entities Cụm Định danh (`ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE`) [COMPLETED]**
+  - *Phạm vi:* Entity cho `Account`, `UserProfile` (quan hệ 1:1 qua `@OneToOne`), `Role`, và ánh xạ quan hệ nhiều-nhiều N:N tài khoản - vai trò qua `@ManyToMany` kèm `@JoinTable(name = "account_role")`.
   - *Không làm:* Không viết logic đăng ký, đăng nhập hay Spring Security.
   - *depends_on:* `Task 1A.4`.
 * **Task 2A.2: Spring Data JPA Repositories Cụm Định danh**

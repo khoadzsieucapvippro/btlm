@@ -165,7 +165,7 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 ================================================================
 [x] Phase 0 — Project Specification & Physical Database Design  [COMPLETED]
 [x] Phase 1 — Spring Boot Foundation & Web Infrastructure       [COMPLETED]
-[ ] Phase 2 — Persistence Layer & Database Seed Data            [NOT_STARTED]
+[~] Phase 2 — Persistence Layer & Database Seed Data            [IN_PROGRESS: Mod 2A In Progress, Mod 2B-2E Pending]
 [ ] Phase 3 — Authentication, Security & RBAC                   [NOT_STARTED]
 [ ] Phase 4 — Radical & Vocabulary Catalog Domain               [NOT_STARTED]
 [ ] Phase 5 — Lesson Management & Excel Import                  [NOT_STARTED]
@@ -187,18 +187,22 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `backend/src/test/java/com/elearning/ElearningApplicationTests.java`: Test khởi động context, kích hoạt migration tự động thành công (1 test, 0 failure).
   * `.gitignore`: Đã hiệu chỉnh loại trừ đúng `target/`, các file IDE, secrets, và đưa thư mục `db/migration` vào Git an toàn.
 * `Module 1B [COMPLETED]`:
-  * `backend/src/main/java/com/elearning/dto/response/ApiResponse.java`: Phong bì JSON chuẩn theo `API.md` Mục 1.2 (`code`, `message`, `errors`, `data`), 4 factory methods (`success(T)`, `success(msg, T)`, `error(code, msg)`, `error(code, msg, errors)`).
+  * `backend/src/main/java/com/elearning/dto/response/ApiResponse.java`: Phong bì JSON chuẩn theo `API.md` Mục 1.2 (`code`, `message`, `errors`, `data`), 4 factory methods.
   * `backend/src/main/java/com/elearning/dto/response/PageResponse.java`: Mô hình phân trang chuẩn theo `API.md` Mục 1.3 (`page`, `size`, `totalElements`, `totalPages`, `items`), factory method chuyển đổi từ Spring Data `Page<T>`.
   * `backend/src/main/java/com/elearning/common/ErrorCode.java`: Enum 12 mã lỗi chuẩn theo `API.md` Mục 1.4 (`code`, `defaultMessage`, `httpStatus`).
   * `backend/src/main/java/com/elearning/exception/BusinessException.java`: Custom runtime exception hỗ trợ dynamic `ErrorCode` và custom message.
   * `backend/src/main/java/com/elearning/exception/GlobalExceptionHandler.java`: Lớp `@RestControllerAdvice` tập trung bắt và chuẩn hóa `MethodArgumentNotValidException` (400), `BusinessException` (dynamic status/code), fallback `Exception` (500).
   * `backend/src/test/java/com/elearning/ApiResponseTests.java`: 12 unit tests kiểm chứng serialization Jackson, mapping Spring Data Page, và ErrorCode mapping PASS 12/12 tests.
   * `backend/src/test/java/com/elearning/GlobalExceptionHandlerTests.java`: 12 unit & slice tests kiểm chứng validation errors, dynamic business exceptions, generic fallback, và MockMvc precedence PASS 12/12 tests.
+* `Module 2A [IN_PROGRESS: Task 2A.1 COMPLETED, Task 2A.2 NOT_STARTED]`:
+  * `backend/src/main/java/com/elearning/entity/Account.java`: JPA Entity cho bảng `ACCOUNT` (BIGINT AUTO_INCREMENT, `email_or_phone` UNIQUE, `password_hash`, `status`, timestamps, 1:1 `UserProfile`, N:N `@JoinTable(name = "account_role")` với `Role`).
+  * `backend/src/main/java/com/elearning/entity/UserProfile.java`: JPA Entity cho bảng `USER_PROFILE` (BIGINT AUTO_INCREMENT, owning side 1:1 `Account` qua `@JoinColumn(name = "account_id")`, `full_name`, `avatar_url`, timestamps).
+  * `backend/src/main/java/com/elearning/entity/Role.java`: JPA Entity cho bảng `ROLE` (INT `role_id`, `role_name` UNIQUE).
+  * `backend/src/test/java/com/elearning/IdentityPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, association 1:1, N:N junction table `account_role`, composite PK semantics, cascade delete PASS 5/5 tests.
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Phase 2 [NOT_STARTED]`: Chưa viết bất kỳ JPA Entity class nào (`backend/src/main/java/com/elearning/entity` chưa tồn tại).
-* `Phase 2 [NOT_STARTED]`: Chưa viết bất kỳ Spring Data JPA Repository interface nào.
-* `Phase 2 [NOT_STARTED]`: Chưa có file seed data `V2__seed_roles.sql` hay `V3__seed_radicals.sql`.
+* `Module 2A [IN_PROGRESS]`: Chưa tạo Spring Data JPA Repositories (`AccountRepository`, `UserProfileRepository`, `RoleRepository`) tại `Task 2A.2`.
+* `Module 2B-2E [NOT_STARTED]`: Chưa viết JPA Entities cho Từ điển (`RADICAL`, `VOCABULARY`, `VOCAB_RADICAL`), Bài học, SRS, và chưa tạo seed data `V2`/`V3`.
 * `Phase 3-8 [NOT_STARTED]`: Chưa có bất kỳ Service, Controller hay Security/JWT configuration nào.
 * `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
 
@@ -206,16 +210,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả nghiệm thu hoàn tất trọn vẹn Phase 1 (1A + 1B với 25/25 tests PASS):
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 2A.1`:
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 2 — Persistence Layer & Database Seed Data`**
-* **Phân hệ hiện tại (Current Module):** **`Module 2A — Identity & Role Persistence Mapping`** (Song song với Module 2B)
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2A.1 — JPA Entity Mapping: ACCOUNT, USER_PROFILE, ROLE, ACCOUNT_ROLE`**
+* **Phân hệ hiện tại (Current Module):** **`Module 2A — Identity & Role Persistence Mapping`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2A.2 — Spring Data JPA Repositories Cụm Định danh (AccountRepository, UserProfileRepository, RoleRepository)`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Khép lại dứt điểm Phase 1:* Cả Module 1A và 1B đã hoàn thành và được kiểm chứng vật lý qua automated tests. Toàn bộ nền móng Walking Skeleton và Response Envelope đã sẵn sàng.
-  2. *Bắt đầu tầng lưu trữ dữ liệu nghiệp vụ:* `Task 2A.1` ánh xạ các bảng cốt lõi của CSDL (`ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE`) sang JPA Entities trên schema 14 bảng MySQL đã tạo ở `V1__init_schema.sql`.
-  3. *Không vi phạm ranh giới:* Triển khai đúng thứ tự module hóa của Phase 2, không kéo logic Service hay Controller vào tầng Entity.
-  4. *Nhiệm vụ tiếp sau đó:* `Task 2A.2` (Spring Data JPA Repositories Cụm Định danh).
+  1. *Tuân thủ thứ tự phân rã Module 2A:* `Task 2A.1` đã cung cấp đầy đủ các lớp Entity Cụm Định danh (`Account`, `UserProfile`, `Role`). `Task 2A.2` là bước tự nhiên tiếp theo xây dựng tầng DAO/Repository interface kế thừa `JpaRepository` cho các entity này.
+  2. *Cung cấp hạ tầng truy vấn cho Phase 3:* `AccountRepository` và `RoleRepository` là thành phần phụ thuộc bắt buộc để hiện thực hóa `UserDetailsService` và các luồng xác thực / đăng ký tại Phase 3.
+  3. *Ngữ cảnh rõ ràng, độc lập:* Chỉ bao gồm repository interfaces và repository slice tests, không kéo logic Service hay Web Controller vào.
+  4. *Nhiệm vụ tiếp sau đó:* Nghiệm thu Checkpoint 2A $\rightarrow$ Hoàn thành Module 2A $\rightarrow$ Bắt đầu `Module 2B` (`Task 2B.1 — JPA Entities Cụm Từ điển`).
 
 ---
 
@@ -231,50 +235,51 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2A.1
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2A.2
 
 ### 1. What (Làm gì)
-Xây dựng các lớp JPA Entity cho Cụm Định danh: `Account`, `UserProfile`, `Role`, và ánh xạ quan hệ N:N `AccountRole` trên schema MySQL do Flyway quản lý.
+Xây dựng các interface Spring Data JPA Repository cho Cụm Định danh: `AccountRepository`, `UserProfileRepository`, `RoleRepository` kèm các derived query methods cần thiết và bộ kiểm thử repository tương ứng.
 
 ### 2. Why (Tại sao cần)
-Để thiết lập mô hình đối tượng dữ liệu trong Java tương thích với schema 14 bảng MySQL của Flyway V1, phục vụ cho tầng Repositories ở `Task 2A.2` và phân hệ Xác thực ở Phase 3.
+Để cung cấp tầng truy xuất dữ liệu an toàn kiểu (type-safe data access) cho các thực thể định danh, hỗ trợ tìm kiếm tài khoản theo `email_or_phone`, tìm vai trò theo `role_name`, và chuẩn bị dữ liệu cho tầng Service ở Phase 3.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo các Entity classes trong package `com.elearning.entity`:
-  * `Account.java`: Bảng `ACCOUNT`, khóa chính `account_id` (BIGINT AUTO_INCREMENT), quan hệ 1:1 với `UserProfile`, quan hệ N:N với `Role`.
-  * `UserProfile.java`: Bảng `USER_PROFILE`, khóa chính `user_id` liên kết `account_id`.
-  * `Role.java`: Bảng `ROLE`, khóa chính `role_id` (INT AUTO_INCREMENT), trường `role_name` (`ROLE_LEARNER`, `ROLE_CREATOR`, `ROLE_MODERATOR`, `ROLE_ADMIN`).
-  * Ánh xạ quan hệ N:N `account_role` qua `@ManyToMany` kèm `@JoinTable` hoặc Entity liên kết với composite key `@IdClass` / `@EmbeddedId`.
-* Sử dụng đúng các kiểu dữ liệu và ràng buộc cột khớp chính xác với `V1__init_schema.sql` và `.agents/DATABASE_DESIGN.md`.
+* Tạo các repository interfaces trong package `com.elearning.repository`:
+  * `AccountRepository`: Kế thừa `JpaRepository<Account, Long>`, có derived query `Optional<Account> findByEmailOrPhone(String emailOrPhone)`, `boolean existsByEmailOrPhone(String emailOrPhone)`.
+  * `UserProfileRepository`: Kế thừa `JpaRepository<UserProfile, Long>`, có derived query `Optional<UserProfile> findByAccount_AccountId(Long accountId)`.
+  * `RoleRepository`: Kế thừa `JpaRepository<Role, Integer>`, có derived query `Optional<Role> findByRoleName(String roleName)`.
+* Viết test `IdentityRepositoryTests.java` kiểm chứng các derived queries trên MySQL.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2A.1)
-* Không viết Repository interfaces (thuộc Task 2A.2).
-* Không viết Service logic, Controller, hay Spring Security code (thuộc Phase 3).
-* Không sửa đổi file migration `V1__init_schema.sql` hay CSDL MySQL.
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2A.2)
+* Không viết Service logic, Controller, DTOs, hay Spring Security code.
+* Không viết Repositories của Cụm Từ điển (`Module 2B`) hay Bài học (`Module 2C`).
+* Không sửa đổi schema database hay Flyway migrations.
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 1A.4` (Flyway V1 schema trong MySQL đã được tạo).
-* [PARALLEL với Module 2B].
+* `depends_on`: `Task 2A.1` (ĐÃ HOÀN THÀNH — cung cấp `Account`, `UserProfile`, `Role` entities).
 
 ### 6. Files/Modules Likely Affected
-* `backend/src/main/java/com/elearning/entity/Account.java` [NEW]
-* `backend/src/main/java/com/elearning/entity/UserProfile.java` [NEW]
-* `backend/src/main/java/com/elearning/entity/Role.java` [NEW]
+* `backend/src/main/java/com/elearning/repository/AccountRepository.java` [NEW]
+* `backend/src/main/java/com/elearning/repository/UserProfileRepository.java` [NEW]
+* `backend/src/main/java/com/elearning/repository/RoleRepository.java` [NEW]
+* `backend/src/test/java/com/elearning/IdentityRepositoryTests.java` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `Given` cấu hình Hibernate `ddl-auto: validate`, `When` ứng dụng compile và chạy test, `Then` các Entity mappings của `Account`, `UserProfile`, `Role` hoàn toàn tương thích với schema `ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE` trong MySQL.
+* `Given` một tài khoản đã lưu, `When` gọi `findByEmailOrPhone`, `Then` trả về đúng `Optional<Account>`.
+* `Given` một vai trò đã lưu, `When` gọi `findByRoleName`, `Then` trả về đúng `Optional<Role>`.
+* `Given` kiểm tra tồn tại, `When` gọi `existsByEmailOrPhone`, `Then` trả về `true`/`false` chính xác.
 
 ### 8. Verification Command
-* Lệnh chạy: `mvn -f backend/pom.xml test-compile`
-* Kiểm thử toàn hệ thống: `mvn -f backend/pom.xml clean test`
+* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=IdentityRepositoryTests`
+* Kiểm thử hồi quy: `mvn -f backend/pom.xml clean test`
 
 ### 9. Completion Condition
-* Các Entity compile thành công, đúng package và kiểu dữ liệu.
-* `mvn clean test` tiếp tục PASS.
-* Cập nhật `Task 2A.1` trong `PROGRESS.md`.
+* Toàn bộ repository queries chạy thành công, không phát sinh N+1 query không mong muốn.
+* `mvn clean test` tiếp tục PASS 100%.
+* Cập nhật `Task 2A.2` thành `COMPLETED` trong `PROGRESS.md`.
 
 ### 10. Next Task
-* `Task 2A.2 — Spring Data JPA Repositories Cụm Định danh`.
+* `Task 2B.1 — JPA Entity Mapping: RADICAL, VOCABULARY, VOCAB_RADICAL`.
 
 ---
 
