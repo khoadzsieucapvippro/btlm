@@ -243,24 +243,29 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `Task 2F.1 [COMPLETED]`: Tổng kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation. Toàn bộ 14 bảng quan hệ khớp chính xác với Hibernate `ddl-auto: validate`. 12 Spring Data JPA Repositories pass.
   * `Checkpoint Phase 2 [COMPLETED]`: `mvn clean test` PASS 81/81 tests (0 failures, 0 errors) với cấu hình `ddl-auto: validate`. Không có cảnh báo sai lệch kiểu dữ liệu, khóa chính hoặc khóa ngoại. Phase 2 chính thức hoàn tất 100%.
 
+* `Module 3A [IN_PROGRESS]`:
+  * `Task 3A.1 [COMPLETED]`: Cấu hình `SecurityConfig`: Spring Security 6 `SecurityFilterChain`, `BCryptPasswordEncoder`, cấu hình session `STATELESS`, vô hiệu hóa CSRF cho REST API. `SecurityConfigTests` PASS 10/10 tests (8.71s); `mvn clean test` PASS 91/91 tests (16.99s).
+
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Phase 3-8 [NOT_STARTED]`: Chưa có bất kỳ Service, Controller hay Security/JWT configuration nào.
+* `Module 3A`: `Task 3A.2` (`JwtUtil`, `JwtAuthenticationFilter`), `Task 3A.3` (`CustomUserDetailsService`, `CustomUserDetails`).
+* `Module 3B-3D [NOT_STARTED]`: Chưa có `AuthService`, `AuthController`, User Profile APIs hay MockMvc RBAC tests.
+* `Phase 4-8 [NOT_STARTED]`: Chưa có bất kỳ Service hay Controller nghiệp vụ nào.
 * `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
 
 ---
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu toàn diện `Phase 2` (Mod 2A $\rightarrow$ 2F) cùng `Checkpoint Phase 2`:
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 3A.1`:
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 3 — Authentication, Authorization & User Management`**
 * **Phân hệ hiện tại (Current Module):** **`Module 3A — Spring Security & JWT Infrastructure`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 3A.1 — Cấu hình Spring Security 6 FilterChain, BCrypt & Stateless Session`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 3A.2 — Xây dựng JwtUtil và JwtAuthenticationFilter`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn tất toàn bộ Phase 2:* Tất cả 6 phân hệ (2A, 2B, 2C, 2D, 2E, 2F) và tất cả Checkpoints (2A, 2B, 2C, 2D, 2E, Phase 2) đã hoàn thành xuất sắc với 81/81 tests PASS và 0% schema drift trên MySQL 8.4.
-  2. *Tuân thủ lộ trình ROADMAP.md:* Phase 3 là giai đoạn tiếp theo của dự án. Theo đồ thị phụ thuộc (`depends_on: Task 1A.1, Task 1B.2`), `Task 3A.1` là nền tảng hạ tầng bảo mật bắt buộc phải có đầu tiên trước khi triển khai `JwtUtil` (`Task 3A.2`), `CustomUserDetailsService` (`Task 3A.3`) và các API Authentication (`Module 3B`).
-  3. *Không vi phạm ranh giới:* Thực hiện đúng thứ tự từ Security Infrastructure $\rightarrow$ Authentication Flow $\rightarrow$ User Management $\rightarrow$ RBAC Integration Tests.
-  4. *Nhiệm vụ tiếp sau đó:* `Task 3A.2 — Xây dựng JwtUtil và JwtAuthenticationFilter`.
+  1. *Hoàn tất nền tảng Task 3A.1:* `SecurityConfig` và `BCryptPasswordEncoder` đã hoạt động chính xác, session ở chế độ `STATELESS`, CSRF đã cấu hình cho REST.
+  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Task 3A.1`), `Task 3A.2` là nhiệm vụ trực tiếp tiếp theo trong Module 3A để xây dựng tiện ích token JWT (`JwtUtil`) và bộ lọc xác thực request (`JwtAuthenticationFilter`).
+  3. *Không vi phạm ranh giới:* Chưa nhảy sang `UserDetailsService` (3A.3) hay `AuthService` (3B.2) khi chưa hoàn thiện tầng filter JWT.
+  4. *Nhiệm vụ tiếp sau đó:* `Task 3A.3 — Triển khai CustomUserDetailsService tải thông tin tài khoản`.
 
 ---
 
@@ -276,50 +281,56 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 3A.1
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 3A.2
 
 ### 1. What (Làm gì)
-Xây dựng lớp cấu hình bảo mật `SecurityConfig` bằng Spring Security 6 component-based (`@Bean SecurityFilterChain`), cấu hình mã hóa mật khẩu `BCryptPasswordEncoder`, cấu hình session không trạng thái `SessionCreationPolicy.STATELESS`, vô hiệu hóa CSRF cho REST API, và phân quyền cơ bản cho các URL patterns công khai (`/api/v1/auth/**`, v.v.).
+Thêm thư viện JJWT (`jjwt-api`, `jjwt-impl`, `jjwt-jackson`), xây dựng component `JwtUtil` (sinh token, giải mã claims `sub`, `roles`, `exp`, `iat`, kiểm tra tính hợp lệ và thời hạn token) và bộ lọc `JwtAuthenticationFilter` kế thừa `OncePerRequestFilter` để chặn request, trích xuất header `Authorization: Bearer <token>` và tích hợp vào `SecurityFilterChain` trước `UsernamePasswordAuthenticationFilter`.
 
 ### 2. Why (Tại sao cần)
-Để thiết lập kiến trúc bảo mật cốt lõi không trạng thái (Stateless Security) dựa trên token JWT cho toàn bộ ứng dụng web API, bảo vệ các endpoint nghiệp vụ khỏi truy cập trái phép và chuẩn bị cho bộ lọc JWT ở Task 3A.2.
+Để hiện thực hóa cơ chế Stateless Authentication qua JWT theo kiến trúc đã định nghĩa trong `ARCHITECTURE.md` (mục 2.5) và `DECISIONS.md` (DEC-13), làm nền tảng cho việc xác thực danh tính người dùng trong mọi API nghiệp vụ.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo lớp `SecurityConfig` trong package `com.elearning.config.security` (hoặc `com.elearning.config`).
-* Cung cấp Bean `SecurityFilterChain` với `csrf(AbstractHttpConfigurer::disable)`.
-* Cấu hình session management: `sessionCreationPolicy(SessionCreationPolicy.STATELESS)`.
-* Cung cấp Bean `PasswordEncoder` sử dụng `BCryptPasswordEncoder`.
-* Cấu hình `authorizeHttpRequests`: cho phép truy cập tự do tới `/api/v1/auth/**`, còn lại yêu cầu authenticated (sẽ tinh chỉnh theo RBAC ở các task sau).
-* Viết unit/integration test xác minh Spring Security FilterChain khởi tạo đúng cấu hình và BCrypt hoạt động chính xác.
+* Thêm dependency JJWT vào `backend/pom.xml`.
+* Cấu hình secret key và expiration time trong `application.yml` (`jwt.secret`, `jwt.expiration-ms`).
+* Xây dựng `com.elearning.security.JwtUtil` (hoặc `com.elearning.config.security.JwtUtil`).
+* Xây dựng `com.elearning.security.JwtAuthenticationFilter`.
+* Cập nhật `SecurityConfig` để đăng ký `JwtAuthenticationFilter` trước `UsernamePasswordAuthenticationFilter`.
+* Viết unit tests cho `JwtUtil` (sinh token hợp lệ, trích xuất claims, xử lý token hết hạn, token sai chữ ký, token dị dạng).
+* Viết integration tests cho `JwtAuthenticationFilter`.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 3A.1)
-* Chưa tạo `JwtUtil` hay `JwtAuthenticationFilter` (thuộc Task 3A.2).
-* Chưa tạo `CustomUserDetailsService` (thuộc Task 3A.3).
-* Chưa viết Auth Controller / Service (thuộc Task 3B.2).
-* Không sửa đổi schema database hay Flyway migrations.
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 3A.2)
+* Chưa tạo `CustomUserDetailsService` hay `CustomUserDetails` (thuộc Task 3A.3).
+* Chưa tạo `AuthService` hay `AuthController` (`/api/v1/auth/**`) (thuộc Task 3B.2).
+* Không tạo Refresh Token hay blacklist token database (stateless JWT theo spec).
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 1A.1` (Spring Boot project structure), `Task 1B.2` (GlobalExceptionHandler).
+* `depends_on`: `Task 3A.1` (SecurityConfig & SecurityFilterChain).
 
 ### 6. Files/Modules Likely Affected
-* `backend/src/main/java/com/elearning/config/SecurityConfig.java` [NEW]
-* `backend/src/test/java/com/elearning/SecurityConfigTests.java` [NEW]
+* `backend/pom.xml` (JJWT dependencies)
+* `backend/src/main/resources/application.yml` (JWT properties)
+* `backend/src/main/java/com/elearning/security/JwtUtil.java` [NEW]
+* `backend/src/main/java/com/elearning/security/JwtAuthenticationFilter.java` [NEW]
+* `backend/src/main/java/com/elearning/config/SecurityConfig.java` [MODIFY]
+* `backend/src/test/java/com/elearning/JwtUtilTests.java` [NEW]
+* `backend/src/test/java/com/elearning/JwtAuthenticationFilterTests.java` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `SecurityConfig` khởi tạo thành công trong ApplicationContext.
-* `BCryptPasswordEncoder` mã hóa và xác thực mật khẩu chính xác.
-* Request tới endpoint công khai không bị chặn bởi form login hay basic auth mặc định của Spring Security.
+* `JwtUtil` sinh token thành công và trích xuất đúng `username` (subject) cùng danh sách `roles`.
+* `JwtUtil` phát hiện chính xác token hết hạn (`ExpiredJwtException`), sai chữ ký (`SignatureException`), hoặc định dạng không hợp lệ (`MalformedJwtException`).
+* `JwtAuthenticationFilter` trích xuất chính xác token từ header `Bearer <token>` và nạp `Authentication` vào `SecurityContextHolder`.
+* Request không có header `Authorization` hoặc header không bắt đầu bằng `Bearer ` được chuyển tiếp bình thường tới các filter tiếp theo.
 * Toàn bộ test suite tiếp tục PASS 100%.
 
 ### 8. Verification Command
 * Lệnh chạy: `mvn -f backend/pom.xml clean test`
 
 ### 9. Completion Condition
-* `SecurityConfig` và test tương ứng được triển khai hoàn tất và pass.
-* Cập nhật `Task 3A.1` thành `COMPLETED` trong `PROGRESS.md`.
+* `JwtUtil` và `JwtAuthenticationFilter` hoàn tất và các tests tương ứng PASS.
+* Cập nhật `Task 3A.2` thành `COMPLETED` trong `PROGRESS.md`.
 
 ### 10. Next Task
-* `Task 3A.2 — Xây dựng JwtUtil và JwtAuthenticationFilter`.
+* `Task 3A.3 — Triển khai CustomUserDetailsService tải thông tin tài khoản`.
 
 ---
 
