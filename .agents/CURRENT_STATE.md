@@ -199,13 +199,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả rà soát dependency thực tế:
-* **Giai đoạn hiện tại (Current Phase):** **`Phase 1`** (Đang hoàn thiện Module 1B) hoặc **`Phase 2`** (Sẵn sàng khởi động Module 2A).
-* **Nhiệm vụ kế tiếp đề xuất ưu tiên 1 (Khuyến nghị):** **`Task 1B.1 — Base Response Models (ApiResponse, PageResponse, ErrorCode)`**
-  * *Lý do:* Đóng gói dứt điểm 100% Phase 1; thiết lập ngay chuẩn phong bì JSON cho các tầng REST sau này; task nhỏ, độc lập, verify nhanh bằng Unit test.
-* **Nhiệm vụ kế tiếp đề xuất ưu tiên 2:** **`Task 2A.1 — Account / User / Role Persistence Mapping`**
-  * *Lý do:* Hạ tầng CSDL 14 bảng của Module 1A đã sẵn sàng và kiểm chứng; Task 2A.1 không phụ thuộc vào Module 1B nên có thể bắt đầu ngay nếu muốn ưu tiên tầng CSDL trước.
-* **Trạng thái cả 2 task:** **`NOT_STARTED`**
+Dựa trên kết quả nghiên cứu external best practices (Anthropic, GitHub Copilot, Martin Fowler) và phân tích dependency thực tế:
+* **Giai đoạn hiện tại (Current Phase):** **`Phase 1 — Spring Boot Foundation & Web Infrastructure`**
+* **Phân hệ hiện tại (Current Module):** **`Module 1B — Web API Response Envelope & Global Error Handling`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 1B.1 — Base Response Models (ApiResponse<T>, PageResponse<T>, ErrorCode)`**
+* **Trạng thái:** **`NOT_STARTED`**
+* **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
+  1. *Đóng gói dứt điểm Phase 1:* Tuân thủ nguyên tắc hoàn thiện từng lát cắt khép kín trước khi chuyển giai đoạn, không để Phase 1 dở dang.
+  2. *Hạ tầng chuẩn cho toàn bộ REST Controller:* Toàn bộ các DTO và Controller từ Phase 3 trở đi đều cần gói dữ liệu vào `ApiResponse<T>` và `PageResponse<T>`. Xây dựng sớm giúp kiểm chứng chuẩn serialization JSON Jackson.
+  3. *Context nhỏ, rủi ro thấp nhất:* Task chỉ gồm 3 class DTO thuần túy và 1 unit test serialization. Không phụ thuộc database MySQL, có thể hoàn thành và nghiệm thu dứt điểm trong 1 phiên làm việc ngắn.
+  4. *Nhiệm vụ tiếp sau đó:* `Task 1B.2` (GlobalExceptionHandler) $\rightarrow$ Khép lại Phase 1 $\rightarrow$ Bắt đầu `Task 2A.1` (JPA Entity Mapping).
 
 ---
 
@@ -221,24 +224,59 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT 2 TASK KẾ TIẾP CÓ THỂ THỰC THI NGAY
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 1B.1
 
-### Lựa chọn 1: Task 1B.1 — Base Response Models (`ApiResponse<T>`, `PageResponse<T>`, `ErrorCode`)
-* **Mục tiêu:** Chuẩn hóa cấu trúc phản hồi JSON thống nhất theo đúng Mục 1.2 & 1.3 của `API.md`.
-* **Phạm vi (In-Scope):**
-  * Tạo `com.elearning.dto.response.ApiResponse<T>`: các trường `code`, `message`, `errors`, `data`, các factory methods (`success()`, `error()`).
-  * Tạo `com.elearning.dto.response.PageResponse<T>`: các trường `page`, `size`, `totalElements`, `totalPages`, `items`.
-  * Tạo `com.elearning.common.ErrorCode`: enum định nghĩa các mã lỗi chuẩn (`SUCCESS`, `VALIDATION_ERROR`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `INTERNAL_ERROR`, v.v.).
-  * Viết Unit test kiểm tra serialization/deserialization JSON qua Jackson.
-* **Ngoài phạm vi (Out-of-Scope):** Không viết Controller hay Service.
+### 1. What (Làm gì)
+Xây dựng các lớp dữ liệu phong bì phản hồi API chuẩn (Standard Response Envelopes) và bảng mã lỗi hệ thống theo đúng quy chuẩn tại Mục 1.2, 1.3 và 1.4 của `.agents/API.md`.
 
-### Lựa chọn 2: Task 2A.1 — JPA Mapping Cụm Định danh (`ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE`)
-* **Mục tiêu:** Triển khai lớp ánh xạ JPA Persistence đầu tiên cho phân hệ Tài khoản và Vai trò dựa trên schema MySQL đã có sẵn từ Phase 1.
-* **Phạm vi (In-Scope):**
-  * Viết các JPA Entity tương ứng: `Account`, `UserProfile` (Quan hệ 1:1 qua `@OneToOne`), `Role`.
-  * Ánh xạ quan hệ N:N giữa `Account` và `Role` (thông qua `@ManyToMany` với `@JoinTable("ACCOUNT_ROLE", ...)` hoặc thực thể trung gian với `@EmbeddedId`).
-  * Cấu hình kiểm tra tính tương thích của Hibernate (`spring.jpa.hibernate.ddl-auto: validate` hoặc chạy `@DataJpaTest`).
-* **Ngoài phạm vi (Out-of-Scope):** Không viết logic Spring Security, JWT, filter, đăng ký, đăng nhập. Không viết Controller hay DTO. Không sửa đổi schema CSDL MySQL.
+### 2. Why (Tại sao cần)
+Để đảm bảo tính nhất quán 100% của cấu trúc JSON trả về client trên toàn bộ hệ thống, tránh việc mỗi Controller tự định nghĩa cấu trúc trả về riêng lẻ, và làm nền tảng cho `GlobalExceptionHandler` ở Task 1B.2.
+
+### 3. In-Scope (Phạm vi thực hiện)
+* Tạo class `com.elearning.dto.response.ApiResponse<T>`:
+  * Các trường: `code` (String), `message` (String), `errors` (List<String>), `data` (T).
+  * Các static factory methods: `success(T data)`, `success(String message, T data)`, `error(String code, String message)`, `error(String code, String message, List<String> errors)`.
+* Tạo class `com.elearning.dto.response.PageResponse<T>`:
+  * Các trường: `page` (int), `size` (int), `totalElements` (long), `totalPages` (int), `items` (List<T>).
+  * Factory method chuyển đổi từ `org.springframework.data.domain.Page<T>`.
+* Tạo enum `com.elearning.common.ErrorCode`:
+  * Định nghĩa các mã lỗi chuẩn: `SUCCESS`, `CREATED`, `VALIDATION_ERROR`, `BAD_REQUEST`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `UNPROCESSABLE_ENTITY`, `INTERNAL_ERROR`.
+  * Mỗi enum item chứa: `code` (String), `defaultMessage` (String), `httpStatus` (HttpStatus).
+* Viết Unit test `ApiResponseTests.java`:
+  * Kiểm tra serialization/deserialization JSON qua Jackson `ObjectMapper`.
+  * Kiểm tra factory methods sinh đúng cấu trúc JSON mong đợi.
+
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 1B.1)
+* Không viết `GlobalExceptionHandler` (đây là phạm vi của Task 1B.2).
+* Không viết bất kỳ Controller, Service, hay JPA Entity nào.
+* Không sửa database MySQL hay Flyway migrations.
+
+### 5. Dependencies (Phụ thuộc)
+* `depends_on`: `Task 1A.4` (Spring Boot context build thành công — ĐÃ HOÀN THÀNH).
+* Không phụ thuộc database MySQL, không phụ thuộc JPA.
+
+### 6. Files/Modules Likely Affected (Các file dự kiến tạo mới)
+* `backend/src/main/java/com/elearning/dto/response/ApiResponse.java` [NEW]
+* `backend/src/main/java/com/elearning/dto/response/PageResponse.java` [NEW]
+* `backend/src/main/java/com/elearning/common/ErrorCode.java` [NEW]
+* `backend/src/test/java/com/elearning/dto/response/ApiResponseTests.java` [NEW]
+
+### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
+* `Given` một đối tượng `ApiResponse.success("Success", data)`, `When` serialize sang JSON bằng Jackson, `Then` chuỗi JSON có đúng 4 keys: `code: "SUCCESS"`, `message: "Success"`, `errors: []`, `data: { ... }`.
+* `Given` một đối tượng `PageResponse`, `When` serialize sang JSON, `Then` có đủ 5 trường phân trang chuẩn (`page`, `size`, `totalElements`, `totalPages`, `items`).
+* Toàn bộ các mã lỗi trong `API.md` (Mục 1.4) được định nghĩa đầy đủ trong `ErrorCode`.
+
+### 8. Verification Command (Lệnh kiểm chứng)
+* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=ApiResponseTests`
+* Kết quả mong đợi: `BUILD SUCCESS`, `Tests run: 1 (hoặc nhiều hơn), Failures: 0, Errors: 0`.
+
+### 9. Completion Condition (Điều kiện hoàn thành)
+* Toàn bộ 4 file được tạo đúng package, không có warning/lint error.
+* `mvn test` chạy thành công 100%.
+* Cập nhật `Task 1B.1` thành `COMPLETED` trong `PROGRESS.md` kèm bằng chứng test pass.
+
+### 10. Next Task (Nhiệm vụ tiếp theo sau đó)
+* `Task 1B.2 — Global Exception Handler (@RestControllerAdvice)` để hoàn tất trọn vẹn Phase 1.
 
 ---
 
@@ -305,7 +343,7 @@ Bất kỳ AI Agent hoặc AI Model nào tiếp quản repo này cần tuân th�
 
 Khi một Agent hoặc Model mới bắt đầu phiên làm việc:
 1. **Không giả định có lịch sử hội thoại trước đó:** Mọi ngữ cảnh được cung cấp đầy đủ thông qua hệ thống tài liệu trong thư mục `.agents/`.
-2. **Khởi động từ file này:** Đọc `.agents/CURRENT_STATE.md` để nắm ngay hiện trạng và nhiệm vụ tiếp theo (`Task 2A.1`).
+2. **Khởi động từ file này:** Đọc `.agents/CURRENT_STATE.md` để nắm ngay hiện trạng và nhiệm vụ tiếp theo (`Task 1B.1`).
 3. **Đối chiếu với thực tế:** Nếu phát hiện bất kỳ sự sai khác nào giữa tài liệu này và mã nguồn thực tế, AI phải báo cáo ngay sự sai khác cho User, không được tự ý ghi đè hay suy đoán lạc quan.
 
 ---
@@ -327,11 +365,11 @@ Một AI mới khi đọc xong tài liệu này có thể trả lời tức thì
 6. **Những gì ĐÃ ĐƯỢC XÁC MINH?**  
    $\rightarrow$ `mvn test` SUCCESS, `mvn clean package` SUCCESS, Flyway V1 áp dụng thành công, CSDL `elearning_db` đã tạo đủ đúng 14 bảng nghiệp vụ với đầy đủ ràng buộc và kiểu dữ liệu chuẩn xác.
 7. **Những gì CHƯA ĐƯỢC triển khai?**  
-   $\rightarrow$ Chưa có JPA Entities, Repositories, DTOs, Controllers, Services, Security/JWT, Business Logic, Thuật toán SRS, Excel Import, Giao diện Frontend.
+   $\rightarrow$ Chưa có `ApiResponse<T>`, `PageResponse<T>`, `GlobalExceptionHandler`, JPA Entities, Repositories, DTOs, Controllers, Services, Security/JWT, Business Logic, Thuật toán SRS, Excel Import, Giao diện Frontend.
 8. **Dự án đang ở Phase nào?**  
-   $\rightarrow$ Đang ở đầu **Phase 2 — Persistence Layer** (Module 2A — JPA Domain Mapping).
+   $\rightarrow$ Đang ở cuối **Phase 1 — Spring Boot Foundation & Web Infrastructure** (Module 1A COMPLETED, Module 1B PENDING).
 9. **Task nào là Task tiếp theo cần làm?**  
-   $\rightarrow$ **Task 2A.1 — Account / User / Role Persistence Mapping** (Tạo Entity, quan hệ N:N, và Repository cơ bản cho 4 bảng `ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE`).
+   $\rightarrow$ **Task 1B.1 — Base Response Models (ApiResponse<T>, PageResponse<T>, ErrorCode)** để chuẩn hóa cấu trúc phong bì API và hoàn tất 100% Phase 1.
 10. **Ràng buộc nào TUYỆT ĐỐI KHÔNG ĐƯỢC VI PHẠM?**  
     $\rightarrow$ Không dùng lại mã nguồn cũ; không để Hibernate tự sửa schema (`ddl-auto: none`); không trả Entity ra API; không đổi tên cột `review_time_seconds`; không giới hạn 5 notes/vocab; không tạo FK MySQL cho tham chiếu đa hình `item_type + item_id`.
 11. **Câu hỏi nào còn mở (Open Questions)?**  
