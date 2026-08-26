@@ -244,10 +244,11 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `Checkpoint Phase 2 [COMPLETED]`: `mvn clean test` PASS 81/81 tests (0 failures, 0 errors) với cấu hình `ddl-auto: validate`. Không có cảnh báo sai lệch kiểu dữ liệu, khóa chính hoặc khóa ngoại. Phase 2 chính thức hoàn tất 100%.
 
 * `Module 3A [IN_PROGRESS]`:
-  * `Task 3A.1 [COMPLETED]`: Cấu hình `SecurityConfig`: Spring Security 6 `SecurityFilterChain`, `BCryptPasswordEncoder`, cấu hình session `STATELESS`, vô hiệu hóa CSRF cho REST API. `SecurityConfigTests` PASS 10/10 tests (8.71s); `mvn clean test` PASS 91/91 tests (16.99s).
+  * `Task 3A.1 [COMPLETED]`: Cấu hình `SecurityConfig`: Spring Security 6 `SecurityFilterChain`, `BCryptPasswordEncoder`, cấu hình session `STATELESS`, vô hiệu hóa CSRF cho REST API. `SecurityConfigTests` PASS 10/10 tests (8.71s).
+  * `Task 3A.2 [COMPLETED]`: Thư viện JJWT 0.12.6, `JwtUtil` (sinh/đọc/validate token HMAC-SHA256, claims `sub`, `roles`, `iat`, `exp`), `JwtAuthenticationFilter` (OncePerRequestFilter, trích xuất `Authorization: Bearer <token>`, nạp `Authentication` vào `SecurityContextHolder` trước `UsernamePasswordAuthenticationFilter` mà không truy vấn DB). `JwtUtilTests` PASS 11/11 tests, `JwtAuthenticationFilterTests` PASS 7/7 tests, `SecurityConfigTests` PASS 12/12 tests; `mvn clean test` PASS 111/111 tests (17.33s).
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 3A`: `Task 3A.2` (`JwtUtil`, `JwtAuthenticationFilter`), `Task 3A.3` (`CustomUserDetailsService`, `CustomUserDetails`).
+* `Module 3A`: `Task 3A.3` (`CustomUserDetailsService`, `CustomUserDetails`) và `Checkpoint 3A`.
 * `Module 3B-3D [NOT_STARTED]`: Chưa có `AuthService`, `AuthController`, User Profile APIs hay MockMvc RBAC tests.
 * `Phase 4-8 [NOT_STARTED]`: Chưa có bất kỳ Service hay Controller nghiệp vụ nào.
 * `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
@@ -256,16 +257,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 3A.1`:
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 3A.2`:
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 3 — Authentication, Authorization & User Management`**
 * **Phân hệ hiện tại (Current Module):** **`Module 3A — Spring Security & JWT Infrastructure`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 3A.2 — Xây dựng JwtUtil và JwtAuthenticationFilter`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 3A.3 — Triển khai CustomUserDetailsService tải thông tin tài khoản`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn tất nền tảng Task 3A.1:* `SecurityConfig` và `BCryptPasswordEncoder` đã hoạt động chính xác, session ở chế độ `STATELESS`, CSRF đã cấu hình cho REST.
-  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Task 3A.1`), `Task 3A.2` là nhiệm vụ trực tiếp tiếp theo trong Module 3A để xây dựng tiện ích token JWT (`JwtUtil`) và bộ lọc xác thực request (`JwtAuthenticationFilter`).
-  3. *Không vi phạm ranh giới:* Chưa nhảy sang `UserDetailsService` (3A.3) hay `AuthService` (3B.2) khi chưa hoàn thiện tầng filter JWT.
-  4. *Nhiệm vụ tiếp sau đó:* `Task 3A.3 — Triển khai CustomUserDetailsService tải thông tin tài khoản`.
+  1. *Hoàn tất toàn diện Task 3A.2:* Tiện ích `JwtUtil` và bộ lọc `JwtAuthenticationFilter` đã hoạt động độc lập, chính xác với 111/111 tests PASS.
+  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Task 2A.2, Task 3A.2`), `Task 3A.3` là mắt xích cuối cùng của Module 3A để kết nối Spring Security Authentication với CSDL thông qua `AccountRepository`, nạp thực thể `Account` kèm các `Role` đã ánh xạ và chuyển đổi thành `UserDetails` / `GrantedAuthority`.
+  3. *Điều kiện tiên quyết nghiệm thu Checkpoint 3A:* Hoàn tất 3A.3 sẽ mở đường cho việc nghiệm thu `Checkpoint 3A` và chuyển sang `Module 3B` (Authentication & Registration APIs).
+  4. *Nhiệm vụ tiếp sau đó:* `Checkpoint 3A` $\rightarrow$ `Module 3B` (`Task 3B.1 — Auth DTOs`).
 
 ---
 
@@ -281,56 +282,51 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 3A.2
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 3A.3
 
 ### 1. What (Làm gì)
-Thêm thư viện JJWT (`jjwt-api`, `jjwt-impl`, `jjwt-jackson`), xây dựng component `JwtUtil` (sinh token, giải mã claims `sub`, `roles`, `exp`, `iat`, kiểm tra tính hợp lệ và thời hạn token) và bộ lọc `JwtAuthenticationFilter` kế thừa `OncePerRequestFilter` để chặn request, trích xuất header `Authorization: Bearer <token>` và tích hợp vào `SecurityFilterChain` trước `UsernamePasswordAuthenticationFilter`.
+Xây dựng `CustomUserDetailsService` hiện thực hóa interface `UserDetailsService` của Spring Security và đối tượng `CustomUserDetails` hiện thực `UserDetails`, nạp thông tin tài khoản từ `AccountRepository` dựa trên `emailOrPhone` (hoặc `username`), nạp các `Role` từ tập hợp `account.getRoles()` và ánh xạ chuẩn hóa sang danh sách `GrantedAuthority` (với prefix `ROLE_`).
 
 ### 2. Why (Tại sao cần)
-Để hiện thực hóa cơ chế Stateless Authentication qua JWT theo kiến trúc đã định nghĩa trong `ARCHITECTURE.md` (mục 2.5) và `DECISIONS.md` (DEC-13), làm nền tảng cho việc xác thực danh tính người dùng trong mọi API nghiệp vụ.
+Để cung cấp nguồn dữ liệu người dùng (User Details Provider) chuẩn mực cho Spring Security `DaoAuthenticationProvider`, phục vụ việc xác thực mật khẩu khi đăng nhập tại Task 3B.2 và phân quyền theo vai trò (RBAC) cho các endpoint nghiệp vụ.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Thêm dependency JJWT vào `backend/pom.xml`.
-* Cấu hình secret key và expiration time trong `application.yml` (`jwt.secret`, `jwt.expiration-ms`).
-* Xây dựng `com.elearning.security.JwtUtil` (hoặc `com.elearning.config.security.JwtUtil`).
-* Xây dựng `com.elearning.security.JwtAuthenticationFilter`.
-* Cập nhật `SecurityConfig` để đăng ký `JwtAuthenticationFilter` trước `UsernamePasswordAuthenticationFilter`.
-* Viết unit tests cho `JwtUtil` (sinh token hợp lệ, trích xuất claims, xử lý token hết hạn, token sai chữ ký, token dị dạng).
-* Viết integration tests cho `JwtAuthenticationFilter`.
+* Tạo lớp `CustomUserDetails` trong `com.elearning.security` implement `UserDetails` (wrap entity `Account`, cung cấp authorities `ROLE_<roleName>`).
+* Tạo lớp `CustomUserDetailsService` trong `com.elearning.security` implement `UserDetailsService`, inject `AccountRepository`.
+* Xử lý trường hợp tài khoản không tồn tại bằng `UsernameNotFoundException`.
+* Xử lý trạng thái tài khoản (`status = 1` là active/enabled, `status = 0` là disabled/locked).
+* Viết unit/integration tests cho `CustomUserDetailsService` (tài khoản tồn tại, nạp đủ 4 vai trò, tài khoản bị khóa/disabled, tài khoản không tồn tại ném `UsernameNotFoundException`).
+* Nghiệm thu `Checkpoint 3A`.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 3A.2)
-* Chưa tạo `CustomUserDetailsService` hay `CustomUserDetails` (thuộc Task 3A.3).
-* Chưa tạo `AuthService` hay `AuthController` (`/api/v1/auth/**`) (thuộc Task 3B.2).
-* Không tạo Refresh Token hay blacklist token database (stateless JWT theo spec).
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 3A.3)
+* Chưa tạo `AuthService` hay `AuthController` (thuộc Module 3B).
+* Chưa tạo DTOs `RegisterRequest`, `LoginRequest` (thuộc Task 3B.1).
+* Không thay đổi schema bảng `account` hay `role`.
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 3A.1` (SecurityConfig & SecurityFilterChain).
+* `depends_on`: `Task 2A.2` (`AccountRepository`), `Task 3A.2` (`JwtUtil`).
 
 ### 6. Files/Modules Likely Affected
-* `backend/pom.xml` (JJWT dependencies)
-* `backend/src/main/resources/application.yml` (JWT properties)
-* `backend/src/main/java/com/elearning/security/JwtUtil.java` [NEW]
-* `backend/src/main/java/com/elearning/security/JwtAuthenticationFilter.java` [NEW]
-* `backend/src/main/java/com/elearning/config/SecurityConfig.java` [MODIFY]
-* `backend/src/test/java/com/elearning/JwtUtilTests.java` [NEW]
-* `backend/src/test/java/com/elearning/JwtAuthenticationFilterTests.java` [NEW]
+* `backend/src/main/java/com/elearning/security/CustomUserDetails.java` [NEW]
+* `backend/src/main/java/com/elearning/security/CustomUserDetailsService.java` [NEW]
+* `backend/src/test/java/com/elearning/CustomUserDetailsServiceTests.java` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `JwtUtil` sinh token thành công và trích xuất đúng `username` (subject) cùng danh sách `roles`.
-* `JwtUtil` phát hiện chính xác token hết hạn (`ExpiredJwtException`), sai chữ ký (`SignatureException`), hoặc định dạng không hợp lệ (`MalformedJwtException`).
-* `JwtAuthenticationFilter` trích xuất chính xác token từ header `Bearer <token>` và nạp `Authentication` vào `SecurityContextHolder`.
-* Request không có header `Authorization` hoặc header không bắt đầu bằng `Bearer ` được chuyển tiếp bình thường tới các filter tiếp theo.
+* `CustomUserDetailsService.loadUserByUsername(emailOrPhone)` trả về đúng `UserDetails` với email/phone, password hash, và authorities `ROLE_<RoleName>`.
+* Khi tài khoản không tồn tại, ném `UsernameNotFoundException`.
+* `isEnabled()` phản ánh đúng trạng thái `account.getStatus() == 1`.
 * Toàn bộ test suite tiếp tục PASS 100%.
 
 ### 8. Verification Command
 * Lệnh chạy: `mvn -f backend/pom.xml clean test`
 
 ### 9. Completion Condition
-* `JwtUtil` và `JwtAuthenticationFilter` hoàn tất và các tests tương ứng PASS.
-* Cập nhật `Task 3A.2` thành `COMPLETED` trong `PROGRESS.md`.
+* `CustomUserDetailsService` và test tương ứng hoàn thành và pass.
+* Nghiệm thu `Checkpoint 3A`.
+* Cập nhật `Task 3A.3` thành `COMPLETED` trong `PROGRESS.md`.
 
 ### 10. Next Task
-* `Task 3A.3 — Triển khai CustomUserDetailsService tải thông tin tài khoản`.
+* `Module 3B: Authentication & Registration Vertical Slice` (`Task 3B.1 — Auth DTOs`).
 
 ---
 

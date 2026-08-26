@@ -11,14 +11,23 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import com.elearning.security.JwtAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 /**
  * Spring Security 6 Configuration for stateless REST API.
  * Configures stateless session management, disables CSRF for REST,
- * and sets authorization boundaries for public vs protected routes.
+ * registers JwtAuthenticationFilter, and sets authorization boundaries for public vs protected routes.
  */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -37,7 +46,9 @@ public class SecurityConfig {
                         .requestMatchers("/error").permitAll()
                         // All other endpoints require authentication
                         .anyRequest().authenticated()
-                );
+                )
+                // Register JWT authentication filter before UsernamePasswordAuthenticationFilter
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

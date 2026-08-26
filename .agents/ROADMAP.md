@@ -177,7 +177,7 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 
 #### Module 3A: Spring Security & JWT Infrastructure
 * **Task 3A.1: Cấu hình `SecurityConfig`: Spring Security 6 `SecurityFilterChain`, `BCryptPasswordEncoder`, cấu hình session `STATELESS`, vô hiệu hóa CSRF cho REST [COMPLETED]**
-* **Task 3A.2:** Xây dựng `JwtUtil` (sinh token, giải mã claims, kiểm tra hết hạn) và `JwtAuthenticationFilter` (chặn request, giải mã header `Bearer`, nạp SecurityContext).
+* **Task 3A.2: Xây dựng `JwtUtil` (sinh token, giải mã claims, kiểm tra hết hạn) và `JwtAuthenticationFilter` (chặn request, giải mã header `Bearer`, nạp SecurityContext) [COMPLETED]**
 * **Task 3A.3:** Triển khai `CustomUserDetailsService` và `CustomUserDetails` nạp người dùng từ `AccountRepository` và ánh xạ roles thành GrantedAuthorities.
 * **Checkpoint 3A:** Unit test cho `JwtUtil` (tạo token, trích xuất claim `email_or_phone`, phát hiện token hết hạn/sai chữ ký) và `CustomUserDetailsService`.
 

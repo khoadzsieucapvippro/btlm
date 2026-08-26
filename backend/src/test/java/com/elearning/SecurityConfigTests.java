@@ -44,6 +44,9 @@ class SecurityConfigTests {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private com.elearning.security.JwtUtil jwtUtil;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @TestConfiguration
@@ -195,6 +198,24 @@ class SecurityConfigTests {
         @DisplayName("GIVEN unauthenticated POST request to catalog endpoint WHEN executed THEN access is rejected as protected")
         void testCatalogNonGetRejectedWhenUnauthenticated() throws Exception {
             mockMvc.perform(post("/api/v1/radicals/test-post"))
+                    .andExpect(status().isForbidden());
+        }
+
+        @Test
+        @DisplayName("GIVEN valid JWT Bearer token WHEN accessing protected endpoint THEN access is granted")
+        void testProtectedEndpointAllowedWithValidJwt() throws Exception {
+            String token = jwtUtil.generateToken("authed-user@elearning.com", java.util.List.of("Learner"));
+
+            mockMvc.perform(get("/api/v1/protected/resource")
+                            .header("Authorization", "Bearer " + token))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        @DisplayName("GIVEN invalid JWT Bearer token WHEN accessing protected endpoint THEN access is rejected")
+        void testProtectedEndpointRejectedWithInvalidJwt() throws Exception {
+            mockMvc.perform(get("/api/v1/protected/resource")
+                            .header("Authorization", "Bearer invalid.jwt.token"))
                     .andExpect(status().isForbidden());
         }
     }
