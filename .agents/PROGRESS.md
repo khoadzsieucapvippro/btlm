@@ -19,14 +19,15 @@
 | **Phase 0** | **TASK-0.4** | Cài đặt và cấu hình MySQL Community Server 8.4 LTS cục bộ | **COMPLETED** | Không | Cài đặt `Oracle.MySQL` 8.4.9 qua winget; cấu hình `my.ini` utf8mb4; tiến trình daemon mysqld chạy cổng 3306; kết nối `mysql.exe` thành công; tạo database `elearning_db`. Không ảnh hưởng tới SQL Server. |
 | **Phase 0** | **TASK-0.5** | Khởi tạo Git repository, thiết lập file `.gitignore` tiêu chuẩn | **COMPLETED** | Không | `git init` thành công; `.gitignore` bảo vệ secrets, target/, ide files; initial commit sẵn sàng. |
 | **Phase 0** | **TASK-0.6** | Soạn thảo tài liệu Thiết kế CSDL Vật lý chi tiết cho 14 bảng MySQL | **COMPLETED** | Không | Tài liệu `.agents/DATABASE_DESIGN.md` hoàn thành với đủ 20 mục chi tiết, giải quyết dứt điểm OQ-04, OQ-05, OQ-06, OQ-07. |
-| **Phase 1** | **TASK-1.1** | Khởi tạo cấu trúc dự án Spring Boot 3 và file `backend/pom.xml` | **NOT_STARTED** | Phase 0 | Chờ bắt đầu Phase 1. |
-| **Phase 1** | **TASK-1.2** | Thiết lập class khởi động, `application.yml` trỏ MySQL, và chuẩn `ApiResponse` | **NOT_STARTED** | TASK-1.1 | Chờ bắt đầu Phase 1. |
-| **Phase 1** | **TASK-1.3** | Thiết lập `GlobalExceptionHandler` bắt toàn diện Validation & Security | **NOT_STARTED** | TASK-1.2 | Chờ bắt đầu Phase 1. |
-| **Phase 1** | **TASK-1.4** | Khởi tạo thư mục `backend/src/test` và kiểm thử Spring Context cơ bản | **NOT_STARTED** | TASK-1.3 | Chờ bắt đầu Phase 1. |
-| **Phase 2** | **TASK-2.1** | Soạn thảo các file Flyway migration mới cho 14 bảng MySQL (`V1`, `V2`, `V3`) | **NOT_STARTED** | Phase 1 | Chưa bắt đầu. |
+| **Phase 1** | **TASK-1.1** | Khởi tạo cấu trúc dự án Spring Boot 3 và file `backend/pom.xml` | **COMPLETED** | Phase 0 | `backend/pom.xml` sử dụng Java 21 LTS, Spring Boot 3.3.5, Maven 3.9.16; build thành công. |
+| **Phase 1** | **TASK-1.2** | Thiết lập class khởi động, `application.yml` trỏ MySQL và Flyway cấu hình | **COMPLETED** | TASK-1.1 | `ElearningApplication.java`, `application.yml` kết nối MySQL cổng 3306 qua HikariCP, `ddl-auto=none`. |
+| **Phase 1** | **TASK-1.3** | Soạn thảo và thực thi Flyway migration `V1__init_schema.sql` cho 14 bảng chuẩn | **COMPLETED** | TASK-1.2 | `V1__init_schema.sql` áp dụng thành công qua Flyway; 14 bảng nghiệp vụ tạo đầy đủ trong `elearning_db`. |
+| **Phase 1** | **TASK-1.4** | Kiểm thử tự động nạp Spring Context và xác minh schema CSDL | **COMPLETED** | TASK-1.3 | `ElearningApplicationTests` pass 100%, `flyway_schema_history` ghi nhận version 1 `SUCCESS`. |
+| **Phase 1** | **TASK-1.5** | Thiết lập chuẩn `ApiResponse`, `PageResponse` và `GlobalExceptionHandler` | **NOT_STARTED** | TASK-1.4 | Chờ triển khai ở bước kế tiếp. |
+| **Phase 2** | **TASK-2.1** | Soạn thảo các file Flyway seed data (`V2__seed_roles.sql`, `V3__seed_radicals.sql`) | **NOT_STARTED** | Phase 1 | Chưa bắt đầu. |
 | **Phase 2** | **TASK-2.2** | Thiết kế và triển khai lớp JPA Entities / ánh xạ dữ liệu theo mô hình miền | **NOT_STARTED** | TASK-2.1 | Chưa bắt đầu. |
 | **Phase 2** | **TASK-2.3** | Xây dựng các Spring Data JPA Repositories | **NOT_STARTED** | TASK-2.2 | Chưa bắt đầu. |
-| **Phase 2** | **TASK-2.4** | Thực thi migration Flyway trên MySQL và kiểm thử truy cập dữ liệu | **NOT_STARTED** | TASK-2.3 | Đã có MySQL runtime sẵn sàng. |
+| **Phase 2** | **TASK-2.4** | Kiểm thử tích hợp truy cập dữ liệu qua Spring Data JPA | **NOT_STARTED** | TASK-2.3 | Chưa bắt đầu. |
 | **Phase 3** | **TASK-3.1** | Thiết lập Spring Security Filter Chain, `JwtUtil` và Stateless Session | **NOT_STARTED** | Phase 1, 2 | Chưa bắt đầu. |
 | **Phase 3** | **TASK-3.2** | Xây dựng `AuthService`, DTOs và `AuthController` (`/api/v1/auth/**`) | **NOT_STARTED** | TASK-3.1 | Chưa bắt đầu. |
 | **Phase 3** | **TASK-3.3** | Viết Unit & MockMvc Test cho Authentication và phân quyền RBAC 4 vai trò | **NOT_STARTED** | TASK-3.2 | Chưa bắt đầu. |

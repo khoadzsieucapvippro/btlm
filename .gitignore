@@ -86,5 +86,7 @@ secrets.*
 # Database runtime & local dumps
 *.sql.gz
 *.dump
-data/
-db/
+/data/
+/db/
+!src/**/db/migration/**
+
