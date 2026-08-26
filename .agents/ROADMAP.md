@@ -129,14 +129,14 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
   - *depends_on:* `Task 2B.1`.
 * **Checkpoint 2B [VERIFIED]:** Chạy `@DataJpaTest` lưu từ vựng liên kết bộ thủ và truy vấn tìm kiếm theo `pinyin_raw`, phân trang `Pageable`; `DictionaryRepositoryTests` PASS 8/8 tests, `DictionaryPersistenceTests` PASS 5/5 tests.
 
-#### Module 2C: Lesson & Content Persistence Mapping [IN_PROGRESS]
+#### Module 2C: Lesson & Content Persistence Mapping [COMPLETED]
 * **Task 2C.1: JPA Entities Cụm Bài học (`LESSON`, `LESSON_VOCABULARY`) [COMPLETED]**
   - *Phạm vi:* Entity cho `Lesson` (quan hệ ManyToOne với `Account` tác giả), bảng liên kết `LessonVocabulary` (composite PK qua `@EmbeddedId` + `@MapsId`, trường thứ tự `order_index`, `@OrderBy("orderIndex ASC")`).
   - *depends_on (Entity Mapping):* `Task 2A.1` (Account Entity), `Task 2B.1` (Vocabulary Entity).
-* **Task 2C.2: Spring Data JPA Repositories Cụm Bài học**
-  - *Phạm vi:* `LessonRepository` (lọc theo tác giả `created_by`, lọc theo trạng thái `status`), `LessonVocabularyRepository`.
+* **Task 2C.2: Spring Data JPA Repositories Cụm Bài học [COMPLETED]**
+  - *Phạm vi:* `LessonRepository` (lọc theo tác giả `created_by`, lọc theo trạng thái `status`), `LessonVocabularyRepository` (lấy từ vựng theo bài học sắp xếp `order_index ASC`).
   - *depends_on (Repository Test):* `Task 2C.1`, `Task 2A.2` (AccountRepository), `Task 2B.2` (VocabularyRepository) để tạo test fixture.
-* **Checkpoint 2C:** Chạy `@DataJpaTest` tạo Lesson, thêm từ vựng kèm `order_index` và truy vấn danh sách sắp xếp đúng thứ tự.
+* **Checkpoint 2C [VERIFIED]:** Chạy `@DataJpaTest` tạo Lesson, thêm từ vựng kèm `order_index` và truy vấn danh sách sắp xếp đúng thứ tự; `LessonRepositoryTests` PASS 7/7 tests, `LessonPersistenceTests` PASS 5/5 tests.
 
 #### Module 2D: Learning Progress, Audit & Personalization Persistence Mapping
 * **Task 2D.1: JPA Entities Cụm Ghi chú & Kiểm toán (`USER_SRS_SETTING`, `PERSONAL_NOTE`, `MODERATION_LOG`)**
