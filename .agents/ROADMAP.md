@@ -120,9 +120,9 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
   - *depends_on:* `Task 2A.1`.
 * **Checkpoint 2A [VERIFIED]:** Chạy `@DataJpaTest` lưu và truy vấn thành công Account kèm UserProfile và Roles; `IdentityRepositoryTests` PASS 7/7 tests, `IdentityPersistenceTests` PASS 5/5 tests.
 
-#### Module 2B: Dictionary Catalog Persistence Mapping [PARALLEL với Mod 2A]
-* **Task 2B.1: JPA Entities Cụm Từ điển (`RADICAL`, `VOCABULARY`, `VOCAB_RADICAL`)**
-  - *Phạm vi:* Entity cho `Radical`, `Vocabulary` (lưu cả `pinyin` có dấu và `pinyin_raw` không dấu), ánh xạ liên kết N:N `VOCAB_RADICAL`.
+#### Module 2B: Dictionary Catalog Persistence Mapping [IN_PROGRESS] [PARALLEL với Mod 2A]
+* **Task 2B.1: JPA Entities Cụm Từ điển (`RADICAL`, `VOCABULARY`, `VOCAB_RADICAL`) [COMPLETED]**
+  - *Phạm vi:* Entity cho `Radical`, `Vocabulary` (lưu cả `pinyin` có dấu và `pinyin_raw` không dấu độc lập), ánh xạ liên kết N:N `VOCAB_RADICAL` qua `@ManyToMany` kèm `@JoinTable`.
   - *depends_on:* `Task 1A.4`.
 * **Task 2B.2: Spring Data JPA Repositories Cụm Từ điển**
   - *Phạm vi:* `RadicalRepository`, `VocabularyRepository` (tìm kiếm derived query theo chữ Hán `hanzi`, pinyin, pinyin thô, phân trang `Pageable`).
