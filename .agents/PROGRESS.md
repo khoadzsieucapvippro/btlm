@@ -24,10 +24,13 @@
 | **Phase 1** | **TASK-1.3** | Soạn thảo và thực thi Flyway migration `V1__init_schema.sql` cho 14 bảng chuẩn | **COMPLETED** | TASK-1.2 | `V1__init_schema.sql` áp dụng thành công qua Flyway; 14 bảng nghiệp vụ tạo đầy đủ trong `elearning_db`. |
 | **Phase 1** | **TASK-1.4** | Kiểm thử tự động nạp Spring Context và xác minh schema CSDL | **COMPLETED** | TASK-1.3 | `ElearningApplicationTests` pass 100%, `flyway_schema_history` ghi nhận version 1 `SUCCESS`. |
 | **Phase 1** | **TASK-1.5** | Thiết lập chuẩn `ApiResponse`, `PageResponse` và `GlobalExceptionHandler` | **NOT_STARTED** | TASK-1.4 | Chờ triển khai ở bước kế tiếp. |
-| **Phase 2** | **TASK-2.1** | Soạn thảo các file Flyway seed data (`V2__seed_roles.sql`, `V3__seed_radicals.sql`) | **NOT_STARTED** | Phase 1 | Chưa bắt đầu. |
-| **Phase 2** | **TASK-2.2** | Thiết kế và triển khai lớp JPA Entities / ánh xạ dữ liệu theo mô hình miền | **NOT_STARTED** | TASK-2.1 | Chưa bắt đầu. |
-| **Phase 2** | **TASK-2.3** | Xây dựng các Spring Data JPA Repositories | **NOT_STARTED** | TASK-2.2 | Chưa bắt đầu. |
-| **Phase 2** | **TASK-2.4** | Kiểm thử tích hợp truy cập dữ liệu qua Spring Data JPA | **NOT_STARTED** | TASK-2.3 | Chưa bắt đầu. |
+| **Phase 2** | **Task 2A.1** | JPA Mapping: Account, UserProfile, Role & AccountRole | **NOT_STARTED** | Phase 1 | Cụm bảng định danh: Entity, quan hệ N:N, composite key, Repositories, Unit test. |
+| **Phase 2** | **Task 2A.2** | JPA Mapping: Radical, Vocabulary & VocabRadical | **NOT_STARTED** | Task 2A.1 | Cụm bảng từ điển: Entity, quan hệ N:N, composite key, Repositories, Unit test. |
+| **Phase 2** | **Task 2A.3** | JPA Mapping: Lesson & LessonVocabulary | **NOT_STARTED** | Task 2A.2 | Cụm bảng bài học: Entity, quan hệ N:N kèm `order_index`, Repositories, Unit test. |
+| **Phase 2** | **Task 2A.4** | JPA Mapping: SRS Setting, CardProgress, ReviewLog, Notes & ModerationLog | **NOT_STARTED** | Task 2A.3 | Cụm bảng SRS & kiểm toán: Xử lý tham chiếu đa hình (`item_type` + `item_id`), Repositories, Unit test. |
+| **Phase 2** | **Task 2B.1** | Flyway Seed Data V2: 4 Vai trò hệ thống (`V2__seed_roles.sql`) | **NOT_STARTED** | Task 2A.1 | Seed 4 vai trò cố định: `Learner`, `Creator`, `Moderator`, `Admin`. |
+| **Phase 2** | **Task 2B.2** | Flyway Seed Data V3: 214 Bộ thủ Khang Hy (`V3__seed_radicals.sql`) | **NOT_STARTED** | Task 2A.2 | Seed 214 bộ thủ Khang Hy chuẩn từ dataset `.agents/references/radicals.json`. |
+| **Phase 2** | **Task 2C.1** | Kiểm thử tích hợp toàn diện tầng Persistence (Schema validation & JPA Tests) | **NOT_STARTED** | Task 2A.4, 2B.2 | Hibernate schema validation khớp 100% với 14 bảng CSDL; Integration test truy xuất dữ liệu seed. |
 | **Phase 3** | **TASK-3.1** | Thiết lập Spring Security Filter Chain, `JwtUtil` và Stateless Session | **NOT_STARTED** | Phase 1, 2 | Chưa bắt đầu. |
 | **Phase 3** | **TASK-3.2** | Xây dựng `AuthService`, DTOs và `AuthController` (`/api/v1/auth/**`) | **NOT_STARTED** | TASK-3.1 | Chưa bắt đầu. |
 | **Phase 3** | **TASK-3.3** | Viết Unit & MockMvc Test cho Authentication và phân quyền RBAC 4 vai trò | **NOT_STARTED** | TASK-3.2 | Chưa bắt đầu. |
