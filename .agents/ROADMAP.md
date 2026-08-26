@@ -129,9 +129,9 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
   - *depends_on:* `Task 2B.1`.
 * **Checkpoint 2B [VERIFIED]:** Chạy `@DataJpaTest` lưu từ vựng liên kết bộ thủ và truy vấn tìm kiếm theo `pinyin_raw`, phân trang `Pageable`; `DictionaryRepositoryTests` PASS 8/8 tests, `DictionaryPersistenceTests` PASS 5/5 tests.
 
-#### Module 2C: Lesson & Content Persistence Mapping
-* **Task 2C.1: JPA Entities Cụm Bài học (`LESSON`, `LESSON_VOCABULARY`)**
-  - *Phạm vi:* Entity cho `Lesson` (quan hệ ManyToOne với `Account` tác giả), bảng liên kết `LessonVocabulary` có trường thứ tự `order_index`.
+#### Module 2C: Lesson & Content Persistence Mapping [IN_PROGRESS]
+* **Task 2C.1: JPA Entities Cụm Bài học (`LESSON`, `LESSON_VOCABULARY`) [COMPLETED]**
+  - *Phạm vi:* Entity cho `Lesson` (quan hệ ManyToOne với `Account` tác giả), bảng liên kết `LessonVocabulary` (composite PK qua `@EmbeddedId` + `@MapsId`, trường thứ tự `order_index`, `@OrderBy("orderIndex ASC")`).
   - *depends_on (Entity Mapping):* `Task 2A.1` (Account Entity), `Task 2B.1` (Vocabulary Entity).
 * **Task 2C.2: Spring Data JPA Repositories Cụm Bài học**
   - *Phạm vi:* `LessonRepository` (lọc theo tác giả `created_by`, lọc theo trạng thái `status`), `LessonVocabularyRepository`.
