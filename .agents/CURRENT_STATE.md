@@ -186,9 +186,14 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `backend/src/main/java/com/elearning/ElearningApplication.java`: Class khởi động chuẩn của ứng dụng.
   * `backend/src/test/java/com/elearning/ElearningApplicationTests.java`: Test khởi động context, kích hoạt migration tự động thành công (1 test, 0 failure).
   * `.gitignore`: Đã hiệu chỉnh loại trừ đúng `target/`, các file IDE, secrets, và đưa thư mục `db/migration` vào Git an toàn.
+* `Module 1B [IN_PROGRESS: Task 1B.1 COMPLETED, Task 1B.2 NOT_STARTED]`:
+  * `backend/src/main/java/com/elearning/dto/response/ApiResponse.java`: Phong bì JSON chuẩn theo `API.md` Mục 1.2 (`code`, `message`, `errors`, `data`), 4 factory methods (`success(T)`, `success(msg, T)`, `error(code, msg)`, `error(code, msg, errors)`).
+  * `backend/src/main/java/com/elearning/dto/response/PageResponse.java`: Mô hình phân trang chuẩn theo `API.md` Mục 1.3 (`page`, `size`, `totalElements`, `totalPages`, `items`), factory method chuyển đổi từ Spring Data `Page<T>`.
+  * `backend/src/main/java/com/elearning/common/ErrorCode.java`: Enum 12 mã lỗi chuẩn theo `API.md` Mục 1.4 (`code`, `defaultMessage`, `httpStatus`).
+  * `backend/src/test/java/com/elearning/ApiResponseTests.java`: 12 unit tests kiểm chứng serialization Jackson, mapping Spring Data Page, và ErrorCode mapping PASS 12/12 tests.
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 1B [NOT_STARTED]`: Chưa tạo `ApiResponse<T>`, `PageResponse<T>`, `ErrorCode`, hay `GlobalExceptionHandler`.
+* `Module 1B [IN_PROGRESS]`: Chưa tạo `GlobalExceptionHandler` (`@RestControllerAdvice`) tại `Task 1B.2`.
 * `Phase 2 [NOT_STARTED]`: Chưa viết bất kỳ JPA Entity class nào (`backend/src/main/java/com/elearning/entity` chưa tồn tại).
 * `Phase 2 [NOT_STARTED]`: Chưa viết bất kỳ Spring Data JPA Repository interface nào.
 * `Phase 2 [NOT_STARTED]`: Chưa có file seed data `V2__seed_roles.sql` hay `V3__seed_radicals.sql`.
@@ -199,16 +204,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả nghiên cứu external best practices (Anthropic, GitHub Copilot, Martin Fowler) và phân tích dependency thực tế:
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 1B.1`:
 * **Giai đoạn hiện tại (Current Phase):** **`Phase 1 — Spring Boot Foundation & Web Infrastructure`**
 * **Phân hệ hiện tại (Current Module):** **`Module 1B — Web API Response Envelope & Global Error Handling`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 1B.1 — Base Response Models (ApiResponse<T>, PageResponse<T>, ErrorCode)`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 1B.2 — Global Exception Handler (GlobalExceptionHandler)`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Đóng gói dứt điểm Phase 1:* Tuân thủ nguyên tắc hoàn thiện từng lát cắt khép kín trước khi chuyển giai đoạn, không để Phase 1 dở dang.
-  2. *Hạ tầng chuẩn cho toàn bộ REST Controller:* Toàn bộ các DTO và Controller từ Phase 3 trở đi đều cần gói dữ liệu vào `ApiResponse<T>` và `PageResponse<T>`. Xây dựng sớm giúp kiểm chứng chuẩn serialization JSON Jackson.
-  3. *Ngữ cảnh tinh gọn, rủi ro phụ thuộc thấp:* Task chỉ gồm 3 class DTO thuần túy và 1 unit test serialization. Không phụ thuộc database MySQL, có thể hoàn thành và nghiệm thu dứt điểm trong 1 phiên làm việc ngắn.
-  4. *Nhiệm vụ tiếp sau đó:* `Task 1B.2` (GlobalExceptionHandler) $\rightarrow$ Khép lại Phase 1 $\rightarrow$ Bắt đầu `Task 2A.1` (JPA Entity Mapping).
+  1. *Khép lại dứt điểm Phase 1:* `Task 1B.1` đã cung cấp `ApiResponse<T>` và `ErrorCode`. `Task 1B.2` là mảnh ghép còn lại để hoàn thành trọn vẹn `Module 1B` và nghiệm thu Phase 1.
+  2. *Hạ tầng bắt lỗi tập trung:* Xử lý ngoại lệ toàn cục (`@RestControllerAdvice`) cho phép mọi Controller sau này tự động trả về `ApiResponse` khi xảy ra lỗi validation hoặc lỗi nghiệp vụ.
+  3. *Ngữ cảnh rõ ràng, độc lập:* Chỉ bao gồm class xử lý ngoại lệ và MockMvc slice test tương ứng, không làm xáo trộn các tầng khác.
+  4. *Nhiệm vụ tiếp sau đó:* Hoàn thành `1B.2` $\rightarrow$ Phase 1 `COMPLETED` $\rightarrow$ Bắt đầu `Phase 2` với `Task 2A.1` (JPA Entity Mapping Cụm Định danh).
 
 ---
 
@@ -224,59 +229,51 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 1B.1
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 1B.2
 
 ### 1. What (Làm gì)
-Xây dựng các lớp dữ liệu phong bì phản hồi API chuẩn (Standard Response Envelopes) và bảng mã lỗi hệ thống theo đúng quy chuẩn tại Mục 1.2, 1.3 và 1.4 của `.agents/API.md`.
+Xây dựng lớp xử lý ngoại lệ toàn cục `GlobalExceptionHandler` (`@RestControllerAdvice`) để bắt và chuẩn hóa các ngoại lệ phát sinh trong ứng dụng thành đối tượng `ApiResponse<Void>` thống nhất.
 
 ### 2. Why (Tại sao cần)
-Để đảm bảo tính nhất quán của cấu trúc JSON trả về client trên toàn bộ hệ thống theo đặc tả API.md, tránh việc mỗi Controller tự định nghĩa cấu trúc trả về riêng lẻ, và làm nền tảng cho `GlobalExceptionHandler` ở Task 1B.2.
+Để client luôn nhận được phản hồi lỗi JSON đồng nhất theo đúng cấu trúc tại Mục 1.2 của `.agents/API.md` thay vì phản hồi lỗi mặc định (Whitelabel Error Page) của Spring Boot.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo class `com.elearning.dto.response.ApiResponse<T>`:
-  * Các trường: `code` (String), `message` (String), `errors` (List<String>), `data` (T).
-  * Các static factory methods: `success(T data)`, `success(String message, T data)`, `error(String code, String message)`, `error(String code, String message, List<String> errors)`.
-* Tạo class `com.elearning.dto.response.PageResponse<T>`:
-  * Các trường: `page` (int), `size` (int), `totalElements` (long), `totalPages` (int), `items` (List<T>).
-  * Factory method chuyển đổi từ `org.springframework.data.domain.Page<T>`.
-* Tạo enum `com.elearning.common.ErrorCode`:
-  * Định nghĩa các mã lỗi chuẩn: `SUCCESS`, `CREATED`, `VALIDATION_ERROR`, `BAD_REQUEST`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `UNPROCESSABLE_ENTITY`, `INTERNAL_ERROR`.
-  * Mỗi enum item chứa: `code` (String), `defaultMessage` (String), `httpStatus` (HttpStatus).
-* Viết Unit test `ApiResponseTests.java`:
-  * Kiểm tra serialization/deserialization JSON qua Jackson `ObjectMapper`.
-  * Kiểm tra factory methods sinh đúng cấu trúc JSON mong đợi.
+* Tạo class `com.elearning.exception.GlobalExceptionHandler` với annotation `@RestControllerAdvice`:
+  * Xử lý `MethodArgumentNotValidException` (HTTP 400): Trích xuất chi tiết lỗi validation từng trường vào danh sách `errors[]`.
+  * Xử lý `BusinessException` (HTTP tương ứng): Xử lý ngoại lệ nghiệp vụ tùy biến dựa trên `ErrorCode`.
+  * Xử lý `AccessDeniedException` (HTTP 403): Chuẩn hóa lỗi từ chối truy cập.
+  * Xử lý `Exception` fallback (HTTP 500): Bắt lỗi không mong muốn, trả về `ErrorCode.INTERNAL_ERROR`.
+* Tạo custom exception `com.elearning.exception.BusinessException`:
+  * Kế thừa `RuntimeException`, chứa trường `ErrorCode`.
+* Viết test `GlobalExceptionHandlerTests.java` kiểm chứng hành vi bắt ngoại lệ.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 1B.1)
-* Không viết `GlobalExceptionHandler` (đây là phạm vi của Task 1B.2).
-* Không viết bất kỳ Controller, Service, hay JPA Entity nào.
-* Không sửa database MySQL hay Flyway migrations.
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 1B.2)
+* Không viết Controller, Service hay Repository nghiệp vụ của Phase 3-8.
+* Không viết JPA Entity hay sửa đổi CSDL MySQL.
+* Không cấu hình Spring Security FilterChain (thuộc Phase 3).
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 1A.4` (Spring Boot context build thành công — ĐÃ HOÀN THÀNH).
-* Không phụ thuộc database MySQL, không phụ thuộc JPA.
+* `depends_on`: `Task 1B.1` (ĐÃ HOÀN THÀNH — cung cấp `ApiResponse<T>` và `ErrorCode`).
 
-### 6. Files/Modules Likely Affected (Các file dự kiến tạo mới)
-* `backend/src/main/java/com/elearning/dto/response/ApiResponse.java` [NEW]
-* `backend/src/main/java/com/elearning/dto/response/PageResponse.java` [NEW]
-* `backend/src/main/java/com/elearning/common/ErrorCode.java` [NEW]
-* `backend/src/test/java/com/elearning/dto/response/ApiResponseTests.java` [NEW]
+### 6. Files/Modules Likely Affected
+* `backend/src/main/java/com/elearning/exception/GlobalExceptionHandler.java` [NEW]
+* `backend/src/main/java/com/elearning/exception/BusinessException.java` [NEW]
+* `backend/src/test/java/com/elearning/GlobalExceptionHandlerTests.java` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `Given` một đối tượng `ApiResponse.success("Success", data)`, `When` serialize sang JSON bằng Jackson, `Then` chuỗi JSON có đúng 4 keys: `code: "SUCCESS"`, `message: "Success"`, `errors: []`, `data: { ... }`.
-* `Given` một đối tượng `PageResponse`, `When` serialize sang JSON, `Then` có đủ 5 trường phân trang chuẩn (`page`, `size`, `totalElements`, `totalPages`, `items`).
-* Toàn bộ các mã lỗi trong `API.md` (Mục 1.4) được định nghĩa đầy đủ trong `ErrorCode`.
+* `Given` một request kích hoạt lỗi validation, `When` ngoại lệ ném ra, `Then` trả về HTTP 400 kèm `ApiResponse` có `code: "VALIDATION_ERROR"` và mảng `errors[]` chứa thông điệp lỗi.
+* `Given` một `BusinessException(ErrorCode.NOT_FOUND)`, `When` ném ra, `Then` trả về HTTP 404 kèm `code: "NOT_FOUND"`.
 
-### 8. Verification Command (Lệnh kiểm chứng)
-* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=ApiResponseTests`
-* Kết quả mong đợi: `BUILD SUCCESS`, `Tests run: 1 (hoặc nhiều hơn), Failures: 0, Errors: 0`.
+### 8. Verification Command
+* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=GlobalExceptionHandlerTests`
+* Kiểm thử hồi quy: `mvn -f backend/pom.xml clean test`
 
-### 9. Completion Condition (Điều kiện hoàn thành)
-* Toàn bộ 4 file được tạo đúng package, không có warning/lint error.
-* `mvn test` chạy thành công 100%.
-* Cập nhật `Task 1B.1` thành `COMPLETED` trong `PROGRESS.md` kèm bằng chứng test pass.
+### 9. Completion Condition
+* Toàn bộ test pass, HTTP status code và JSON envelope chuẩn xác.
+* Cập nhật `Task 1B.2` thành `COMPLETED` trong `PROGRESS.md` và nghiệm thu hoàn tất Phase 1.
 
-### 10. Next Task (Nhiệm vụ tiếp theo sau đó)
-* `Task 1B.2 — Global Exception Handler (@RestControllerAdvice)` để hoàn tất trọn vẹn Phase 1.
+### 10. Next Task
+* `Task 2A.1 — JPA Entity Mapping: ACCOUNT, USER_PROFILE, ROLE, ACCOUNT_ROLE`.
 
 ---
 
