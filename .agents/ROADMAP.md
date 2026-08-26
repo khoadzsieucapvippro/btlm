@@ -142,10 +142,10 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 * **Task 2D.1: JPA Entities Cụm Ghi chú & Kiểm toán (`USER_SRS_SETTING`, `PERSONAL_NOTE`, `MODERATION_LOG`) [COMPLETED]**
   - *Phạm vi:* Entity cho `UserSrsSetting` (1:1 với UserProfile), `PersonalNote` (ràng buộc độ dài $\le 500$ ký tự, không giới hạn 5 notes), `ModerationLog` (bất biến, quan hệ RESTRICT với Lesson và Account).
   - *depends_on:* `Task 2A.1` (UserProfile), `Task 2B.1` (Vocabulary), `Task 2C.1` (Lesson).
-* **Task 2D.2: JPA Entities Cụm SRS với Tham chiếu Đa hình (`CARD_PROGRESS`, `REVIEW_LOG`)**
+* **Task 2D.2: JPA Entities Cụm SRS với Tham chiếu Đa hình (`CARD_PROGRESS`, `REVIEW_LOG`) [COMPLETED]**
   - *Phạm vi:* Ánh xạ cặp trường `item_type` (`VARCHAR(20)`) và `item_id` (`BIGINT UNSIGNED`). **Tuyệt đối không tạo FK vật lý ở MySQL** theo đúng Phương án A đã duyệt.
-  - *Lưu ý kỹ thuật:* Ràng buộc kiểm tra sự tồn tại của từ vựng hoặc bộ thủ là **Service/Business dependency**, không phải physical FK dependency. Do đó Entity mapping chỉ phụ thuộc vào `Account`.
-  - *depends_on:* `Task 2A.1` (Account).
+  - *Lưu ý kỹ thuật:* Ràng buộc kiểm tra sự tồn tại của từ vựng hoặc bộ thủ là **Service/Business dependency**, không phải physical FK dependency. Do đó Entity mapping chỉ phụ thuộc vào `UserProfile`.
+  - *depends_on:* `Task 2A.1` (UserProfile).
 * **Task 2D.3: Spring Data JPA Repositories Cụm SRS, Ghi chú & Kiểm toán**
   - *Phạm vi:* `CardProgressRepository` (tìm thẻ đến hạn `next_review_at <= NOW()`), `ReviewLogRepository`, `PersonalNoteRepository`, `ModerationLogRepository`, `UserSrsSettingRepository`.
   - *depends_on:* `Task 2D.1`, `Task 2D.2`.
