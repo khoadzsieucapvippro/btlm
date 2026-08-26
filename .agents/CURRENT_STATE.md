@@ -239,8 +239,11 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
   * `backend/src/main/resources/db/migration/V3__seed_radicals.sql`: Flyway migration nạp 214 bộ thủ Khang Hy chuẩn từ dataset authoritative `.agents/references/radicals.json`. Checksum `-1949280069`, `success=1`.
   * `Checkpoint 2E [COMPLETED]`: `role_count = 4`, `radical_count = 214`.
 
+* `Module 2F [COMPLETED]`:
+  * `Task 2F.1 [COMPLETED]`: Tổng kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation. Toàn bộ 14 bảng quan hệ khớp chính xác với Hibernate `ddl-auto: validate`. 12 Spring Data JPA Repositories pass.
+  * `Checkpoint Phase 2 [COMPLETED]`: `mvn clean test` PASS 81/81 tests (0 failures, 0 errors) với cấu hình `ddl-auto: validate`. Không có cảnh báo sai lệch kiểu dữ liệu, khóa chính hoặc khóa ngoại. Phase 2 chính thức hoàn tất 100%.
+
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 2F [NOT_STARTED]`: Chưa chạy kiểm thử tích hợp toàn diện tầng Persistence với Hibernate `ddl-auto: validate` chốt hạ Phase 2 (Task 2F.1).
 * `Phase 3-8 [NOT_STARTED]`: Chưa có bất kỳ Service, Controller hay Security/JWT configuration nào.
 * `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
 
@@ -248,16 +251,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 2E.2` cùng `Checkpoint 2E`:
-* **Giai đoạn hiện tại (Current Phase):** **`Phase 2 — Persistence Layer & Database Seed Data`**
-* **Phân hệ hiện tại (Current Module):** **`Module 2F — Persistence Layer Verification & Schema Validation`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 2F.1 — Kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation`**
+Dựa trên kết quả triển khai và nghiệm thu toàn diện `Phase 2` (Mod 2A $\rightarrow$ 2F) cùng `Checkpoint Phase 2`:
+* **Giai đoạn hiện tại (Current Phase):** **`Phase 3 — Authentication, Authorization & User Management`**
+* **Phân hệ hiện tại (Current Module):** **`Module 3A — Spring Security & JWT Infrastructure`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 3A.1 — Cấu hình Spring Security 6 FilterChain, BCrypt & Stateless Session`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn tất toàn bộ Module 2E và Checkpoint 2E:* Cả 2 tasks của Module 2E (2E.1, 2E.2) đã hoàn thành xuất sắc, nghiệm thu Checkpoint 2E với `role_count = 4`, `radical_count = 214`, đối chiếu 100% field-by-field và 81/81 tests PASS.
-  2. *Tuân thủ lộ trình ROADMAP.md:* Module 2F là phân hệ cuối cùng của Phase 2, với nhiệm vụ duy nhất `Task 2F.1` để chốt hạ toàn bộ tầng Persistence và xác minh schema validation của 14 bảng quan hệ.
-  3. *Điều kiện tiên quyết chuyển sang Phase 3:* Vượt qua `Task 2F.1` và `Checkpoint Phase 2` sẽ kết thúc trọn vẹn Phase 2, mở đường cho Phase 3 (Authentication, Authorization & Spring Security 6).
-  4. *Nhiệm vụ tiếp sau đó:* `Phase 3 — Authentication, Authorization & User Management` (`Module 3A` / `Task 3A.1`).
+  1. *Hoàn tất toàn bộ Phase 2:* Tất cả 6 phân hệ (2A, 2B, 2C, 2D, 2E, 2F) và tất cả Checkpoints (2A, 2B, 2C, 2D, 2E, Phase 2) đã hoàn thành xuất sắc với 81/81 tests PASS và 0% schema drift trên MySQL 8.4.
+  2. *Tuân thủ lộ trình ROADMAP.md:* Phase 3 là giai đoạn tiếp theo của dự án. Theo đồ thị phụ thuộc (`depends_on: Task 1A.1, Task 1B.2`), `Task 3A.1` là nền tảng hạ tầng bảo mật bắt buộc phải có đầu tiên trước khi triển khai `JwtUtil` (`Task 3A.2`), `CustomUserDetailsService` (`Task 3A.3`) và các API Authentication (`Module 3B`).
+  3. *Không vi phạm ranh giới:* Thực hiện đúng thứ tự từ Security Infrastructure $\rightarrow$ Authentication Flow $\rightarrow$ User Management $\rightarrow$ RBAC Integration Tests.
+  4. *Nhiệm vụ tiếp sau đó:* `Task 3A.2 — Xây dựng JwtUtil và JwtAuthenticationFilter`.
 
 ---
 
@@ -273,44 +276,50 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 2F.1
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 3A.1
 
 ### 1. What (Làm gì)
-Thực hiện kiểm thử tích hợp toàn diện tầng Persistence và Schema Validation cho toàn bộ 14 bảng quan hệ của hệ thống với cấu hình Hibernate `spring.jpa.hibernate.ddl-auto: validate`.
+Xây dựng lớp cấu hình bảo mật `SecurityConfig` bằng Spring Security 6 component-based (`@Bean SecurityFilterChain`), cấu hình mã hóa mật khẩu `BCryptPasswordEncoder`, cấu hình session không trạng thái `SessionCreationPolicy.STATELESS`, vô hiệu hóa CSRF cho REST API, và phân quyền cơ bản cho các URL patterns công khai (`/api/v1/auth/**`, v.v.).
 
 ### 2. Why (Tại sao cần)
-Để chốt hạ toàn bộ Phase 2, chứng minh 100% rằng toàn bộ JPA entities và quan hệ (1:1, 1:N, N:N, đa hình) hoàn toàn tương thích và khớp chính xác với physical schema MySQL do Flyway quản lý (V1 + V2 + V3), không có bất kỳ schema drift nào.
+Để thiết lập kiến trúc bảo mật cốt lõi không trạng thái (Stateless Security) dựa trên token JWT cho toàn bộ ứng dụng web API, bảo vệ các endpoint nghiệp vụ khỏi truy cập trái phép và chuẩn bị cho bộ lọc JWT ở Task 3A.2.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Kiểm tra cấu hình `spring.jpa.hibernate.ddl-auto: validate` trên toàn bộ persistence unit.
-* Chạy toàn bộ test suite `@DataJpaTest` của tất cả các module: 2A (Identity), 2B (Dictionary), 2C (Lesson), 2D (SRS & Moderation).
-* Xác minh không có cảnh báo hay lỗi schema validation nào từ Hibernate 6.
-* Nghiệm thu `Checkpoint Phase 2`.
+* Tạo lớp `SecurityConfig` trong package `com.elearning.config.security` (hoặc `com.elearning.config`).
+* Cung cấp Bean `SecurityFilterChain` với `csrf(AbstractHttpConfigurer::disable)`.
+* Cấu hình session management: `sessionCreationPolicy(SessionCreationPolicy.STATELESS)`.
+* Cung cấp Bean `PasswordEncoder` sử dụng `BCryptPasswordEncoder`.
+* Cấu hình `authorizeHttpRequests`: cho phép truy cập tự do tới `/api/v1/auth/**`, còn lại yêu cầu authenticated (sẽ tinh chỉnh theo RBAC ở các task sau).
+* Viết unit/integration test xác minh Spring Security FilterChain khởi tạo đúng cấu hình và BCrypt hoạt động chính xác.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 2F.1)
-* Không tạo entity mới hoặc thay đổi migration SQL.
-* Không viết Service, Controller, Spring Security hay JWT (thuộc Phase 3).
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 3A.1)
+* Chưa tạo `JwtUtil` hay `JwtAuthenticationFilter` (thuộc Task 3A.2).
+* Chưa tạo `CustomUserDetailsService` (thuộc Task 3A.3).
+* Chưa viết Auth Controller / Service (thuộc Task 3B.2).
+* Không sửa đổi schema database hay Flyway migrations.
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Module 2A`, `Module 2B`, `Module 2C`, `Module 2D`, `Module 2E`.
+* `depends_on`: `Task 1A.1` (Spring Boot project structure), `Task 1B.2` (GlobalExceptionHandler).
 
 ### 6. Files/Modules Likely Affected
-* Toàn bộ test suite trong `backend/src/test/java/com/elearning/`.
+* `backend/src/main/java/com/elearning/config/SecurityConfig.java` [NEW]
+* `backend/src/test/java/com/elearning/SecurityConfigTests.java` [NEW]
 
 ### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `mvn clean test` PASS 100% với `ddl-auto: validate`.
-* Không có bất kỳ cảnh báo sai khác kiểu dữ liệu, khóa chính hoặc khóa ngoại.
-* Nghiệm thu thành công `Checkpoint Phase 2`.
+* `SecurityConfig` khởi tạo thành công trong ApplicationContext.
+* `BCryptPasswordEncoder` mã hóa và xác thực mật khẩu chính xác.
+* Request tới endpoint công khai không bị chặn bởi form login hay basic auth mặc định của Spring Security.
+* Toàn bộ test suite tiếp tục PASS 100%.
 
 ### 8. Verification Command
 * Lệnh chạy: `mvn -f backend/pom.xml clean test`
 
 ### 9. Completion Condition
-* Toàn bộ test suite PASS.
-* Cập nhật `Task 2F.1` và `Checkpoint Phase 2` thành `COMPLETED` trong `PROGRESS.md` và `ROADMAP.md`.
+* `SecurityConfig` và test tương ứng được triển khai hoàn tất và pass.
+* Cập nhật `Task 3A.1` thành `COMPLETED` trong `PROGRESS.md`.
 
 ### 10. Next Task
-* `Phase 3 — Authentication, Authorization & User Management` (`Task 3A.1 — Cấu hình Spring Security 6 FilterChain, BCrypt & Stateless Session`).
+* `Task 3A.2 — Xây dựng JwtUtil và JwtAuthenticationFilter`.
 
 ---
 

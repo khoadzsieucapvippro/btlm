@@ -161,10 +161,10 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 * **Checkpoint 2E: [COMPLETED]** Flyway migration V2 và V3 chạy thành công. Kiểm tra `SELECT COUNT(*) FROM role` trả về 4; `SELECT COUNT(*) FROM radical` trả về 214.
 
 #### Module 2F: Persistence Layer Verification & Schema Validation
-* **Task 2F.1: Kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation**
+* **Task 2F.1: Kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation [COMPLETED]**
   - *Phạm vi:* Bật cấu hình Hibernate `spring.jpa.hibernate.ddl-auto: validate`, chạy toàn bộ test suite để đảm bảo các Entity mappings khớp chính xác với schema MySQL do Flyway quản lý.
   - *depends_on:* `Module 2A`, `Module 2B`, `Module 2C`, `Module 2D`, `Module 2E`.
-* **Checkpoint Phase 2:** `mvn clean test` PASS với `ddl-auto: validate`. Không có cảnh báo sai khác kiểu dữ liệu, khóa chính hoặc khóa ngoại.
+* **Checkpoint Phase 2: [COMPLETED]** `mvn clean test` PASS với `ddl-auto: validate`. Không có cảnh báo sai khác kiểu dữ liệu, khóa chính hoặc khóa ngoại. Toàn bộ 81/81 tests PASS.
 
 ---
 
