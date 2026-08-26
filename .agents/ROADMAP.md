@@ -182,7 +182,7 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 * **Checkpoint 3A: Unit test cho `JwtUtil` (tạo token, trích xuất claim `email_or_phone`, phát hiện token hết hạn/sai chữ ký) và `CustomUserDetailsService` [COMPLETED]**
 
 #### Module 3B: Authentication & Registration Vertical Slice
-* **Task 3B.1:** Request/Response DTOs: `RegisterRequest`, `LoginRequest`, `AuthResponse` với Jakarta Validation (`@NotBlank`, `@Size`, v.v.).
+* **Task 3B.1: Request/Response DTOs: `RegisterRequest`, `LoginRequest`, `AuthResponse` với Jakarta Validation (`@NotBlank`, `@Size`, v.v.) [COMPLETED]**
 * **Task 3B.2:** `AuthService` và `AuthController` (`POST /api/v1/auth/register` gán mặc định role `Learner`, `POST /api/v1/auth/login` kiểm tra mật khẩu qua BCrypt, trả về JWT gói trong `ApiResponse`).
 * **Checkpoint 3B:** MockMvc test: Đăng ký thành công trả về 201; Đăng nhập đúng trả về 200 kèm JWT; Đăng nhập sai mật khẩu trả về 401; Input thiếu trường trả về 400 kèm lỗi validation.
 
