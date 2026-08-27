@@ -5,7 +5,7 @@
 > **Vị trí file:** `.agents/CURRENT_STATE.md`  
 > **Cam kết tính xác thực:** Mô tả **HIỆN TRẠNG THỰC TẾ (REAL ACTUAL STATE)** của mã nguồn, CSDL và cấu hình trong repository; KHÔNG phản ánh hiện trạng mong muốn (intended state) hay báo cáo lạc quan.  
 > **Phiên bản cập nhật:** Sau khi hoàn thành Task 4A.1 (Phase 4 — Module 4A). Hiện đang ở Task 4A.2.  
-> **Commit hash hiện tại:** `e8789f0`  
+> **Commit hash hiện tại:** `ef17a4d`  
 > **Bằng chứng kiểm thử gần nhất:** **`201/201 tests PASS, Failures: 0, Errors: 0, Build SUCCESS`** (thời gian: 43.69s).  
 
 ---
@@ -340,7 +340,8 @@ Công bố giao diện REST API chính thức cho học viên tra cứu danh m�
    * Khóa ngoại `moderation_log.lesson_id`: `RESTRICT`.
    * Cột `review_time_seconds`: Tồn tại đúng chuẩn.
 3. **Git Log gần nhất:**
-   * Commit: `e8789f0` — `fix(catalog): resolve Task 4A.1 discrepancies per correction patch`
+   * Commit: `ef17a4d` — `docs: synchronize project state across .agents documentation to Phase 4 Task 4A.2`
+   * Commit trước: `e8789f0` — `fix(catalog): resolve Task 4A.1 discrepancies per correction patch`
    * Commit trước: `01a02e4` — `feat(catalog): implement Task 4A.1 Radical DTOs & RadicalService`
    * Commit trước: `2e76d5c` — `docs: add authoritative project runbook .agents/RUNBOOK.md`
    * Trạng thái: `working tree clean`.
