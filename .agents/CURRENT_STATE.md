@@ -264,16 +264,16 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 3D.1` và `Checkpoint Phase 3`:
-* **Giai đoạn vừa hoàn thành:** **`Phase 3 — Authentication, Authorization & User Management (COMPLETED)`**
-* **Giai đoạn tiếp theo (Next Phase):** **`Phase 4 — Radical and Vocabulary Catalog Domain`**
-* **Phân hệ tiếp theo (Next Module):** **`Module 4A — Radical Catalog Vertical Slice`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 4A.1 — Radical DTOs & RadicalService tra cứu Bộ thủ`**
+Dựa trên kết quả triển khai và nghiệm thu thành công `Task 4A.1`:
+* **Giai đoạn hiện tại (Current Phase):** **`Phase 4 — Radical and Vocabulary Catalog Domain`**
+* **Phân hệ hiện tại (Current Module):** **`Module 4A — Radical Catalog Vertical Slice`**
+* **Nhiệm vụ vừa hoàn thành:** **`Task 4A.1 — Radical DTOs & RadicalService tra cứu Bộ thủ (COMPLETED)`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ`**
 * **Trạng thái:** **`NOT_STARTED`**
 * **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn tất toàn diện Phase 3:* Toàn bộ các module bảo mật Phase 3 (`Mod 3A`: Security foundation & JWT, `Mod 3B`: Auth slice, `Mod 3C`: User profile, `Mod 3D`: RBAC verification 4 vai trò) đã hoàn thiện 100% và vượt qua `Checkpoint Phase 3` với 187/187 tests PASS.
-  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Task 1B.1, 2B.2, 2E.2`), `Task 4A.1` là bước khởi đầu của Phase 4 nhằm xây dựng DTOs và Service tra cứu 214 bộ thủ Khang Hy (đã được seed authoritative từ V3__seed_radicals.sql).
-  3. *Nhiệm vụ tiếp sau đó:* `Task 4A.2` (`RadicalController` công khai & Admin CRUD).
+  1. *Hoàn tất nền tảng Service Layer Bộ thủ:* `RadicalResponse`, `RadicalDetailResponse`, `RadicalService`, `RadicalServiceImpl` đã hoàn thiện và được kiểm chứng 100% qua cả Mockito unit tests và Spring Boot integration tests với CSDL MySQL thực tế (214 bộ thủ Khang Hy).
+  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Task 1B.1, 1B.2, Task 4A.1, Mod 3A`), `Task 4A.2` là bước tiếp theo để công bố REST API controller công khai (`GET /api/v1/radicals`, `GET /api/v1/radicals/{id}`) và bảo vệ các thao tác CRUD quản trị của Admin (`POST/PUT/DELETE /api/v1/admin/radicals/**`) qua Spring Security.
+  3. *Nhiệm vụ tiếp sau đó:* `Checkpoint 4A` $\rightarrow$ `Module 4B: Vocabulary Catalog & Search Vertical Slice`.
 
 ---
 
@@ -289,53 +289,57 @@ $$\text{PHASE (Giai đoạn lớn)} \longrightarrow \text{MODULE (Phân hệ k�
 
 ---
 
-## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 4A.1
+## 10. ĐẶC TẢ CHI TIẾT NHIỆM VỤ TIẾP THEO: TASK 4A.2
 
 ### 1. What (Làm gì)
-Xây dựng Radical DTOs (`RadicalResponse`, `RadicalDetailResponse`) và `RadicalService` tra cứu danh mục 214 Bộ thủ Khang Hy.
-- DTOs hiển thị thông tin bộ thủ (`radicalId`, `radicalNumber`, `radicalChar`, `strokeCount`, `pinyin`, `meaning`).
-- `RadicalService` cung cấp:
-  - Lấy danh sách toàn bộ 214 bộ thủ Khang Hy.
-  - Tra cứu chi tiết bộ thủ theo `radicalId` hoặc `radicalChar`.
-  - Tra cứu danh sách từ vựng liên quan cấu thành từ bộ thủ này.
+Xây dựng `RadicalController` cung cấp:
+- Các endpoint công khai (Public):
+  - `GET /api/v1/radicals`: Danh sách 214 Bộ thủ có phân trang (`page`, `size`), trả về `ApiResponse<PageResponse<RadicalResponse>>`.
+  - `GET /api/v1/radicals/{id}`: Chi tiết một bộ thủ, trả về `ApiResponse<RadicalDetailResponse>`.
+- Các endpoint quản trị Admin (`/api/v1/admin/radicals/**`):
+  - `POST /api/v1/admin/radicals`: Thêm bộ thủ mới (yêu cầu role `Admin`).
+  - `PUT /api/v1/admin/radicals/{id}`: Cập nhật thông tin bộ thủ (yêu cầu role `Admin`).
+  - `DELETE /api/v1/admin/radicals/{id}`: Xóa bộ thủ (yêu cầu role `Admin`).
 
 ### 2. Why (Tại sao cần)
-Khởi động phân hệ tra cứu danh mục cốt lõi của ứng dụng học tiếng Trung, cung cấp dữ liệu nền tảng phục vụ học viên tra cứu và hỗ trợ soạn thảo bài học.
+Công bố giao diện REST API chính thức cho học viên tra cứu danh mục 214 bộ thủ Khang Hy và trao quyền cho quản trị viên quản lý dữ liệu danh mục gốc, đồng thời kích hoạt và kiểm chứng ranh giới phân quyền `ROLE_ADMIN` đã thiết lập ở Phase 3.
 
 ### 3. In-Scope (Phạm vi thực hiện)
-* Tạo DTOs trong package `com.elearning.dto.radical` (hoặc `com.elearning.dto.response`).
-* Tạo `RadicalService` và `RadicalServiceImpl` trong `com.elearning.service`.
-* Viết unit/integration tests cho `RadicalService` với Mockito/DataJpaTest.
+* Tạo `RadicalController` (hoặc `AdminRadicalController` nếu tách theo phân hệ admin).
+* Tạo DTOs request phục vụ Admin CRUD (`CreateRadicalRequest`, `UpdateRadicalRequest`) với Jakarta Validation.
+* Bổ sung mutation methods trong `RadicalService` và `RadicalServiceImpl` phục vụ Admin CRUD.
+* Viết WebMvc/MockMvc tests kiểm chứng:
+  - Tra cứu công khai trả về HTTP 200 không cần JWT.
+  - Gọi Admin endpoints không có token trả về 401.
+  - Gọi Admin endpoints với quyền `Learner` bị từ chối 403 Forbidden.
+  - Gọi Admin endpoints với quyền `Admin` thành công.
+* Nghiệm thu `Checkpoint 4A`.
 
-### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 4A.1)
-* Không tạo `RadicalController` (thuộc Task 4A.2).
-* Không tạo endpoint Admin CRUD (thuộc Task 4A.2).
+### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 4A.2)
 * Không can thiệp sang phân hệ Từ vựng (thuộc Module 4B).
+* Không sửa cấu trúc Flyway migration cũ.
+* Không can thiệp sang phân hệ Bài học (Phase 5).
 
 ### 5. Dependencies (Phụ thuộc)
-* `depends_on`: `Task 1B.1`, `Task 2B.2`, `Task 2E.2` (data 214 bộ thủ Khang Hy).
+* `depends_on`: `Task 1B.1`, `Task 1B.2`, `Task 4A.1`, `Mod 3A` (Security & RBAC).
 
-### 6. Files/Modules Likely Affected
-* `backend/src/main/java/com/elearning/dto/radical/RadicalResponse.java` [NEW]
-* `backend/src/main/java/com/elearning/dto/radical/RadicalDetailResponse.java` [NEW]
-* `backend/src/main/java/com/elearning/service/RadicalService.java` [NEW]
-* `backend/src/main/java/com/elearning/service/impl/RadicalServiceImpl.java` [NEW]
-* `backend/src/test/java/com/elearning/RadicalServiceTests.java` [NEW]
-
-### 7. Acceptance Criteria (Tiêu chí nghiệm thu)
-* `RadicalService` trả về chính xác 214 bộ thủ Khang Hy đã seed từ CSDL.
-* Tra cứu chi tiết bộ thủ theo ID/ký tự thành công.
+### 6. Acceptance Criteria (Tiêu chí nghiệm thu)
+* Public API trả về dữ liệu 214 bộ thủ chuẩn `ApiResponse<PageResponse<RadicalResponse>>`.
+* Detail API trả về chi tiết bộ thủ.
+* Phân quyền bảo vệ Admin API hoạt động chính xác (401/403/200).
+* Nghiệm thu đạt `Checkpoint 4A`.
 * Toàn bộ test suite tiếp tục PASS 100%.
 
-### 8. Verification Command
-* Lệnh chạy: `mvn -f backend/pom.xml test -Dtest=RadicalServiceTests`
+### 7. Verification Command
+* Lệnh chạy: `mvn -f backend/pom.xml clean test`
 
-### 9. Completion Condition
-* `RadicalService` và DTOs hoàn tất, các unit tests PASS.
-* Cập nhật `Task 4A.1` thành `COMPLETED` trong `PROGRESS.md`.
+### 8. Completion Condition
+* Toàn bộ các test cases công khai và bảo mật của `RadicalController` PASS.
+* Nghiệm thu `Checkpoint 4A`.
+* Cập nhật `Task 4A.2` thành `COMPLETED` trong `PROGRESS.md`.
 
-### 10. Next Task
-* `Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ`.
+### 9. Next Task
+* `Module 4B — Vocabulary Catalog & Search Vertical Slice` (`Task 4B.1`).
 
 ---
 

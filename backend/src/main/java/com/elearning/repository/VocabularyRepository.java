@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -59,4 +60,23 @@ public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
             "LOWER(v.pinyin) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(v.pinyinRaw) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Vocabulary> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    /**
+     * Finds all vocabularies containing the given radical ID.
+     *
+     * @param radicalId the radical ID
+     * @return List of matching Vocabulary records
+     */
+    @Query("SELECT v FROM Vocabulary v JOIN v.radicals r WHERE r.radicalId = :radicalId ORDER BY v.vocabId ASC")
+    List<Vocabulary> findByRadicalId(@Param("radicalId") Integer radicalId);
+
+    /**
+     * Finds all vocabularies containing the given radical ID with pagination.
+     *
+     * @param radicalId the radical ID
+     * @param pageable pagination parameters
+     * @return Page of matching Vocabulary records
+     */
+    @Query("SELECT v FROM Vocabulary v JOIN v.radicals r WHERE r.radicalId = :radicalId")
+    Page<Vocabulary> findByRadicalId(@Param("radicalId") Integer radicalId, Pageable pageable);
 }
