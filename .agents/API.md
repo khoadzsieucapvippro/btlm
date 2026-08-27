@@ -1,8 +1,13 @@
 # API SPECIFICATION — HỢP ĐỒNG RESTFUL API CHÍNH THỨC
 
 > **Trạng thái thực thi hiện tại:**  
-> - `CURRENT API IMPLEMENTATION`: **NONE** (Toàn bộ Controller, DTO, RequestMapping cũ đã bị xóa).  
-> - `PLANNED API`: **BASED ON APPROVED REQUIREMENTS** (Quy chuẩn thiết kế chính thức cho lần xây mới từ đầu).  
+> - `CURRENT IMPLEMENTED APIS`:  
+>   - `POST /api/v1/auth/register` — Đăng ký tài khoản (201 Created)  
+>   - `POST /api/v1/auth/login` — Đăng nhập lấy JWT Bearer token (200 OK)  
+>   - `GET /api/v1/users/profile` — Xem hồ sơ cá nhân của user đăng nhập (200 OK)  
+>   - `PUT /api/v1/users/profile` — Cập nhật hồ sơ cá nhân của user đăng nhập (200 OK)  
+> - `CURRENT IN PROGRESS`: `GET /api/v1/radicals/**` & Admin CRUD `/api/v1/admin/radicals/**` (Phase 4 — Task 4A.2)  
+> - `PLANNED API`: Các phân hệ tiếp theo tuân thủ hợp đồng thiết kế đã phê duyệt bên dưới.  
 > - **Tiền tố phiên bản thống nhất:** `/api/v1/...` trên toàn bộ hệ thống.  
 
 ---

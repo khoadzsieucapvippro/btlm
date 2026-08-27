@@ -1,7 +1,7 @@
 # ARCHITECTURE — THIẾT KẾ KIẾN TRÚC MỤC TIÊU (TARGET ARCHITECTURE)
 
-> **Phạm vi tài liệu:** Chỉ mô tả KIẾN TRÚC MỤC TIÊU (TARGET) cho lần triển khai mới từ đầu.  
-> **Trạng thái triển khai hiện tại:** CURRENT IMPLEMENTATION = NONE (Đã xóa bỏ hoàn toàn mã nguồn cũ).  
+> **Phạm vi tài liệu:** Thiết kế kiến trúc chuẩn mực cho toàn bộ hệ thống.  
+> **Trạng thái triển khai hiện tại:** Phase 0-3 COMPLETED, Phase 4 IN PROGRESS (Module 4A Task 4A.1 COMPLETED, Task 4A.2 CURRENT NEXT TASK; 201/201 tests PASS).  
 
 ---
 

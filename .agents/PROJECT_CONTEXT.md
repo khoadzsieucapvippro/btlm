@@ -1,8 +1,8 @@
 # PROJECT CONTEXT — HỆ THỐNG HỌC BỘ THỦ VÀ TỪ VỰNG TIẾNG TRUNG
 
-> **Trạng thái:** Clean Project Baseline — Rebuilt from Scratch  
-> **Current Implementation:** NONE (Đã xóa toàn bộ mã nguồn cũ để triển khai mới từ đầu)  
-> **Cập nhật lần cuối:** 2026-08-26  
+> **Trạng thái:** Phase 0-3 COMPLETED, Phase 4 IN PROGRESS (Module 4A Task 4A.1 COMPLETED, Task 4A.2 CURRENT NEXT TASK)  
+> **Current Implementation:** Phase 0, 1, 2, 3 hoàn tất (201/201 tests PASS). Đang triển khai Phase 4 (Module 4A: Radical Catalog).  
+> **Cập nhật lần cuối:** 2026-08-27  
 
 ---
 

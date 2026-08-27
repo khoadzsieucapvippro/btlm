@@ -139,28 +139,34 @@ Phải biết project đang ở đâu trước.
 
 # 4. CURRENT PROJECT STATUS
 
-Trước khi Phase 4 bắt đầu:
+Hiện trạng dự án:
 
 ```text
 Phase 0 = COMPLETED
 Phase 1 = COMPLETED
 Phase 2 = COMPLETED
 Phase 3 = COMPLETED
-Phase 4 = NOT STARTED
+Phase 4 = IN PROGRESS (Module 4A)
 ```
 
-Phase 3 regression cuối cùng đã đạt:
+Regression suite hiện tại đã đạt:
 
 ```text
-PASS 187/187 tests
+PASS 201/201 tests
 Failures: 0
 Errors: 0
 ```
 
-Task tiếp theo:
+Nhiệm vụ vừa hoàn thành:
 
 ```text
-Task 4A.1 — Radical DTOs & RadicalService
+Task 4A.1 — Radical DTOs & RadicalService (COMPLETED)
+```
+
+Nhiệm vụ kế tiếp duy nhất:
+
+```text
+Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ
 ```
 
 Sau khi quay lại project, luôn kiểm tra:
@@ -1665,12 +1671,12 @@ Checklist:
 
 ---
 
-# 50. PHASE 4 START CHECKLIST
+# 50. TASK 4A.2 PREPARATION CHECKLIST
 
 Trước khi bắt đầu:
 
 ```text
-Task 4A.1 — Radical DTOs & RadicalService
+Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ
 ```
 
 làm:
@@ -1679,16 +1685,14 @@ làm:
 [ ] Read .agents/ROADMAP.md
 [ ] Read .agents/PROGRESS.md
 [ ] Read .agents/CURRENT_STATE.md
-[ ] Read .agents/API.md
+[ ] Read .agents/API.md (Mục Radical endpoints)
 [ ] Read .agents/ARCHITECTURE.md
 [ ] Read .agents/DECISIONS.md
-[ ] Read .agents/DATABASE.md
-[ ] Inspect Radical entity
-[ ] Inspect RadicalRepository
-[ ] Inspect existing DTO convention
-[ ] Inspect existing Service convention
+[ ] Inspect RadicalService và RadicalServiceImpl (Task 4A.1)
+[ ] Inspect RadicalResponse và RadicalDetailResponse
+[ ] Inspect SecurityConfig (route matching /api/v1/radicals/** và /api/v1/admin/**)
 [ ] Run baseline:
-    mvn -f backend/pom.xml clean test
+    mvn -f backend/pom.xml clean test (201/201 tests PASS)
 ```
 
 Sau đó mới gửi implementation prompt cho AI coding agent.

@@ -12,11 +12,12 @@
 
 ---
 
-## 1. BẢNG TRUY XUẤT LỊCH SỬ NHIỆM VỤ (TASK TRACEABILITY MAPPING)
+## 1. BẢNG TRUY XUẤT LỊCH SỬ NHIỆM VỤ (HISTORICAL TASK TRACEABILITY MAPPING)
 
-Nhằm bảo toàn lịch sử thực thi và bằng chứng nghiệm thu từ các phiên trước, bảng ánh xạ định danh cũ $\rightarrow$ mới:
+> [!NOTE]
+> **Lưu trữ Lịch sử Ánh xạ Định danh:** Bảng dưới đây lưu vết quá trình chuyển đổi định danh từ các task legacy sang hệ thống chuẩn hóa 4 cấp độ kỹ thuật tại thời điểm khởi động lại dự án (Phase 0). Nguồn chân lý duy nhất về tiến độ trực tiếp của từng task hiện tại nằm ở **Mục 2: MA TRẬN TIẾN ĐỘ CHI TIẾT** ngay dưới đây.
 
-| Định danh cũ (Old Task ID) | Định danh chuẩn hóa mới (New Task ID) | Phase | Trạng thái thực tế | Ghi chú chuyển đổi |
+| Định danh cũ (Old Task ID) | Định danh chuẩn hóa mới (New Task ID) | Phase | Trạng thái hiện tại | Ghi chú chuyển đổi |
 | :--- | :--- | :--- | :--- | :--- |
 | `TASK-0.1` | **Task 0A.1** | Phase 0 | `COMPLETED` | Xóa sạch legacy artifacts và source cũ. |
 | `TASK-0.2` | **Task 0A.2** | Phase 0 | `COMPLETED` | Xác minh 19 Agent Skills trong `.agents/skills/`. |
@@ -28,11 +29,11 @@ Nhằm bảo toàn lịch sử thực thi và bằng chứng nghiệm thu từ c
 | `TASK-1.2` | **Task 1A.2** | Phase 1 | `COMPLETED` | `application.yml` HikariCP kết nối MySQL 3306. |
 | `TASK-1.3` | **Task 1A.3** | Phase 1 | `COMPLETED` | Flyway V1 migration tạo 14 bảng nghiệp vụ. |
 | `TASK-1.4` | **Task 1A.4** | Phase 1 | `COMPLETED` | Kiểm thử Context Load & Flyway schema version 1. |
-| `TASK-1.5` | **Task 1B.1, 1B.2** | Phase 1 | `NOT_STARTED` | Phân rã thành 2 task nhỏ: DTOs phong bì và GlobalExceptionHandler. |
-| `TASK-2.1` | **Task 2E.1, 2E.2** | Phase 2 | `NOT_STARTED` | Chuyển thành Module 2E: Flyway Seed Data V2, V3. |
-| `TASK-2.2` | **Task 2A.1..2D.2** | Phase 2 | `NOT_STARTED` | Phân rã thành 4 Modules miền nghiệp vụ khép kín (2A, 2B, 2C, 2D). |
-| `TASK-2.3` | **Task 2A.2, 2B.2, 2C.2, 2D.3** | Phase 2 | `NOT_STARTED` | Repositories được gắn liền với từng Module miền tương ứng. |
-| `TASK-2.4` | **Task 2F.1** | Phase 2 | `NOT_STARTED` | Chuyển thành Module 2F: Full Persistence Verification. |
+| `TASK-1.5` | **Task 1B.1, 1B.2** | Phase 1 | `COMPLETED` | Phân rã thành 2 task nhỏ: DTOs phong bì và GlobalExceptionHandler. |
+| `TASK-2.1` | **Task 2E.1, 2E.2** | Phase 2 | `COMPLETED` | Chuyển thành Module 2E: Flyway Seed Data V2, V3. |
+| `TASK-2.2` | **Task 2A.1..2D.2** | Phase 2 | `COMPLETED` | Phân rã thành 4 Modules miền nghiệp vụ khép kín (2A, 2B, 2C, 2D). |
+| `TASK-2.3` | **Task 2A.2, 2B.2, 2C.2, 2D.3** | Phase 2 | `COMPLETED` | Repositories được gắn liền với từng Module miền tương ứng. |
+| `TASK-2.4` | **Task 2F.1** | Phase 2 | `COMPLETED` | Chuyển thành Module 2F: Full Persistence Verification. |
 | `TASK-10.2` (cũ) / `10B.2` | **Task 10C.1** | Phase 10 | `NOT_STARTED` | Tách riêng phần đóng khoảng trống kiểm thử thành Module 10C. |
 
 ---

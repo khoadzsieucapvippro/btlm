@@ -13,45 +13,58 @@
 
 ## 1. TỔNG QUAN LỘ TRÌNH 12 GIAI ĐOẠN (ROADMAP OVERVIEW)
 
-```
+> [!NOTE]
+> **Phân biệt Thứ tự Phân phối (Milestone Order) vs Đồ thị Phụ thuộc (Dependency Graph):**  
+> - **Thứ tự Phase (Phase 0 $\rightarrow$ 11):** Là các cột mốc phân phối tính năng theo lộ trình hệ thống.  
+> - **Đồ thị Phụ thuộc (Task/Module Dependencies):** Cho phép các module/task độc lập được triển khai song song (ví dụ: Module 2A và 2B thực thi song song; Module 2E Flyway Seed song song với JPA mappings; Module 1B phong bì phản hồi độc lập với tầng Persistence). Không gò ép tuyến tính cứng nhắc nếu dependency thực tế cho phép song song.
+
+```text
 Phase 0: Project Specification & Architecture Baseline [COMPLETED]
    │
    ▼
-Phase 1: Spring Boot Foundation & Web Infrastructure [IN_PROGRESS: Mod 1A Done, Mod 1B Pending]
+Phase 1: Spring Boot Foundation & Web Infrastructure [COMPLETED]
    │
    ├────────────────────────────────────────┬───────────────────────────────────────┐
-   ▼ (Hard dependency cho Persistence)      ▼ (Parallel với 2A/2B/2E)               ▼ (Parallel)
+   ▼ (Hard dependency cho Persistence)      ▼ (Response Envelope & Errors)          ▼ (Database Seed)
 Phase 2: Persistence Layer & Seed Data      Phase 1 Module 1B: Response Envelope    Phase 2 Module 2E: Seed
-(JPA Mappings 2A-2D, Test 2F)               (ApiResponse, GlobalExceptionHandler)   (Roles V2, Radicals V3)
-   │                                        │                                       │
+(JPA Mappings 2A-2D, Test 2F) [COMPLETED]   (ApiResponse, GlobalExceptionHandler)   (Roles V2, Radicals V3)
+   │                                        │ [COMPLETED]                           │ [COMPLETED]
    │                                        ├───────────────────────────────────────┤
    ▼                                        ▼                                       ▼
 Phase 3: Authentication, Security & RBAC ◄──┴───────────────────────────────────────┘
-(Security 6, JWT, Login/Register DTO & Controllers, User Profile)
+(Security 6, JWT, Login/Register DTO & Controllers, User Profile) [COMPLETED]
    │
    ▼
-Phase 4: Radical & Vocabulary Catalog Domain (214 Radicals, Vocabulary Search, Admin CRUD)
+Phase 4: Radical & Vocabulary Catalog Domain [IN_PROGRESS: Mod 4A Task 4A.1 COMPLETED, Task 4A.2 NEXT]
+(214 Radicals, Vocabulary Search, Admin CRUD)
    │
    ▼
-Phase 5: Lesson Management & Excel Import (Public Lessons, Creator Studio, POI 2-Step Import)
+Phase 5: Lesson Management & Excel Import [NOT_STARTED]
+(Public Lessons, Creator Studio, POI 2-Step Import)
    │
    ▼
-Phase 6: Content Moderation Workflow (Moderator Queue, Approve/Reject Invariants, Audit Log)
+Phase 6: Content Moderation Workflow [NOT_STARTED]
+(Moderator Queue, Approve/Reject Invariants, Audit Log)
    │
    ▼
-Phase 7: Spaced Repetition System (SM-2 Pure Algorithm, Review Session, Study Progress)
+Phase 7: Spaced Repetition System [NOT_STARTED]
+(SM-2 Pure Algorithm, Review Session, Study Progress)
    │
    ▼
-Phase 8: Personal Notes & User Settings (Notes <= 500 chars, SRS Daily Limits)
+Phase 8: Personal Notes & User Settings [NOT_STARTED]
+(Notes <= 500 chars, SRS Daily Limits)
    │
    ▼
-Phase 9: Frontend UI & Client Integration (Layout, api.js, Learner, SRS, Creator, Moderator UI)
+Phase 9: Frontend UI & Client Integration [NOT_STARTED]
+(Layout, api.js, Learner, SRS, Creator, Moderator UI)
    │
    ▼
-Phase 10: Security, Performance & Quality Hardening (10A Security, 10B Performance, 10C Quality Gaps)
+Phase 10: Security, Performance & Quality Hardening [NOT_STARTED]
+(10A Security, 10B Performance, 10C Quality Gaps)
    │
    ▼
-Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Packaging, Delivery)
+Phase 11: Final Integration, Release Validation & Delivery [NOT_STARTED]
+(E2E Journeys, JAR Packaging, Delivery)
 ```
 
 ---
@@ -91,12 +104,12 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 * **Checkpoint 1A [VERIFIED]:** `mvn clean test` trả về `BUILD SUCCESS`, schema `elearning_db` chứa đúng 15 bảng (14 bảng nghiệp vụ + `flyway_schema_history` version 1).
 
 #### Module 1B: Web API Response Envelope & Global Error Handling [COMPLETED]
-* **Task 1B.1: Base Response Models (`ApiResponse<T>`, `PageResponse<T>`, `ErrorCode` enum)**
+* **Task 1B.1: Base Response Models (`ApiResponse<T>`, `PageResponse<T>`, `ErrorCode` enum) [COMPLETED]**
   - *Mục đích:* Chuẩn hóa định dạng JSON trả về client theo Mục 1.2 và 1.3 của `API.md`.
   - *Phạm vi:* `com.elearning.dto.response.ApiResponse`, `PageResponse`, `com.elearning.common.ErrorCode`.
   - *Không làm:* Chưa viết Controller hay Service nghiệp vụ.
   - *depends_on:* `Task 1A.4`.
-* **Task 1B.2: Global Exception Handler (`GlobalExceptionHandler`)**
+* **Task 1B.2: Global Exception Handler (`GlobalExceptionHandler`) [COMPLETED]**
   - *Mục đích:* Bắt toàn diện ngoại lệ tại `@RestControllerAdvice` và chuyển thành `ApiResponse` chuẩn.
   - *Phạm vi:* Xử lý `MethodArgumentNotValidException` (400), `BusinessException` (dynamic code/status), fallback `Exception` (500).
   - *depends_on:* `Task 1B.1`.
@@ -108,7 +121,7 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 ### Phase 2 — Persistence Layer & Database Seed Data
 - **Mục tiêu:** Xây dựng tầng ánh xạ thực thể JPA (JPA Domain Mappings), Spring Data Repositories, và nạp dữ liệu danh mục ban đầu qua Flyway seed data (Roles, Radicals).
 - **Ranh giới phụ thuộc:** Phụ thuộc vào `Module 1A` (Flyway V1 schema). **KHÔNG phụ thuộc vào `Module 1B`** (có thể triển khai song song).
-- **Trạng thái:** **`IN_PROGRESS`** (Module 2A: `IN_PROGRESS`, Mod 2B-2E: `NOT_STARTED`).
+- **Trạng thái:** **`COMPLETED`** (Đã nghiệm thu toàn diện Module 2A..2F qua `Checkpoint Phase 2` với 81/81 tests PASS).
 
 #### Module 2A: Identity & Role Persistence Mapping [COMPLETED] [PARALLEL với Mod 2B]
 * **Task 2A.1: JPA Entities Cụm Định danh (`ACCOUNT`, `USER_PROFILE`, `ROLE`, `ACCOUNT_ROLE`) [COMPLETED]**
@@ -138,7 +151,7 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
   - *depends_on (Repository Test):* `Task 2C.1`, `Task 2A.2` (AccountRepository), `Task 2B.2` (VocabularyRepository) để tạo test fixture.
 * **Checkpoint 2C [VERIFIED]:** Chạy `@DataJpaTest` tạo Lesson, thêm từ vựng kèm `order_index` và truy vấn danh sách sắp xếp đúng thứ tự; `LessonRepositoryTests` PASS 7/7 tests, `LessonPersistenceTests` PASS 5/5 tests.
 
-#### Module 2D: Learning Progress, Audit & Personalization Persistence Mapping [IN_PROGRESS]
+#### Module 2D: Learning Progress, Audit & Personalization Persistence Mapping [COMPLETED]
 * **Task 2D.1: JPA Entities Cụm Ghi chú & Kiểm toán (`USER_SRS_SETTING`, `PERSONAL_NOTE`, `MODERATION_LOG`) [COMPLETED]**
   - *Phạm vi:* Entity cho `UserSrsSetting` (1:1 với UserProfile), `PersonalNote` (ràng buộc độ dài $\le 500$ ký tự, không giới hạn 5 notes), `ModerationLog` (bất biến, quan hệ RESTRICT với Lesson và Account).
   - *depends_on:* `Task 2A.1` (UserProfile), `Task 2B.1` (Vocabulary), `Task 2C.1` (Lesson).
@@ -151,7 +164,7 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
   - *depends_on:* `Task 2D.1`, `Task 2D.2`.
 * **Checkpoint 2D: [COMPLETED]** Chạy `@DataJpaTest` kiểm tra lưu trữ thẻ học đa hình, truy vấn thẻ đến hạn ôn tập và lưu ghi chú cá nhân PASS 100%.
 
-#### Module 2E: Database Seed Migrations (Flyway) [PARALLEL với Mod 2A..2D]
+#### Module 2E: Database Seed Migrations (Flyway) [PARALLEL với Mod 2A..2D] [COMPLETED]
 * **Task 2E.1: Flyway Seed Data V2: 4 Vai trò hệ thống (`V2__seed_roles.sql`) [COMPLETED]**
   - *Phạm vi:* Script seed 4 vai trò cố định: `1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`.
   - *depends_on:* `Task 1A.4`.
@@ -160,7 +173,7 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
   - *depends_on:* `Task 1A.4`.
 * **Checkpoint 2E: [COMPLETED]** Flyway migration V2 và V3 chạy thành công. Kiểm tra `SELECT COUNT(*) FROM role` trả về 4; `SELECT COUNT(*) FROM radical` trả về 214.
 
-#### Module 2F: Persistence Layer Verification & Schema Validation
+#### Module 2F: Persistence Layer Verification & Schema Validation [COMPLETED]
 * **Task 2F.1: Kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation [COMPLETED]**
   - *Phạm vi:* Bật cấu hình Hibernate `spring.jpa.hibernate.ddl-auto: validate`, chạy toàn bộ test suite để đảm bảo các Entity mappings khớp chính xác với schema MySQL do Flyway quản lý.
   - *depends_on:* `Module 2A`, `Module 2B`, `Module 2C`, `Module 2D`, `Module 2E`.
@@ -173,24 +186,24 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 - **Ranh giới phụ thuộc:**
   - `Task 3A.1` & `3A.2` (Security Infrastructure): Chỉ phụ thuộc `Task 1A.1, 1B.2` (không phụ thuộc seed data).
   - `Task 3B.2` (AuthService / Register): Phụ thuộc `Task 1B.1, 1B.2, 2A.2, 2E.1` (cần Role Learner từ seed) và `3A.3`.
-- **Trạng thái:** **`NOT_STARTED`**.
+- **Trạng thái:** **`COMPLETED`** (Đã nghiệm thu toàn bộ Module 3A..3D qua `Checkpoint Phase 3` với 187/187 tests PASS).
 
-#### Module 3A: Spring Security & JWT Infrastructure
+#### Module 3A: Spring Security & JWT Infrastructure [COMPLETED]
 * **Task 3A.1: Cấu hình `SecurityConfig`: Spring Security 6 `SecurityFilterChain`, `BCryptPasswordEncoder`, cấu hình session `STATELESS`, vô hiệu hóa CSRF cho REST [COMPLETED]**
 * **Task 3A.2: Xây dựng `JwtUtil` (sinh token, giải mã claims, kiểm tra hết hạn) và `JwtAuthenticationFilter` (chặn request, giải mã header `Bearer`, nạp SecurityContext) [COMPLETED]**
 * **Task 3A.3: Triển khai `CustomUserDetailsService` và `CustomUserDetails` nạp người dùng từ `AccountRepository` và ánh xạ roles thành GrantedAuthorities [COMPLETED]**
 * **Checkpoint 3A: Unit test cho `JwtUtil` (tạo token, trích xuất claim `email_or_phone`, phát hiện token hết hạn/sai chữ ký) và `CustomUserDetailsService` [COMPLETED]**
 
-#### Module 3B: Authentication & Registration Vertical Slice
+#### Module 3B: Authentication & Registration Vertical Slice [COMPLETED]
 * **Task 3B.1: Request/Response DTOs: `RegisterRequest`, `LoginRequest`, `AuthResponse` với Jakarta Validation (`@NotBlank`, `@Size`, v.v.) [COMPLETED]**
 * **Task 3B.2: `AuthService` và `AuthController` (`POST /api/v1/auth/register` gán mặc định role `Learner`, `POST /api/v1/auth/login` kiểm tra mật khẩu qua BCrypt, trả về JWT gói trong `ApiResponse`) [COMPLETED]**
 * **Checkpoint 3B: MockMvc test: Đăng ký thành công trả về 201; Đăng nhập đúng trả về 200 kèm JWT; Đăng nhập sai mật khẩu trả về 401; Input thiếu trường trả về 400 kèm lỗi validation [COMPLETED]**
 
-#### Module 3C: User Profile Vertical Slice
+#### Module 3C: User Profile Vertical Slice [COMPLETED]
 * **Task 3C.1: DTOs (`UserProfileResponse`, `UpdateProfileRequest`), `UserProfileService` và `UserProfileController` (`GET /api/v1/users/profile`, `PUT /api/v1/users/profile` lấy và cập nhật profile của user đang đăng nhập qua `ApiResponse`) [COMPLETED]**
 * **Checkpoint 3C: MockMvc test: Truy cập profile khi có JWT hợp lệ trả về 200; truy cập khi không có JWT trả về 401 Unauthorized [COMPLETED]**
 
-#### Module 3D: Security & RBAC Verification
+#### Module 3D: Security & RBAC Verification [COMPLETED]
 * **Task 3D.1: Bộ kiểm thử tích hợp tự động cho phân quyền RBAC 4 vai trò (Learner, Creator, Moderator, Admin) [COMPLETED]**
 * **Checkpoint Phase 3: MockMvc test xác minh chặn 403 Forbidden khi Learner cố truy cập endpoint yêu cầu quyền Admin/Moderator/Creator [COMPLETED]**
 
@@ -199,11 +212,17 @@ Phase 11: Final Integration, Release Validation & Delivery (E2E Journeys, JAR Pa
 ### Phase 4 — Radical and Vocabulary Catalog Domain
 - **Mục tiêu:** Cung cấp RESTful APIs tra cứu danh mục 214 Bộ thủ Khang Hy và Từ vựng tiếng Trung, hỗ trợ tìm kiếm đa tiêu chí (pinyin có dấu, pinyin không dấu `pinyin_raw`, chữ Hán `hanzi`), lọc theo bộ thủ, phân trang chuẩn `PageResponse`, và Admin CRUD.
 - **Ranh giới phụ thuộc:** Phụ thuộc vào `Module 1B` (cho Controller response contract), `Module 2B`, `Task 2E.2` (data 214 bộ thủ), và `Phase 3` (xác thực quyền Admin).
-- **Trạng thái:** **`NOT_STARTED`**.
+- **Trạng thái:** **`IN_PROGRESS`** (Module 4A: Task 4A.1 COMPLETED, Task 4A.2 CURRENT NEXT TASK; Module 4B-4C PENDING).
 
-#### Module 4A: Radical Catalog Vertical Slice
-* **Task 4A.1:** Radical DTOs (`RadicalResponse`, `RadicalDetailResponse`) và `RadicalService` (danh sách 214 bộ thủ, chi tiết bộ thủ theo ID/ký tự, danh sách từ vựng chứa bộ thủ).
-* **Task 4A.2:** `RadicalController` (`GET /api/v1/radicals`, `GET /api/v1/radicals/{id}` công khai) và Admin endpoints (`POST/PUT/DELETE /api/v1/admin/radicals/**` yêu cầu role Admin).
+#### Module 4A: Radical Catalog Vertical Slice [IN_PROGRESS]
+* **Task 4A.1: Radical DTOs (`RadicalResponse`, `RadicalDetailResponse`) và `RadicalService` [COMPLETED]**
+  - *Phạm vi:* DTOs đóng gói metadata bộ thủ chuẩn (không chứa `radicalNumber`/`strokeCount` do không có trong DB schema; không chứa vocabulary list do thuộc phân hệ 4B theo `API.md`), `RadicalService` và `RadicalServiceImpl` (lấy toàn bộ 214 bộ thủ, phân trang `Pageable`, chi tiết theo ID/ký tự), xử lý lỗi không tìm thấy bằng `BusinessException(ErrorCode.NOT_FOUND)`.
+  - *depends_on:* `Task 1B.1`, `Task 2B.2`, `Task 2E.2`.
+  - *Kiểm thử:* `RadicalServiceTests` PASS 8/8 tests, `RadicalServiceIntegrationTests` PASS 6/6 tests (xác minh chính xác 214 bộ thủ Khang Hy trên MySQL thật).
+* **Task 4A.2: `RadicalController` công khai & Admin CRUD Bộ thủ [CURRENT NEXT TASK]**
+  - *Phạm vi:* `RadicalController` (`GET /api/v1/radicals`, `GET /api/v1/radicals/{id}` công khai) và Admin endpoints (`POST/PUT/DELETE /api/v1/admin/radicals/**` yêu cầu role Admin).
+  - *Ranh giới bất biến giữa Flyway và Runtime:* Thao tác Admin CRUD là nghiệp vụ runtime chạy qua Service/Repository, **tuyệt đối không sửa script Flyway migration**.
+  - *depends_on:* `Task 1B.1`, `Task 1B.2`, `Task 4A.1`, `Mod 3A` (Security & RBAC).
 * **Checkpoint 4A:** MockMvc test: Tra cứu công khai trả về đủ 214 bộ thủ; Gọi Admin API bằng quyền Learner bị từ chối 403 Forbidden.
 
 #### Module 4B: Vocabulary Catalog & Search Vertical Slice

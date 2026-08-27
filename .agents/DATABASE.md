@@ -3,8 +3,8 @@
 > **Source of Truth:** Authoritative Database Baseline (User Specification)  
 > **Status:**  
 > - `APPROVED SPECIFICATION`: **14 TABLES APPROVED** (Nghiệp vụ, trường dữ liệu, quan hệ và quy tắc nghiệp vụ đã được phê duyệt)  
-> - `CURRENT IMPLEMENTATION`: **NONE** (Toàn bộ mã nguồn, thực thể và SQL scripts cũ đã được xóa bỏ hoàn toàn)  
-> - `IMPLEMENTATION DECISIONS`: **PENDING** (Chi tiết kỹ thuật vật lý trên MySQL, kiểu dữ liệu, index, ánh xạ JPA sẽ được quyết định ở Phase 2)  
+> - `PHYSICAL DATABASE STATE`: **IMPLEMENTED & VERIFIED** (MySQL 8.4 LTS `elearning_db`, Flyway V1-V3 applied, 14 domain tables + `flyway_schema_history`, 4 roles, 214 radicals)  
+> - `JPA ENTITIES & REPOSITORIES`: **IMPLEMENTED & VERIFIED** (12 Entities, 12 Repositories, Hibernate `ddl-auto: validate` PASS trong Phase 2)  
 
 ---
 

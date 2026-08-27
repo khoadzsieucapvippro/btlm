@@ -4,8 +4,24 @@
 > **Dự án:** Hệ thống Website học Bộ thủ và Từ vựng Tiếng Trung (E-learning Chinese Radicals & Vocabulary)  
 > **Vị trí file:** `.agents/CURRENT_STATE.md`  
 > **Cam kết tính xác thực:** Mô tả **HIỆN TRẠNG THỰC TẾ (REAL ACTUAL STATE)** của mã nguồn, CSDL và cấu hình trong repository; KHÔNG phản ánh hiện trạng mong muốn (intended state) hay báo cáo lạc quan.  
-> **Phiên bản cập nhật:** Sau khi hoàn thành Phase 1 (Spring Boot Foundation + MySQL + Flyway Schema).  
-> **Commit hash hiện tại:** `5d59ff497e2d416618ea774e98354c5c27b310ac` (`5d59ff4`)  
+> **Phiên bản cập nhật:** Sau khi hoàn thành Task 4A.1 (Phase 4 — Module 4A). Hiện đang ở Task 4A.2.  
+> **Commit hash hiện tại:** `e8789f0`  
+> **Bằng chứng kiểm thử gần nhất:** **`201/201 tests PASS, Failures: 0, Errors: 0, Build SUCCESS`** (thời gian: 43.69s).  
+
+---
+
+## 0. TỔNG QUAN ĐIỀU HÀNH CHO AI CODING AGENT MỚI (EXECUTIVE SUMMARY)
+
+Một AI coding agent khi mở tài liệu này cần nắm ngay 6 câu trả lời cốt lõi:
+
+| Câu hỏi | Câu trả lời chuẩn xác (Authoritative Answer) |
+| :--- | :--- |
+| **1. Where are we now?** | **Phase 4 — Radical and Vocabulary Catalog Domain**, phân hệ **Module 4A — Radical Catalog Vertical Slice**. |
+| **2. What has been completed?** | **Phase 0** (Spec & DB Design), **Phase 1** (Scaffold & Web Infrastructure), **Phase 2** (Persistence & Seed Data V1-V3), **Phase 3** (Security, JWT, Auth, User Profile, RBAC Verification), và **Task 4A.1** (Radical DTOs & RadicalService). |
+| **3. What is currently in progress?** | **Phase 4 — Radical and Vocabulary Catalog Domain** (chuẩn bị triển khai **Task 4A.2**). |
+| **4. What is the next task?** | **`Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ`** (`GET /api/v1/radicals/**` công khai và `POST/PUT/DELETE /api/v1/admin/radicals/**` yêu cầu role `Admin`). |
+| **5. What must not be changed?** | - Tuyệt đối **không sửa** các file Flyway migration cũ (`V1`, `V2`, `V3`).<br>- Giữ nguyên cấu hình Hibernate `ddl-auto: none`.<br>- Admin CRUD là thao tác nghiệp vụ tại runtime qua Service/Repository, **tuyệt đối không sửa Flyway**.<br>- Tuyệt đối **không leak JPA Entity** ra Controller (100% qua DTO).<br>- Không tự ý thêm trường `radicalNumber` hay `strokeCount` (không có trong schema vật lý).<br>- Không can thiệp sang phân hệ Từ vựng (Module 4B). |
+| **6. What evidence confirms the state?** | - `mvn clean test` PASS **201/201 tests**, 0 failures, 0 errors.<br>- MySQL `elearning_db` có 15 bảng (14 bảng nghiệp vụ + 1 bảng Flyway ở version 3), 4 roles, 214 bộ thủ Khang Hy.<br>- Git commit log sạch sẽ trên nhánh `main`. |
 
 ---
 
@@ -37,11 +53,11 @@ Khi làm việc trên repository này, AI Agent mới **BẮT BUỘC** tuân th�
   3. `Moderator` (Kiểm duyệt viên): Duyệt hàng đợi bài học (`Pending`), phê duyệt (`Approve`) hoặc từ chối (`Reject`) kèm lý do và đánh dấu các trường lỗi JSON (`flagged_fields`).
   4. `Admin` (Quản trị viên): Toàn quyền quản trị hệ thống, quản lý tài khoản, phân quyền, giám sát dữ liệu và nhật ký kiểm toán.
 * **5 Phân hệ nghiệp vụ chính:**
-  1. *Authentication & User Profile*: Đăng ký, đăng nhập, JWT stateless, hồ sơ cá nhân.
-  2. *Curriculum & Dictionary*: 214 Bộ thủ Khang Hy, từ vựng (chữ Hán, Pinyin có dấu/không dấu, Hán-Việt, dịch nghĩa, media URLs), bài học và phân thứ tự từ vựng.
-  3. *Moderation*: Quy trình kiểm duyệt bài học và lưu vết `MODERATION_LOG`.
-  4. *Spaced Repetition System (SRS)*: Thuật toán SM-2, quản lý tiến trình thẻ (`CARD_PROGRESS`), nhật ký ôn tập (`REVIEW_LOG`).
-  5. *Personalization*: Ghi chú từ vựng cá nhân (`PERSONAL_NOTE` $\le 500$ ký tự) và cài đặt SRS (`USER_SRS_SETTING`).
+  1. *Authentication & User Profile*: Đăng ký, đăng nhập, JWT stateless, hồ sơ cá nhân (ĐÃ HOÀN THÀNH trong Phase 3).
+  2. *Curriculum & Dictionary*: 214 Bộ thủ Khang Hy, từ vựng (chữ Hán, Pinyin có dấu/không dấu, Hán-Việt, dịch nghĩa, media URLs), bài học và phân thứ tự từ vựng (ĐANG TRIỂN KHAI trong Phase 4 & 5).
+  3. *Moderation*: Quy trình kiểm duyệt bài học và lưu vết `MODERATION_LOG` (Phase 6).
+  4. *Spaced Repetition System (SRS)*: Thuật toán SM-2, quản lý tiến trình thẻ (`CARD_PROGRESS`), nhật ký ôn tập (`REVIEW_LOG`) (Phase 7).
+  5. *Personalization*: Ghi chú từ vựng cá nhân (`PERSONAL_NOTE` $\le 500$ ký tự) và cài đặt SRS (`USER_SRS_SETTING`) (Phase 8).
 
 ---
 
@@ -58,15 +74,15 @@ Toàn bộ môi trường đã được cài đặt, kích hoạt và kiểm ch�
 | **Mô hình Web** | Spring MVC | Đã tích hợp trong Spring Boot | RESTful API, JSON payload, UTF-8 |
 | **Hệ quản trị CSDL** | MySQL Server | **MySQL Community Server 8.4.9 LTS** | Port: `3306`, DataDir: `C:\ProgramData\MySQL\MySQL Server 8.4\Data`, config: `my.ini` |
 | **Tên Database** | MySQL Database | **`elearning_db`** | Charset: `utf8mb4`, Collation: `utf8mb4_unicode_ci` |
-| **Cơ chế Migration** | Flyway | **Flyway 10.x** (`flyway-core` + `flyway-mysql`) | Là **CƠ QUAN THẨM QUYỀN DUY NHẤT** quản lý Database Schema |
+| **Cơ chế Migration** | Flyway | **Flyway 10.x** (`flyway-core` + `flyway-mysql`) | 3 migrations áp dụng thành công: `V1`, `V2`, `V3` |
 | **Tầng Persistence** | Spring Data JPA / Hibernate | **Hibernate 6.5.3.Final** | Cấu hình `spring.jpa.hibernate.ddl-auto: none` (Cấm Hibernate tự sửa schema) |
-| **Bảo mật (Kế hoạch)** | Spring Security & JJWT | Chưa triển khai code | Sẽ triển khai tại Phase 3 (JWT Stateless, BCrypt) |
-| **Frontend (Kế hoạch)** | HTML, CSS, JavaScript | Chưa triển khai code | Web tiêu chuẩn, `frontend/` hiện là thư mục rỗng có `.gitkeep` |
-| **Quản lý phiên bản** | Git | Git cục bộ nhánh `main` | Đã cấu hình `.gitignore`, initial commit + commit Phase 1 |
+| **Bảo mật** | Spring Security 6 & JJWT | **JJWT 0.12.6** + BCrypt | Đã triển khai hoàn tất trong Phase 3 (Stateless JWT, RBAC 4 vai trò) |
+| **Frontend (Kế hoạch)** | HTML, CSS, JavaScript | Chưa triển khai code | Sẽ triển khai tại Phase 9 (`frontend/` hiện là thư mục rỗng có `.gitkeep`) |
+| **Quản lý phiên bản** | Git | Git cục bộ nhánh `main` | Đã cấu hình `.gitignore`, commit hash hiện tại: `e8789f0` |
 
 ---
 
-## 4. KIẾN TRÚC HỆ THỐNG (ARCHITECTURE)
+## 4. KIẾN TRÚC HỆ THỐNG VÀ RANH GIỚI VẬN HÀNH (ARCHITECTURE & BOUNDARIES)
 
 ### 4.1. Luồng phân tầng mục tiêu (Target Architecture)
 ```text
@@ -74,7 +90,7 @@ Frontend (HTML / CSS / Vanilla JS)
       │  HTTP Requests (JSON, Authorization: Bearer <JWT>)
       ▼
 REST API Controllers (/api/v1/...)
-      │  DTOs (Request validation @Valid)
+      │  DTOs (Request validation @Valid, zero entity leak)
       ▼
 Service Layer (Business Logic, Transactions @Transactional, Security)
       │  Entities / Domain Objects
@@ -85,24 +101,32 @@ Repository Layer (Spring Data JPA)
 MySQL 8.4 LTS Database (elearning_db)
 ```
 
-### 4.2. Thẩm quyền quản trị Schema CSDL
-* **Flyway là cơ quan thẩm quyền duy nhất:** Mọi thay đổi bảng, cột, khóa ngoại, chỉ mục phải thực hiện qua script `src/main/resources/db/migration/V{X}__{description}.sql`.
+### 4.2. Ranh giới tuyệt đối giữa Flyway và Runtime CRUD
+* **Flyway là cơ quan thẩm quyền duy nhất về Cấu trúc và Dữ liệu Nền tảng:**
+  - Flyway chỉ quản lý: Schema DDL (`V1__init_schema.sql`), Migration cấu trúc, và Seed data hệ thống ban đầu (`V2__seed_roles.sql`, `V3__seed_radicals.sql`).
+  - **TUYỆT ĐỐI CẤM:** Tạo Flyway migration script cho các thao tác thêm, sửa, xóa dữ liệu người dùng hay nội dung do Admin/Creator thực hiện tại runtime.
+* **Service/Repository quản lý Runtime CRUD:**
+  - Mọi thao tác thêm/sửa/xóa Bộ thủ, Từ vựng, Bài học của Admin/Creator thực hiện tại runtime thông qua `Service` $\rightarrow$ `Repository` $\rightarrow$ `MySQL`.
 * **Hibernate hoàn toàn thụ động:** Cấu hình `spring.jpa.hibernate.ddl-auto: none`. Tuyệt đối không dùng `update`, `create`, `create-drop`.
 * **Nguyên tắc DTO Boundary:** 100% request và response đi qua Controller phải dùng DTO. Tuyệt đối cấm trả trực tiếp JPA Entity ra API.
 
 ### 4.3. Bảng phân định Hiện trạng Thực tế vs Mục tiêu
 | Thành phần | Hiện trạng thực tế trong Repository | Trạng thái |
 | :--- | :--- | :--- |
-| **Backend Project Scaffold** | File `backend/pom.xml`, cấu trúc thư mục Maven chuẩn | **ĐÃ HOÀN THÀNH** |
-| **Spring Boot Context & Startup** | `ElearningApplication.java`, chạy thành công | **ĐÃ HOÀN THÀNH** |
-| **Database Connection & Pool** | HikariCP kết nối MySQL cổng 3306, `elearning_db` | **ĐÃ HOÀN THÀNH** |
-| **Flyway Schema Migration** | Script `V1__init_schema.sql` đã apply thành công | **ĐÃ HOÀN THÀNH** |
-| **14 Bảng CSDL Vật lý** | Đã tồn tại thực tế 100% trong `elearning_db` | **ĐÃ HOÀN THÀNH** |
-| **JPA Entities & Mappings** | Chưa tạo bất kỳ file Entity nào | **CHƯA BẮT ĐẦU (Phase 2)** |
-| **Spring Data Repositories** | Chưa tạo bất kỳ repository interface nào | **CHƯA BẮT ĐẦU (Phase 2)** |
-| **Flyway Seed Data (V2, V3)** | Chưa tạo `V2__seed_roles.sql` và `V3__seed_radicals.sql` | **CHƯA BẮT ĐẦU (Phase 2)** |
-| **Spring Security & JWT** | Chưa thêm dependency security, chưa viết filter | **CHƯA BẮT ĐẦU (Phase 3)** |
-| **Controllers / Services / DTOs** | Chưa tạo bất kỳ controller hay service nào | **CHƯA BẮT ĐẦU (Phase 3-8)** |
+| **Backend Project Scaffold** | File `backend/pom.xml`, cấu trúc thư mục Maven chuẩn | **ĐÃ HOÀN THÀNH (Phase 1)** |
+| **Spring Boot Context & Startup** | `ElearningApplication.java`, chạy thành công | **ĐÃ HOÀN THÀNH (Phase 1)** |
+| **Response Envelope & Error Handling** | `ApiResponse<T>`, `PageResponse<T>`, `ErrorCode`, `GlobalExceptionHandler` | **ĐÃ HOÀN THÀNH (Phase 1)** |
+| **14 Bảng CSDL Vật lý** | Đã tồn tại thực tế 100% trong `elearning_db` | **ĐÃ HOÀN THÀNH (Phase 1)** |
+| **JPA Entities & Mappings** | 12 Entities ánh xạ chính xác 14 bảng quan hệ | **ĐÃ HOÀN THÀNH (Phase 2)** |
+| **Spring Data Repositories** | 12 JPA Repository interfaces | **ĐÃ HOÀN THÀNH (Phase 2)** |
+| **Flyway Seed Data (V2, V3)** | 4 Roles và 214 Bộ thủ Khang Hy chuẩn | **ĐÃ HOÀN THÀNH (Phase 2)** |
+| **Spring Security 6 & JWT** | FilterChain, BCrypt, JwtUtil, JwtAuthenticationFilter, CustomUserDetails | **ĐÃ HOÀN THÀNH (Phase 3)** |
+| **Auth & Profile Endpoints** | `/api/v1/auth/register`, `/api/v1/auth/login`, `/api/v1/users/profile` | **ĐÃ HOÀN THÀNH (Phase 3)** |
+| **RBAC Integration Verification** | 20 MockMvc tests kiểm chứng ma trận 4 vai trò | **ĐÃ HOÀN THÀNH (Phase 3)** |
+| **Radical DTOs & Service** | `RadicalResponse`, `RadicalDetailResponse`, `RadicalService`, `RadicalServiceImpl` | **ĐÃ HOÀN THÀNH (Task 4A.1)** |
+| **Radical Controller & Admin CRUD** | `RadicalController` (`/api/v1/radicals/**`, `/api/v1/admin/radicals/**`) | **NHIỆM VỤ TIẾP THEO (Task 4A.2)** |
+| **Vocabulary Module** | DTOs, Service, Controller tìm kiếm từ vựng đa tiêu chí | **CHƯA BẮT ĐẦU (Module 4B)** |
+| **Lesson Management & Excel Import**| Public Lesson, Creator Studio, POI Excel Import | **CHƯA BẮT ĐẦU (Phase 5)** |
 | **Frontend Code** | Thư mục `frontend/` rỗng (chỉ có `.gitkeep`) | **CHƯA BẮT ĐẦU (Phase 9)** |
 
 ---
@@ -128,32 +152,35 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ### 5.2. Hiện trạng Thực tế trong MySQL `elearning_db`
 * **Số lượng bảng hiện có:** Đúng 15 bảng (14 bảng nghiệp vụ + 1 bảng hạ tầng `flyway_schema_history`).
-* **Trạng thái Flyway:** Version `1` áp dụng thành công qua file `V1__init_schema.sql` (execution time: 527ms).
-* **Kiểm chứng khóa chính:**
-  * Bảng đơn: Khóa chính đơn (`account_id`, `user_id`, `role_id`, `radical_id`, `vocab_id`, `lesson_id`, `setting_id`, `progress_id`, `log_id`, `note_id`).
-  * `USER_SRS_SETTING.setting_id`: Là Primary Key duy nhất (đã sửa triệt để lỗi khai báo lặp).
-  * Bảng liên kết: Khóa chính phức hợp (`account_id, role_id`), (`vocab_id, radical_id`), (`lesson_id, vocab_id`).
-* **Kiểm chứng quy tắc xóa khóa ngoại (ON DELETE):**
-  * `MODERATION_LOG.lesson_id`: Tuân thủ nghiêm ngặt **`ON DELETE RESTRICT`** để bảo tồn lịch sử kiểm toán.
-  * `LESSON.created_by`, `MODERATION_LOG.moderator_id`, `ACCOUNT_ROLE.role_id`, `VOCAB_RADICAL.radical_id`, `LESSON_VOCABULARY.vocab_id`: Đều là **`RESTRICT`**.
-  * Các bảng quan hệ phụ thuộc chặt (`USER_PROFILE`, `CARD_PROGRESS`, `PERSONAL_NOTE`, v.v.): Đều là **`CASCADE`**.
-* **Kiểm chứng tên cột đặc thù:**
-  * Cột `review_time_seconds` trong bảng `REVIEW_LOG` tồn tại chính xác 100%.
+* **Trạng thái Flyway:** Version `3` áp dụng thành công qua 3 file migration:
+  - `V1__init_schema.sql`: Khởi tạo 14 bảng quan hệ.
+  - `V2__seed_roles.sql`: Seed 4 vai trò cố định.
+  - `V3__seed_radicals.sql`: Seed 214 Bộ thủ Khang Hy chuẩn.
+* **Số lượng bản ghi CSDL nền tảng đã xác minh:**
+  - `SELECT COUNT(*) FROM role;` $\rightarrow$ **4** bản ghi.
+  - `SELECT COUNT(*) FROM radical;` $\rightarrow$ **214** bản ghi.
+* **Kiểm chứng khóa ngoại và toàn vẹn tham chiếu:**
+  - `MODERATION_LOG.lesson_id`: Tuân thủ nghiêm ngặt **`ON DELETE RESTRICT`** để bảo tồn lịch sử kiểm toán.
+  - `LESSON.created_by`, `MODERATION_LOG.moderator_id`, `ACCOUNT_ROLE.role_id`, `VOCAB_RADICAL.radical_id`, `LESSON_VOCABULARY.vocab_id`: Đều là **`RESTRICT`**.
+  - Các bảng quan hệ phụ thuộc chặt (`USER_PROFILE`, `CARD_PROGRESS`, `PERSONAL_NOTE`, v.v.): Đều là **`CASCADE`**.
+  - Cột `review_time_seconds` trong bảng `REVIEW_LOG` tồn tại chính xác 100%.
 
 ---
 
-## 6. QUYẾT ĐỊNH THIẾT KẾ CƠ SỞ DỮ LIỆU CẦN LƯU Ý
+## 6. QUYẾT ĐỊNH THIẾT KẾ CƠ SỞ DỮ LIỆU & CONTRACT CẦN LƯU Ý
 
 1. **Chiến lược Tham chiếu Đa hình (`CARD_PROGRESS` và `REVIEW_LOG`):**
    * Sử dụng cặp trường: `item_type VARCHAR(20)` (`VOCABULARY` hoặc `RADICAL`) và `item_id BIGINT UNSIGNED`.
-   * **Không tạo Foreign Key vật lý ở mức CSDL MySQL** cho `item_id` (đây là **Phương án A** đã được duyệt).
-   * **Bắt buộc:** Tầng Service trong Spring Boot chịu trách nhiệm kiểm tra toàn vẹn tham chiếu (kiểm tra ID tồn tại trong bảng tương ứng trước khi thêm/sửa tiến trình học).
+   * **Không tạo Foreign Key vật lý ở mức CSDL MySQL** cho `item_id` (đây là **Phương án A** đã được duyệt). Tầng Service trong Spring Boot chịu trách nhiệm kiểm tra toàn vẹn tham chiếu.
 2. **Quy tắc Ghi chú Cá nhân (Personal Note):**
    * Giới hạn độ dài nội dung: `content <= 500 characters` (`VARCHAR(500)`).
-   * **Bác bỏ hoàn toàn đề xuất giới hạn 5 ghi chú/từ vựng** (User đã khẳng định đề xuất này không hợp lệ, không được cài đặt ràng buộc CSDL hay code chặn 5 ghi chú).
+   * **Bác bỏ hoàn toàn đề xuất giới hạn 5 ghi chú/từ vựng** (không được cài đặt ràng buộc CSDL hay code chặn 5 ghi chú).
 3. **Audit Timestamps:**
    * 5 bảng thực thể chính (`ACCOUNT`, `USER_PROFILE`, `LESSON`, `RADICAL`, `VOCABULARY`) có cả `created_at` và `updated_at`.
    * Bảng log bất biến (`REVIEW_LOG`, `MODERATION_LOG`, `PERSONAL_NOTE`) chỉ có `created_at` hoặc `reviewed_at`.
+4. **Quyết định Hợp đồng Radical DTOs (Correction Patch Task 4A.1):**
+   * **Không có `radicalNumber` và `strokeCount`:** Cột vật lý trong bảng `RADICAL` chỉ có `radical_id, character, pinyin, meaning_han_viet, meaning_vi, audio_url, video_writing_url, created_at, updated_at`. DTO bám đúng schema thực tế, không tự thêm trường hay tính toán giả định.
+   * **Không chứa danh sách Vocabulary trong `RadicalDetailResponse`:** Theo chuẩn `API.md`, Radical metadata độc lập hoàn toàn khỏi Vocabulary. Tra cứu từ vựng theo bộ thủ thuộc thẩm quyền của Module 4B (`VocabularyService`).
 
 ---
 
@@ -165,9 +192,9 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 ================================================================
 [x] Phase 0 — Project Specification & Physical Database Design  [COMPLETED]
 [x] Phase 1 — Spring Boot Foundation & Web Infrastructure       [COMPLETED]
-[~] Phase 2 — Persistence Layer & Database Seed Data            [IN_PROGRESS: Mod 2A In Progress, Mod 2B-2E Pending]
-[ ] Phase 3 — Authentication, Security & RBAC                   [NOT_STARTED]
-[ ] Phase 4 — Radical & Vocabulary Catalog Domain               [NOT_STARTED]
+[x] Phase 2 — Persistence Layer & Database Seed Data            [COMPLETED]
+[x] Phase 3 — Authentication, Security & RBAC                   [COMPLETED]
+[~] Phase 4 — Radical & Vocabulary Catalog Domain               [IN_PROGRESS: Mod 4A Task 4A.1 COMPLETED, Task 4A.2 NEXT]
 [ ] Phase 5 — Lesson Management & Excel Import                  [NOT_STARTED]
 [ ] Phase 6 — Content Moderation Workflow                       [NOT_STARTED]
 [ ] Phase 7 — Spaced Repetition System (SRS SM-2 Engine)        [NOT_STARTED]
@@ -179,86 +206,32 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 ```
 
 ### Chi tiết ĐÃ TRIỂN KHAI VÀ XÁC MINH (IMPLEMENTED):
-* `Module 1A [COMPLETED]`:
-  * `backend/pom.xml`: Khởi tạo thành công với Spring Boot 3.3.5, Java 21 LTS, dependencies: Web, JPA, MySQL Connector, Flyway, Validation, Test.
-  * `backend/src/main/resources/application.yml`: Cấu hình kết nối MySQL `elearning_db`, kích hoạt Flyway, đặt Hibernate `ddl-auto: none`.
-  * `backend/src/main/resources/db/migration/V1__init_schema.sql`: Khởi tạo trọn vẹn 14 bảng quan hệ, được Flyway áp dụng thành công.
-  * `backend/src/main/java/com/elearning/ElearningApplication.java`: Class khởi động chuẩn của ứng dụng.
-  * `backend/src/test/java/com/elearning/ElearningApplicationTests.java`: Test khởi động context, kích hoạt migration tự động thành công (1 test, 0 failure).
-  * `.gitignore`: Đã hiệu chỉnh loại trừ đúng `target/`, các file IDE, secrets, và đưa thư mục `db/migration` vào Git an toàn.
-* `Module 1B [COMPLETED]`:
-  * `backend/src/main/java/com/elearning/dto/response/ApiResponse.java`: Phong bì JSON chuẩn theo `API.md` Mục 1.2 (`code`, `message`, `errors`, `data`), 4 factory methods.
-  * `backend/src/main/java/com/elearning/dto/response/PageResponse.java`: Mô hình phân trang chuẩn theo `API.md` Mục 1.3 (`page`, `size`, `totalElements`, `totalPages`, `items`), factory method chuyển đổi từ Spring Data `Page<T>`.
-  * `backend/src/main/java/com/elearning/common/ErrorCode.java`: Enum 12 mã lỗi chuẩn theo `API.md` Mục 1.4 (`code`, `defaultMessage`, `httpStatus`).
-  * `backend/src/main/java/com/elearning/exception/BusinessException.java`: Custom runtime exception hỗ trợ dynamic `ErrorCode` và custom message.
-  * `backend/src/main/java/com/elearning/exception/GlobalExceptionHandler.java`: Lớp `@RestControllerAdvice` tập trung bắt và chuẩn hóa `MethodArgumentNotValidException` (400), `BusinessException` (dynamic status/code), fallback `Exception` (500).
-  * `backend/src/test/java/com/elearning/ApiResponseTests.java`: 12 unit tests kiểm chứng serialization Jackson, mapping Spring Data Page, và ErrorCode mapping PASS 12/12 tests.
-  * `backend/src/test/java/com/elearning/GlobalExceptionHandlerTests.java`: 12 unit & slice tests kiểm chứng validation errors, dynamic business exceptions, generic fallback, và MockMvc precedence PASS 12/12 tests.
-* `Module 2A [COMPLETED]`:
-  * `backend/src/main/java/com/elearning/entity/Account.java`: JPA Entity cho bảng `ACCOUNT` (BIGINT AUTO_INCREMENT, `email_or_phone` UNIQUE, `password_hash`, `status`, timestamps, 1:1 `UserProfile`, N:N `@JoinTable(name = "account_role")` với `Role`).
-  * `backend/src/main/java/com/elearning/entity/UserProfile.java`: JPA Entity cho bảng `USER_PROFILE` (BIGINT AUTO_INCREMENT, owning side 1:1 `Account` qua `@JoinColumn(name = "account_id")`, `full_name`, `avatar_url`, timestamps).
-  * `backend/src/main/java/com/elearning/entity/Role.java`: JPA Entity cho bảng `ROLE` (INT `role_id`, `role_name` UNIQUE).
-  * `backend/src/main/java/com/elearning/repository/AccountRepository.java`: Spring Data JPA Repository cho `Account`, hỗ trợ `findByEmailOrPhone` và `existsByEmailOrPhone`.
-  * `backend/src/main/java/com/elearning/repository/UserProfileRepository.java`: Spring Data JPA Repository cho `UserProfile`, hỗ trợ `findByAccount`.
-  * `backend/src/main/java/com/elearning/repository/RoleRepository.java`: Spring Data JPA Repository cho `Role`, hỗ trợ `findByRoleName`.
-  * `backend/src/test/java/com/elearning/IdentityPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, association 1:1, N:N junction table `account_role`, composite PK semantics, cascade delete PASS 5/5 tests.
-  * `backend/src/test/java/com/elearning/IdentityRepositoryTests.java`: 7 tests kiểm chứng Spring Data JPA proxy, truy vấn tìm kiếm `email_or_phone`, `role_name`, `account` profile PASS 7/7 tests.
-* `Module 2B [COMPLETED]`:
-  * `backend/src/main/java/com/elearning/entity/Radical.java`: JPA Entity cho bảng `RADICAL` (INT AUTO_INCREMENT, `character` UNIQUE, `pinyin`, `meaning_han_viet`, `meaning_vi`, timestamps, N:N `vocabularies`).
-  * `backend/src/main/java/com/elearning/entity/Vocabulary.java`: JPA Entity cho bảng `VOCABULARY` (BIGINT AUTO_INCREMENT, `hanzi`, `pinyin`, `pinyin_raw` lưu độc lập, `meaning_han_viet`, `meaning_vi`, timestamps, N:N `@JoinTable(name = "vocab_radical")` với `radicals`).
-  * `backend/src/main/java/com/elearning/repository/RadicalRepository.java`: Spring Data JPA Repository cho `Radical`, hỗ trợ `findByCharacter` và `existsByCharacter`.
-  * `backend/src/main/java/com/elearning/repository/VocabularyRepository.java`: Spring Data JPA Repository cho `Vocabulary`, hỗ trợ `findByHanziAndPinyinRaw`, `findByHanzi`, `findByPinyinRaw`, `searchByKeyword` kèm phân trang `Pageable`.
-  * `backend/src/test/java/com/elearning/DictionaryPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, association 2 chiều, composite PK junction table, và Set deduplication PASS 5/5 tests.
-  * `backend/src/test/java/com/elearning/DictionaryRepositoryTests.java`: 8 tests kiểm chứng Spring Data JPA proxy, truy vấn tìm kiếm `character`, `hanzi`, `pinyin_raw`, tìm kiếm kết hợp đa tiêu chí, phân trang metadata PASS 8/8 tests.
-* `Module 2C [COMPLETED]`:
-  * `backend/src/main/java/com/elearning/entity/Lesson.java`: JPA Entity cho bảng `LESSON` (BIGINT AUTO_INCREMENT, `title`, `excel_file_url`, `created_by` liên kết `@ManyToOne` với `Account`, `status`, timestamps, `@OneToMany` `lessonVocabularies` với `@OrderBy("orderIndex ASC")`).
-  * `backend/src/main/java/com/elearning/entity/LessonVocabularyId.java`: Composite ID `@Embeddable` cho `(lesson_id, vocab_id)`.
-  * `backend/src/main/java/com/elearning/entity/LessonVocabulary.java`: JPA Entity cho bảng `LESSON_VOCABULARY` (`@EmbeddedId` kèm `@MapsId("lessonId")` và `@MapsId("vocabId")`, `order_index`).
-  * `backend/src/main/java/com/elearning/repository/LessonRepository.java`: Spring Data JPA Repository cho `Lesson`, hỗ trợ `findByCreatedBy`, `findByStatus`, `findByCreatedByAndStatus` kèm phân trang `Pageable`.
-  * `backend/src/main/java/com/elearning/repository/LessonVocabularyRepository.java`: Spring Data JPA Repository cho `LessonVocabulary`, hỗ trợ `findByLessonOrderByOrderIndexAsc`, `findByLesson_LessonIdOrderByOrderIndexAsc`, `existsBy...`, `countBy...`.
-  * `backend/src/test/java/com/elearning/LessonPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, foreign key `created_by`, composite PK semantics, sắp xếp `@OrderBy("orderIndex ASC")`, shared vocab không trùng lặp, và cascade delete bảo toàn `Account`/`Vocabulary` PASS 5/5 tests.
-  * `backend/src/test/java/com/elearning/LessonRepositoryTests.java`: 7 tests kiểm chứng Spring Data JPA proxy, truy vấn lọc theo creator, lọc theo status, lọc kết hợp creator + status, sắp xếp `order_index ASC`, cách ly bài học và chia sẻ từ vựng PASS 7/7 tests.
-
-* `Module 2D [COMPLETED: Task 2D.1 COMPLETED, Task 2D.2 COMPLETED, Task 2D.3 COMPLETED]`:
-  * `backend/src/main/java/com/elearning/entity/UserSrsSetting.java`: JPA Entity cho bảng `USER_SRS_SETTING` (1:1 với `UserProfile`, `new_cards_per_day`, `max_review_per_day`).
-  * `backend/src/main/java/com/elearning/entity/PersonalNote.java`: JPA Entity cho bảng `PERSONAL_NOTE` (`user_id` $\rightarrow$ `UserProfile`, `vocab_id` $\rightarrow$ `Vocabulary`, `content` VARCHAR 500, không giới hạn 5 notes).
-  * `backend/src/main/java/com/elearning/entity/ModerationLog.java`: JPA Entity cho bảng `MODERATION_LOG` (nhật ký bất biến, `lesson_id` $\rightarrow$ `Lesson` `ON DELETE RESTRICT`, `moderator_id` $\rightarrow$ `Account` `ON DELETE RESTRICT`).
-  * `backend/src/main/java/com/elearning/entity/CardProgress.java`: JPA Entity cho bảng `CARD_PROGRESS` (`user_id` $\rightarrow$ `UserProfile`, `item_type` `VARCHAR(20)`, `item_id` `BIGINT UNSIGNED`, `ease_factor` DECIMAL(4,2), `interval_days`, `repetitions`, `next_review_at`, unique `uk_card_progress_user_item`).
-  * `backend/src/main/java/com/elearning/entity/ReviewLog.java`: JPA Entity cho bảng `REVIEW_LOG` (`user_id` $\rightarrow$ `UserProfile`, `item_type` `VARCHAR(20)`, `item_id` `BIGINT UNSIGNED`, `rating` `Byte`, `interval_before`, `interval_after`, `review_time_seconds`, `reviewed_at`).
-  * `backend/src/main/java/com/elearning/repository/CardProgressRepository.java`: Repository cho `CardProgress` (`findByUserAndNextReviewAtLessThanEqualOrderByNextReviewAtAsc`, `countByUserAndNextReviewAtLessThanEqual`, `findByUserAndItemTypeAndItemId`).
-  * `backend/src/main/java/com/elearning/repository/ReviewLogRepository.java`: Repository cho `ReviewLog` (`findByUserOrderByReviewedAtDesc`, phân trang `Pageable`, tìm theo thẻ `findByUserAndItemTypeAndItemIdOrderByReviewedAtDesc`).
-  * `backend/src/main/java/com/elearning/repository/PersonalNoteRepository.java`: Repository cho `PersonalNote` (`findByUserAndVocabularyOrderByCreatedAtDesc`, `findByNoteIdAndUser`, không giới hạn 5 notes).
-  * `backend/src/main/java/com/elearning/repository/ModerationLogRepository.java`: Repository cho `ModerationLog` (`findByLessonOrderByCreatedAtDesc`, `findByLesson_LessonIdOrderByCreatedAtDesc`, bảo toàn audit trail bất biến không custom delete).
-  * `backend/src/main/java/com/elearning/repository/UserSrsSettingRepository.java`: Repository cho `UserSrsSetting` (`findByUser`, `findByUser_UserId`, `existsByUser`).
-  * `backend/src/test/java/com/elearning/ProgressAuditPersistenceTests.java`: 7 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, 1:1 SRS settings, ghi chú độ dài 500 ký tự, nhiều ghi chú không giới hạn 5, không cascade delete `Vocabulary`, và bảo toàn `ON DELETE RESTRICT` của `Lesson` PASS 7/7 tests.
-  * `backend/src/test/java/com/elearning/SrsProgressPersistenceTests.java`: 5 tests kiểm chứng mapping với Hibernate `ddl-auto=validate`, tham chiếu đa hình `VOCABULARY` và `RADICAL` không FK vật lý, `review_time_seconds`, `rating` `Byte` (TINYINT), và `uk_card_progress_user_item` PASS 5/5 tests.
-  * `backend/src/test/java/com/elearning/SrsProgressRepositoryTests.java`: 7 tests kiểm chứng các derived queries, due-card boundary `<= now`, user isolation, không giới hạn 5 notes, ownership isolation, và audit order PASS 7/7 tests.
-
-* `Module 2E [COMPLETED]`:
-  * `backend/src/main/resources/db/migration/V2__seed_roles.sql`: Flyway migration nạp 4 vai trò cố định của hệ thống (`1=Learner`, `2=Creator`, `3=Moderator`, `4=Admin`). Checksum `449376763`, `success=1`.
-  * `backend/src/main/resources/db/migration/V3__seed_radicals.sql`: Flyway migration nạp 214 bộ thủ Khang Hy chuẩn từ dataset authoritative `.agents/references/radicals.json`. Checksum `-1949280069`, `success=1`.
-  * `Checkpoint 2E [COMPLETED]`: `role_count = 4`, `radical_count = 214`.
-
-* `Module 2F [COMPLETED]`:
-  * `Task 2F.1 [COMPLETED]`: Tổng kiểm thử tích hợp toàn diện tầng Persistence & Schema Validation. Toàn bộ 14 bảng quan hệ khớp chính xác với Hibernate `ddl-auto: validate`. 12 Spring Data JPA Repositories pass.
-  * `Checkpoint Phase 2 [COMPLETED]`: `mvn clean test` PASS 81/81 tests (0 failures, 0 errors) với cấu hình `ddl-auto: validate`. Không có cảnh báo sai lệch kiểu dữ liệu, khóa chính hoặc khóa ngoại. Phase 2 chính thức hoàn tất 100%.
-
-* `Module 3A [COMPLETED]`:
-  * `Task 3A.1 [COMPLETED]`: Cấu hình `SecurityConfig`: Spring Security 6 `SecurityFilterChain`, `BCryptPasswordEncoder`, cấu hình session `STATELESS`, vô hiệu hóa CSRF cho REST API. `SecurityConfigTests` PASS 10/10 tests (8.71s).
-  * `Task 3A.2 [COMPLETED]`: Thư viện JJWT 0.12.6, `JwtUtil` (sinh/đọc/validate token HMAC-SHA256, claims `sub`, `roles`, `iat`, `exp`), `JwtAuthenticationFilter` (OncePerRequestFilter, trích xuất `Authorization: Bearer <token>`, nạp `Authentication` vào `SecurityContextHolder` trước `UsernamePasswordAuthenticationFilter` mà không truy vấn DB). `JwtUtilTests` PASS 11/11 tests, `JwtAuthenticationFilterTests` PASS 7/7 tests, `SecurityConfigTests` PASS 12/12 tests.
-  * `Task 3A.3 [COMPLETED]`: Triển khai `CustomUserDetailsService` và `CustomUserDetails`. Nạp `Account` qua `AccountRepository.findByEmailOrPhone`, mapping chuẩn `ROLE_<RoleName>` độc lập khỏi lazy JPA graph, kiểm soát an toàn trạng thái `Active`, `Inactive`, `Banned`/`Locked`, ném `UsernameNotFoundException` không rò rỉ SQL; bean tự động cấu hình Global `AuthenticationManager`. `CustomUserDetailsTests` PASS 11/11 tests, `CustomUserDetailsServiceTests` PASS 6/6 tests, `CustomUserDetailsServiceIntegrationTests` PASS 2/2 tests.
-  * `Checkpoint 3A [COMPLETED]`: `mvn clean test` PASS 130/130 tests (19.37s). Hạ tầng Spring Security 6, BCrypt, JWT, UserDetailsService và FilterChain hoàn tất 100%.
-
-* `Module 3B [COMPLETED]`:
-  * `Task 3B.1 [COMPLETED]`: Request/Response DTOs cho phân hệ xác thực: `RegisterRequest` (`emailOrPhone`, `password`, `fullName`), `LoginRequest` (`emailOrPhone`, `password`), `AuthResponse` (`token`, `type`, `accountId`, `emailOrPhone`, `fullName`, `roles`). Ràng buộc Jakarta Validation (`@NotBlank`, `@Size`), hỗ trợ `@JsonAlias` (`accessToken`, `tokenType`), che giấu credentials an toàn trong `toString()`, cách ly 100% khỏi JPA Entity. `AuthenticationDtoTests` PASS 14/14 tests.
-  * `Task 3B.2 [COMPLETED]`: `AuthService`, `AuthServiceImpl` và `AuthController` (`POST /api/v1/auth/register`, `POST /api/v1/auth/login`). Đăng ký tài khoản kiểm tra trùng lặp email/phone trả về 409 Conflict, mã hóa mật khẩu bằng `BCryptPasswordEncoder`, gán vai trò mặc định `Learner`, cascade tạo `UserProfile`, bọc trong transaction nguyên tử; đăng nhập xác thực qua `AuthenticationManager`, sinh token JWT bằng `JwtUtil`, từ chối thông tin sai bằng 401 generic không làm lộ sự tồn tại của tài khoản; tích hợp mượt mà với `JwtAuthenticationFilter`. `AuthServiceTests` PASS 6/6 tests, `AuthControllerTests` PASS 6/6 tests, `AuthIntegrationTests` PASS 1/1 test.
-  * `Checkpoint 3B [COMPLETED]`: Đăng ký thành công trả về 201; đăng nhập đúng trả về 200 kèm JWT; đăng nhập sai mật khẩu trả về 401; dữ liệu không hợp lệ trả về 400 kèm lỗi validation; trùng email/phone trả về 409; JWT handoff tới route bảo vệ thành công; full regression `mvn clean test` PASS 157/157 tests (20.98s).
+* **Phase 0 [COMPLETED]:** Dọn dẹp legacy code, xác minh 19 Agent Skills (`validate_skills.ps1` PASS), bộ 9 tài liệu đặc tả chuẩn, cài đặt MySQL 8.4.9 LTS cổng 3306, thiết kế CSDL 14 bảng `DATABASE_DESIGN.md`.
+* **Phase 1 [COMPLETED]:**
+  * `Module 1A`: Spring Boot 3.3.5, Java 21 LTS, Flyway V1 14 bảng, `ElearningApplication`.
+  * `Module 1B`: `ApiResponse<T>`, `PageResponse<T>`, `ErrorCode`, `BusinessException`, `GlobalExceptionHandler` (`ApiResponseTests` PASS 12/12, `GlobalExceptionHandlerTests` PASS 12/12).
+* **Phase 2 [COMPLETED]:**
+  * `Module 2A`: Entity & Repository cho `Account`, `UserProfile`, `Role`, `account_role` junction table (`IdentityPersistenceTests` PASS 5/5, `IdentityRepositoryTests` PASS 7/7).
+  * `Module 2B`: Entity & Repository cho `Radical`, `Vocabulary`, `vocab_radical` junction table (`DictionaryPersistenceTests` PASS 5/5, `DictionaryRepositoryTests` PASS 8/8).
+  * `Module 2C`: Entity & Repository cho `Lesson`, `LessonVocabulary` (`LessonPersistenceTests` PASS 5/5, `LessonRepositoryTests` PASS 7/7).
+  * `Module 2D`: Entity & Repository cho `UserSrsSetting`, `PersonalNote`, `ModerationLog`, `CardProgress`, `ReviewLog` (`ProgressAuditPersistenceTests` PASS 7/7, `SrsProgressPersistenceTests` PASS 5/5, `SrsProgressRepositoryTests` PASS 7/7).
+  * `Module 2E`: Flyway V2 seed 4 roles (`V2__seed_roles.sql`), Flyway V3 seed 214 radicals (`V3__seed_radicals.sql`).
+  * `Module 2F`: Kiểm thử tích hợp `ddl-auto: validate` khớp 100% Flyway schema (Checkpoint Phase 2 PASS 81/81 tests).
+* **Phase 3 [COMPLETED]:**
+  * `Module 3A`: `SecurityConfig` (SecurityFilterChain, BCrypt, STATELESS, CSRF disable), `JwtUtil` (HMAC-SHA256, claims `sub`, `roles`, `iat`, `exp`), `JwtAuthenticationFilter` (OncePerRequestFilter, Bearer header), `CustomUserDetails` & `CustomUserDetailsService` (`ROLE_<RoleName>`, trạng thái Active/Inactive/Locked) (`JwtUtilTests` PASS 11/11, `JwtAuthenticationFilterTests` PASS 7/7, `CustomUserDetailsTests` PASS 11/11, `CustomUserDetailsServiceTests` PASS 6/6, `CustomUserDetailsServiceIntegrationTests` PASS 2/2).
+  * `Module 3B`: `RegisterRequest`, `LoginRequest`, `AuthResponse` (Jakarta Validation, zero entity leak), `AuthService`, `AuthController` (`POST /api/v1/auth/register`, `POST /api/v1/auth/login`) (`AuthenticationDtoTests` PASS 14/14, `AuthServiceTests` PASS 6/6, `AuthControllerTests` PASS 6/6, `AuthIntegrationTests` PASS 1/1).
+  * `Module 3C`: `UserProfileResponse`, `UpdateProfileRequest`, `UserProfileService`, `UserProfileController` (`GET /api/v1/users/profile`, `PUT /api/v1/users/profile`, ownership isolation, 401 unauthenticated) (`UserProfileServiceTests` PASS 5/5, `UserProfileControllerTests` PASS 3/3, `UserProfileIntegrationTests` PASS 2/2).
+  * `Module 3D`: `RbacSecurityIntegrationTests` (20 tests kiểm chứng ma trận 4 vai trò Learner, Creator, Moderator, Admin; 401 unauthenticated, 403 forbidden, 200 OK với JWT thật). Checkpoint Phase 3 nghiệm thu đạt.
+* **Phase 4 [IN_PROGRESS]:**
+  * `Task 4A.1 [COMPLETED]`: `RadicalResponse`, `RadicalDetailResponse` (chứa radical metadata chuẩn, không có `radicalNumber`/`strokeCount`, không có vocabulary list), `RadicalService`, `RadicalServiceImpl` (`getAllRadicals(Pageable)`, `getAllRadicals()`, `getRadicalById(Integer)`, `getRadicalByCharacter(String)`), xử lý lỗi `BusinessException(ErrorCode.NOT_FOUND)`. `RadicalServiceTests` PASS 8/8 tests, `RadicalServiceIntegrationTests` PASS 6/6 tests (xác minh chính xác 214 bộ thủ Khang Hy trên MySQL thật).
 
 ### Chi tiết CHƯA TRIỂN KHAI (NOT IMPLEMENTED):
-* `Module 3C`: `Task 3C.1` (`UserProfileResponse`, `UpdateProfileRequest`, `UserProfileService`, `UserProfileController`) và `Checkpoint 3C`.
-* `Module 3D [NOT_STARTED]`: `Task 3D.1` (Kiểm thử tự động MockMvc cho Auth & RBAC 4 vai trò).
-* `Phase 4-8 [NOT_STARTED]`: Chưa có bất kỳ Service hay Controller nghiệp vụ nào.
-* `Phase 9 [NOT_STARTED]`: Chưa có mã nguồn giao diện HTML/CSS/JS nào trong `frontend/`.
+* `Task 4A.2 [NEXT / CURRENT]`: `RadicalController` công khai (`GET /api/v1/radicals/**`) và Admin endpoints (`POST/PUT/DELETE /api/v1/admin/radicals/**`).
+* `Module 4B [NOT_STARTED]`: `Task 4B.1`, `Task 4B.2` (Vocabulary DTOs, Service tìm kiếm phân trang theo pinyin/hanzi, VocabularyController).
+* `Module 4C [NOT_STARTED]`: `Task 4C.1` (Kiểm thử tích hợp Catalog Bộ thủ & Từ vựng).
+* `Phase 5-8 [NOT_STARTED]`: Lesson, Moderation, SRS, Personal Notes.
+* `Phase 9 [NOT_STARTED]`: Frontend HTML/CSS/JS (`frontend/` rỗng).
+* `Phase 10-11 [NOT_STARTED]`: Hardening, Final Release.
 
 ---
 
@@ -307,17 +280,17 @@ Công bố giao diện REST API chính thức cho học viên tra cứu danh m�
 ### 3. In-Scope (Phạm vi thực hiện)
 * Tạo `RadicalController` (hoặc `AdminRadicalController` nếu tách theo phân hệ admin).
 * Tạo DTOs request phục vụ Admin CRUD (`CreateRadicalRequest`, `UpdateRadicalRequest`) với Jakarta Validation.
-* Bổ sung mutation methods trong `RadicalService` và `RadicalServiceImpl` phục vụ Admin CRUD.
+* Bổ sung mutation methods trong `RadicalService` và `RadicalServiceImpl` phục vụ Admin CRUD (chạy qua JPA Repository, **tuyệt đối không sửa Flyway**).
 * Viết WebMvc/MockMvc tests kiểm chứng:
   - Tra cứu công khai trả về HTTP 200 không cần JWT.
-  - Gọi Admin endpoints không có token trả về 401.
+  - Gọi Admin endpoints không có token trả về 401 Unauthorized.
   - Gọi Admin endpoints với quyền `Learner` bị từ chối 403 Forbidden.
-  - Gọi Admin endpoints với quyền `Admin` thành công.
+  - Gọi Admin endpoints với quyền `Admin` thành công (200 / 201).
 * Nghiệm thu `Checkpoint 4A`.
 
 ### 4. Out-of-Scope (Tuyệt đối KHÔNG làm ở Task 4A.2)
 * Không can thiệp sang phân hệ Từ vựng (thuộc Module 4B).
-* Không sửa cấu trúc Flyway migration cũ.
+* Không sửa cấu trúc Flyway migration cũ (`V1`, `V2`, `V3`).
 * Không can thiệp sang phân hệ Bài học (Phase 5).
 
 ### 5. Dependencies (Phụ thuộc)
@@ -325,7 +298,7 @@ Công bố giao diện REST API chính thức cho học viên tra cứu danh m�
 
 ### 6. Acceptance Criteria (Tiêu chí nghiệm thu)
 * Public API trả về dữ liệu 214 bộ thủ chuẩn `ApiResponse<PageResponse<RadicalResponse>>`.
-* Detail API trả về chi tiết bộ thủ.
+* Detail API trả về chi tiết bộ thủ `ApiResponse<RadicalDetailResponse>`.
 * Phân quyền bảo vệ Admin API hoạt động chính xác (401/403/200).
 * Nghiệm thu đạt `Checkpoint 4A`.
 * Toàn bộ test suite tiếp tục PASS 100%.
@@ -354,31 +327,22 @@ Công bố giao diện REST API chính thức cho học viên tra cứu danh m�
 
 ## 12. BẰNG CHỨNG XÁC MINH GẦN NHẤT (RECENT VERIFICATION EVIDENCE)
 
-1. **Kết quả Maven Test:**
+1. **Kết quả Maven Clean Test:**
    ```text
-   [INFO] Running com.elearning.ElearningApplicationTests
-   [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.473 s
+   [INFO] Tests run: 201, Failures: 0, Errors: 0, Skipped: 0
    [INFO] BUILD SUCCESS
+   [INFO] Total time: 43.692 s
    ```
-2. **Kết quả Maven Package:**
-   ```text
-   [INFO] Building jar: ...\backend\target\elearning-backend-1.0.0.jar
-   [INFO] BUILD SUCCESS
-   ```
-3. **Kết quả Flyway Migration:**
-   ```text
-   [INFO] Current version of schema `elearning_db`: << Empty Schema >>
-   [INFO] Migrating schema `elearning_db` to version "1 - init schema"
-   [INFO] Successfully applied 1 migration to schema `elearning_db`, now at version v1 (execution time 00:00.527s)
-   ```
-4. **Kiểm tra CSDL MySQL cục bộ (`elearning_db`):**
-   * Số bảng: 15 (14 bảng nghiệp vụ + `flyway_schema_history`).
+2. **Kiểm tra CSDL MySQL cục bộ (`elearning_db`):**
+   * Số bảng: 15 (14 bảng nghiệp vụ + `flyway_schema_history` version 3).
+   * Dữ liệu hạt giống: 4 roles, 214 radicals chuẩn Khang Hy.
    * Engine: `InnoDB`, Charset: `utf8mb4`, Collation: `utf8mb4_unicode_ci`.
    * Khóa ngoại `moderation_log.lesson_id`: `RESTRICT`.
    * Cột `review_time_seconds`: Tồn tại đúng chuẩn.
-5. **Git Log gần nhất:**
-   * Commit: `5d59ff497e2d416618ea774e98354c5c27b310ac`
-   * Message: `feat(phase-1): establish Spring Boot foundation with Flyway V1 14-table schema`
+3. **Git Log gần nhất:**
+   * Commit: `e8789f0` — `fix(catalog): resolve Task 4A.1 discrepancies per correction patch`
+   * Commit trước: `01a02e4` — `feat(catalog): implement Task 4A.1 Radical DTOs & RadicalService`
+   * Commit trước: `2e76d5c` — `docs: add authoritative project runbook .agents/RUNBOOK.md`
    * Trạng thái: `working tree clean`.
 
 ---
@@ -406,7 +370,7 @@ Bất kỳ AI Agent hoặc AI Model nào tiếp quản repo này cần tuân th�
 
 Khi một Agent hoặc Model mới bắt đầu phiên làm việc:
 1. **Không giả định có lịch sử hội thoại trước đó:** Mọi ngữ cảnh được cung cấp đầy đủ thông qua hệ thống tài liệu trong thư mục `.agents/`.
-2. **Khởi động từ file này:** Đọc `.agents/CURRENT_STATE.md` để nắm ngay hiện trạng và nhiệm vụ tiếp theo (`Task 1B.1`).
+2. **Khởi động từ file này:** Đọc `.agents/CURRENT_STATE.md` để nắm ngay hiện trạng và nhiệm vụ tiếp theo (`Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ`).
 3. **Đối chiếu với thực tế:** Nếu phát hiện bất kỳ sự sai khác nào giữa tài liệu này và mã nguồn thực tế, AI phải báo cáo ngay sự sai khác cho User, không được tự ý ghi đè hay suy đoán lạc quan.
 
 ---
@@ -418,22 +382,43 @@ Một AI mới khi đọc xong tài liệu này có thể trả lời tức thì
 1. **Dự án này là gì?**  
    $\rightarrow$ Hệ thống Website học 214 Bộ thủ và Từ vựng Tiếng Trung kết hợp thuật toán lặp lại ngắt quãng SM-2 (SRS), hỗ trợ nhập bài học từ Excel và quy trình kiểm duyệt bài học.
 2. **Công nghệ nào đang được sử dụng?**  
-   $\rightarrow$ Java 21 LTS (OpenJDK 21.0.12), Spring Boot 3.3.5, Apache Maven 3.9.16, MySQL Community Server 8.4.9 LTS, Flyway 10.x, Spring Data JPA / Hibernate 6.5.3, HTML/CSS/JavaScript.
+   $\rightarrow$ Java 21 LTS (OpenJDK 21.0.12), Spring Boot 3.3.5, Apache Maven 3.9.16, MySQL Community Server 8.4.9 LTS, Flyway 10.x, Spring Data JPA / Hibernate 6.5.3, Spring Security 6, JJWT 0.12.6, BCrypt, HTML/CSS/JavaScript.
 3. **Kiến trúc hệ thống là gì?**  
    $\rightarrow$ Kiến trúc phân tầng: `Client/Frontend -> REST API -> Controller -> Service -> Repository -> MySQL`. Flyway là thẩm quyền duy nhất quản lý schema. DTO phân tách hoàn toàn với Entity.
 4. **Mô hình CSDL nào đã được phê duyệt?**  
    $\rightarrow$ Mô hình đúng 14 bảng quan hệ chuẩn hóa 3NF, bộ mã `utf8mb4` / `utf8mb4_unicode_ci`, khóa chính `BIGINT/INT UNSIGNED AUTO_INCREMENT`.
 5. **Những gì ĐÃ THỰC SỰ được triển khai?**  
-   $\rightarrow$ Khung dự án Spring Boot 3.3.5 (`backend/pom.xml`), cấu hình datasource & Flyway (`application.yml`), script Flyway `V1__init_schema.sql`, class chính `ElearningApplication.java`, kiểm thử context `ElearningApplicationTests.java`, và kho Git sạch sẽ.
+   $\rightarrow$ Khung Spring Boot, Flyway V1 (14 bảng), Flyway V2 (4 roles), Flyway V3 (214 radicals), Response Envelopes (`ApiResponse`, `PageResponse`, `ErrorCode`, `GlobalExceptionHandler`), 12 JPA Entities, 12 Repositories, Spring Security 6 Stateless JWT, Auth Service & Controller (`/api/v1/auth/**`), User Profile Service & Controller (`/api/v1/users/profile`), RBAC 4 vai trò (`RbacSecurityIntegrationTests`), và Radical Service & DTOs (`RadicalResponse`, `RadicalDetailResponse`, `RadicalService`, `RadicalServiceImpl`).
 6. **Những gì ĐÃ ĐƯỢC XÁC MINH?**  
-   $\rightarrow$ `mvn test` SUCCESS, `mvn clean package` SUCCESS, Flyway V1 áp dụng thành công, CSDL `elearning_db` đã tạo đủ đúng 14 bảng nghiệp vụ với đầy đủ ràng buộc và kiểu dữ liệu chuẩn xác.
+   $\rightarrow$ `mvn clean test` PASS 201/201 tests (0 failures, 0 errors), CSDL `elearning_db` tạo đủ đúng 14 bảng nghiệp vụ, nạp đủ 4 roles và 214 bộ thủ Khang Hy, xác minh bảo mật 401/403/200 OK trên MockMvc.
 7. **Những gì CHƯA ĐƯỢC triển khai?**  
-   $\rightarrow$ Chưa có `ApiResponse<T>`, `PageResponse<T>`, `GlobalExceptionHandler`, JPA Entities, Repositories, DTOs, Controllers, Services, Security/JWT, Business Logic, Thuật toán SRS, Excel Import, Giao diện Frontend.
+   $\rightarrow$ `RadicalController` (Task 4A.2), Vocabulary DTOs/Service/Controller (Module 4B), Bài học (Phase 5), Duyệt bài (Phase 6), SRS Engine (Phase 7), Ghi chú (Phase 8), Giao diện Frontend (Phase 9).
 8. **Dự án đang ở Phase nào?**  
-   $\rightarrow$ Đang ở cuối **Phase 1 — Spring Boot Foundation & Web Infrastructure** (Module 1A COMPLETED, Module 1B PENDING).
+   $\rightarrow$ Đang ở **Phase 4 — Radical and Vocabulary Catalog Domain** (Module 4A: Task 4A.1 COMPLETED, Task 4A.2 NEXT / IN PROGRESS).
 9. **Task nào là Task tiếp theo cần làm?**  
-   $\rightarrow$ **Task 1B.1 — Base Response Models (ApiResponse<T>, PageResponse<T>, ErrorCode)** để chuẩn hóa cấu trúc phong bì API và hoàn tất 100% Phase 1.
+   $\rightarrow$ **`Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ`**.
 10. **Ràng buộc nào TUYỆT ĐỐI KHÔNG ĐƯỢC VI PHẠM?**  
-    $\rightarrow$ Không dùng lại mã nguồn cũ; không để Hibernate tự sửa schema (`ddl-auto: none`); không trả Entity ra API; không đổi tên cột `review_time_seconds`; không giới hạn 5 notes/vocab; không tạo FK MySQL cho tham chiếu đa hình `item_type + item_id`.
+    $\rightarrow$ Không dùng lại mã nguồn cũ; không để Hibernate tự sửa schema (`ddl-auto: none`); không sửa các migration V1-V3; không trả Entity ra API; không đổi tên cột `review_time_seconds`; không giới hạn 5 notes/vocab; không tạo FK MySQL cho tham chiếu đa hình `item_type + item_id`; không thêm `radicalNumber`/`strokeCount` vào DTO; không can thiệp sang Vocabulary ở Module 4A.
 11. **Câu hỏi nào còn mở (Open Questions)?**  
     $\rightarrow$ Duy nhất câu hỏi **OQ-08** về việc lựa chọn thư viện tĩnh cho Frontend tại Phase 9.
+
+---
+
+## 16. LƯU TRỮ LỊCH SỬ THIẾT LẬP BAN ĐẦU (HISTORICAL ARCHIVE — PHASE 1 INITIAL SNAPSHOT)
+
+> [!NOTE]
+> **MỤC ĐÍCH LƯU TRỮ (FOR HISTORICAL RECORD ONLY):**  
+> Phần dưới đây bảo lưu nguyên văn snapshot bàn giao tại thời điểm vừa hoàn thành Phase 1 (Commit `5d59ff4`), chỉ để theo dõi vết lịch sử phát triển ban đầu của dự án. **KHÔNG ĐƯỢC COI NỘI DUNG DƯỚI ĐÂY LÀ HIỆN TRẠNG DỰ ÁN.** Hiện trạng thực tế chính thức luôn tuân theo các Mục 0 đến 15 ở trên.
+
+<details>
+<summary><b>Nhấn để xem lại Snapshot lịch sử Phase 1 (Initial Foundation)</b></summary>
+
+```text
+Snapshot Commit: 5d59ff497e2d416618ea774e98354c5c27b310ac
+Status tại thời điểm đó:
+- Phase 1 hoàn tất (Scaffold Spring Boot 3.3.5, application.yml, Flyway V1 14 tables, ElearningApplicationTests 1/1 pass).
+- Tầng Persistence, Security, Controller chưa bắt đầu.
+- Nhiệm vụ tiếp theo tại thời điểm đó: Task 1B.1 (ApiResponse, PageResponse, ErrorCode).
+```
+
+</details>
