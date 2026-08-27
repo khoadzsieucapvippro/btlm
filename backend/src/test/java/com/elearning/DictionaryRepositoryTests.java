@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -210,34 +209,6 @@ class DictionaryRepositoryTests {
             assertThat(page3.getNumberOfElements()).isZero();
             assertThat(page3.getContent()).isEmpty();
             assertThat(page3.getTotalElements()).isEqualTo(5);
-        }
-
-        @Test
-        @DisplayName("GIVEN vocabulary associated with radical WHEN findByRadicalId THEN returns matching vocabularies")
-        void testFindByRadicalId() {
-            Radical radical = radicalRepository.findByCharacter("木")
-                    .orElseGet(() -> entityManager.persistAndFlush(new Radical(null, "木_test", "mù", "Mộc", "Cây, gỗ")));
-
-            Vocabulary v1 = new Vocabulary("林", "lín", "lin", "Lâm", "Rừng");
-            v1.getRadicals().add(radical);
-            entityManager.persistAndFlush(v1);
-
-            Vocabulary v2 = new Vocabulary("森", "sēn", "sen", "Sâm", "Rừng rậm");
-            v2.getRadicals().add(radical);
-            entityManager.persistAndFlush(v2);
-
-            Vocabulary v3 = new Vocabulary("水", "shuǐ", "shui", "Thủy", "Nước");
-            entityManager.persistAndFlush(v3);
-
-            entityManager.clear();
-
-            List<Vocabulary> list = vocabularyRepository.findByRadicalId(radical.getRadicalId());
-            assertThat(list).hasSize(2);
-            assertThat(list).extracting(Vocabulary::getHanzi).containsExactly("林", "森");
-
-            Page<Vocabulary> page = vocabularyRepository.findByRadicalId(radical.getRadicalId(), PageRequest.of(0, 10));
-            assertThat(page.getTotalElements()).isEqualTo(2);
-            assertThat(page.getContent()).hasSize(2);
         }
     }
 }

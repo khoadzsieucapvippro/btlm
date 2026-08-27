@@ -31,7 +31,7 @@ public interface RadicalService {
      * Retrieves detailed information of a radical by its primary key ID.
      *
      * @param radicalId ID of the radical
-     * @return RadicalDetailResponse
+     * @return RadicalDetailResponse containing radical metadata
      * @throws com.elearning.exception.BusinessException with NOT_FOUND if radical does not exist
      */
     RadicalDetailResponse getRadicalById(Integer radicalId);
@@ -40,17 +40,8 @@ public interface RadicalService {
      * Retrieves detailed information of a radical by its Chinese character symbol.
      *
      * @param character the radical Chinese character symbol
-     * @return RadicalDetailResponse
+     * @return RadicalDetailResponse containing radical metadata
      * @throws com.elearning.exception.BusinessException with NOT_FOUND if radical does not exist
      */
     RadicalDetailResponse getRadicalByCharacter(String character);
-
-    /**
-     * Retrieves the list of vocabularies related to a radical.
-     *
-     * @param radicalId ID of the radical
-     * @return List of RelatedVocabularyDto
-     * @throws com.elearning.exception.BusinessException with NOT_FOUND if radical does not exist
-     */
-    List<RadicalDetailResponse.RelatedVocabularyDto> getRelatedVocabularies(Integer radicalId);
 }

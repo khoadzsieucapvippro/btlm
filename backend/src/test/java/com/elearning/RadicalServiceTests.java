@@ -4,10 +4,8 @@ import com.elearning.common.ErrorCode;
 import com.elearning.dto.response.RadicalDetailResponse;
 import com.elearning.dto.response.RadicalResponse;
 import com.elearning.entity.Radical;
-import com.elearning.entity.Vocabulary;
 import com.elearning.exception.BusinessException;
 import com.elearning.repository.RadicalRepository;
-import com.elearning.repository.VocabularyRepository;
 import com.elearning.service.RadicalService;
 import com.elearning.service.impl.RadicalServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,36 +22,30 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Task 4A.1: RadicalService Unit Tests")
+@DisplayName("Task 4A.1: RadicalService Unit Tests (Clean Metadata Contract)")
 class RadicalServiceTests {
 
     @Mock
     private RadicalRepository radicalRepository;
 
-    @Mock
-    private VocabularyRepository vocabularyRepository;
-
     private RadicalService radicalService;
 
     private Radical sampleRadical1;
     private Radical sampleRadical2;
-    private Vocabulary sampleVocab1;
 
     @BeforeEach
     void setUp() {
-        radicalService = new RadicalServiceImpl(radicalRepository, vocabularyRepository);
+        radicalService = new RadicalServiceImpl(radicalRepository);
 
         sampleRadical1 = new Radical();
         sampleRadical1.setRadicalId(1);
@@ -74,14 +66,6 @@ class RadicalServiceTests {
         sampleRadical2.setMeaningVi("Nét sổ thẳng");
         sampleRadical2.setCreatedAt(LocalDateTime.of(2026, 1, 1, 10, 0));
         sampleRadical2.setUpdatedAt(LocalDateTime.of(2026, 1, 1, 10, 0));
-
-        sampleVocab1 = new Vocabulary();
-        sampleVocab1.setVocabId(101L);
-        sampleVocab1.setHanzi("一天");
-        sampleVocab1.setPinyin("yī tiān");
-        sampleVocab1.setPinyinRaw("yi tian");
-        sampleVocab1.setMeaningHanViet("Nhất thiên");
-        sampleVocab1.setMeaningVi("Một ngày");
     }
 
     @Nested
@@ -132,10 +116,9 @@ class RadicalServiceTests {
     class GetRadicalByIdTests {
 
         @Test
-        @DisplayName("GIVEN existing radical ID WHEN getRadicalById THEN returns detail response with related vocabularies")
+        @DisplayName("GIVEN existing radical ID WHEN getRadicalById THEN returns detail response with metadata only")
         void testGetRadicalByIdFound() {
             when(radicalRepository.findById(1)).thenReturn(Optional.of(sampleRadical1));
-            when(vocabularyRepository.findByRadicalId(1)).thenReturn(List.of(sampleVocab1));
 
             RadicalDetailResponse response = radicalService.getRadicalById(1);
 
@@ -149,14 +132,6 @@ class RadicalServiceTests {
             assertThat(response.getVideoWritingUrl()).isEqualTo("https://cdn.example.com/video/radicals/1.mp4");
             assertThat(response.getCreatedAt()).isEqualTo(LocalDateTime.of(2026, 1, 1, 10, 0));
             assertThat(response.getUpdatedAt()).isEqualTo(LocalDateTime.of(2026, 1, 2, 12, 0));
-
-            assertThat(response.getRelatedVocabularies()).hasSize(1);
-            assertThat(response.getRelatedVocabularies().get(0).getVocabId()).isEqualTo(101L);
-            assertThat(response.getRelatedVocabularies().get(0).getHanzi()).isEqualTo("一天");
-            assertThat(response.getRelatedVocabularies().get(0).getPinyin()).isEqualTo("yī tiān");
-            assertThat(response.getRelatedVocabularies().get(0).getPinyinRaw()).isEqualTo("yi tian");
-            assertThat(response.getRelatedVocabularies().get(0).getMeaningHanViet()).isEqualTo("Nhất thiên");
-            assertThat(response.getRelatedVocabularies().get(0).getMeaningVi()).isEqualTo("Một ngày");
         }
 
         @Test
@@ -193,7 +168,6 @@ class RadicalServiceTests {
         @DisplayName("GIVEN existing character WHEN getRadicalByCharacter THEN returns detail response")
         void testGetRadicalByCharacterFound() {
             when(radicalRepository.findByCharacter("一")).thenReturn(Optional.of(sampleRadical1));
-            when(vocabularyRepository.findByRadicalId(1)).thenReturn(Collections.emptyList());
 
             RadicalDetailResponse response = radicalService.getRadicalByCharacter("一");
 
@@ -201,7 +175,7 @@ class RadicalServiceTests {
             assertThat(response.getRadicalId()).isEqualTo(1);
             assertThat(response.getCharacter()).isEqualTo("一");
             assertThat(response.getMeaningHanViet()).isEqualTo("Nhất");
-            assertThat(response.getRelatedVocabularies()).isEmpty();
+            assertThat(response.getMeaningVi()).isEqualTo("Một, thứ nhất");
         }
 
         @Test
@@ -229,50 +203,6 @@ class RadicalServiceTests {
                     });
 
             assertThatThrownBy(() -> radicalService.getRadicalByCharacter(null))
-                    .isInstanceOf(BusinessException.class)
-                    .satisfies(ex -> {
-                        BusinessException be = (BusinessException) ex;
-                        assertThat(be.getErrorCode()).isEqualTo(ErrorCode.VALIDATION_ERROR);
-                    });
-        }
-    }
-
-    @Nested
-    @DisplayName("4. Related Vocabularies By Radical ID (getRelatedVocabularies)")
-    class GetRelatedVocabulariesTests {
-
-        @Test
-        @DisplayName("GIVEN existing radical ID WHEN getRelatedVocabularies THEN returns mapped vocabulary DTOs")
-        void testGetRelatedVocabulariesSuccess() {
-            when(radicalRepository.existsById(1)).thenReturn(true);
-            when(vocabularyRepository.findByRadicalId(1)).thenReturn(List.of(sampleVocab1));
-
-            List<RadicalDetailResponse.RelatedVocabularyDto> result = radicalService.getRelatedVocabularies(1);
-
-            assertThat(result).hasSize(1);
-            assertThat(result.get(0).getVocabId()).isEqualTo(101L);
-            assertThat(result.get(0).getHanzi()).isEqualTo("一天");
-            assertThat(result.get(0).getPinyin()).isEqualTo("yī tiān");
-            assertThat(result.get(0).getPinyinRaw()).isEqualTo("yi tian");
-        }
-
-        @Test
-        @DisplayName("GIVEN nonexistent radical ID WHEN getRelatedVocabularies THEN throws BusinessException with NOT_FOUND")
-        void testGetRelatedVocabulariesNotFound() {
-            when(radicalRepository.existsById(999)).thenReturn(false);
-
-            assertThatThrownBy(() -> radicalService.getRelatedVocabularies(999))
-                    .isInstanceOf(BusinessException.class)
-                    .satisfies(ex -> {
-                        BusinessException be = (BusinessException) ex;
-                        assertThat(be.getErrorCode()).isEqualTo(ErrorCode.NOT_FOUND);
-                    });
-        }
-
-        @Test
-        @DisplayName("GIVEN null ID WHEN getRelatedVocabularies THEN throws BusinessException with VALIDATION_ERROR")
-        void testGetRelatedVocabulariesNullId() {
-            assertThatThrownBy(() -> radicalService.getRelatedVocabularies(null))
                     .isInstanceOf(BusinessException.class)
                     .satisfies(ex -> {
                         BusinessException be = (BusinessException) ex;

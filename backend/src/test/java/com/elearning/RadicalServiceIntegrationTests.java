@@ -74,7 +74,7 @@ class RadicalServiceIntegrationTests {
     }
 
     @Test
-    @DisplayName("GIVEN existing radical ID WHEN getRadicalById THEN returns detailed response from database")
+    @DisplayName("GIVEN existing radical ID WHEN getRadicalById THEN returns detailed metadata from database")
     void testGetRadicalByIdRealDb() {
         RadicalDetailResponse detail = radicalService.getRadicalById(1);
 
@@ -85,7 +85,6 @@ class RadicalServiceIntegrationTests {
         assertThat(detail.getMeaningHanViet()).isEqualTo("Nhất");
         assertThat(detail.getCreatedAt()).isNotNull();
         assertThat(detail.getUpdatedAt()).isNotNull();
-        assertThat(detail.getRelatedVocabularies()).isEmpty();
     }
 
     @Test
@@ -119,14 +118,5 @@ class RadicalServiceIntegrationTests {
                     BusinessException be = (BusinessException) ex;
                     assertThat(be.getErrorCode()).isEqualTo(ErrorCode.NOT_FOUND);
                 });
-    }
-
-    @Test
-    @DisplayName("GIVEN radical ID WHEN getRelatedVocabularies THEN returns empty list for seeded radicals")
-    void testGetRelatedVocabulariesRealDb() {
-        List<RadicalDetailResponse.RelatedVocabularyDto> related = radicalService.getRelatedVocabularies(1);
-
-        assertThat(related).isNotNull();
-        assertThat(related).isEmpty();
     }
 }
