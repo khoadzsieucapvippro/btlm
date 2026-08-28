@@ -210,4 +210,172 @@ class RadicalServiceTests {
                     });
         }
     }
+
+    @Nested
+    @DisplayName("4. Create Radical (createRadical)")
+    class CreateRadicalTests {
+
+        @Test
+        @DisplayName("GIVEN valid create request WHEN createRadical THEN persists and returns detail response")
+        void testCreateRadicalSuccess() {
+            com.elearning.dto.request.CreateRadicalRequest request = new com.elearning.dto.request.CreateRadicalRequest(
+                    "口", "kǒu", "Khẩu", "Miệng", "http://audio.mp3", "http://video.mp4"
+            );
+
+            when(radicalRepository.existsByCharacter("口")).thenReturn(false);
+            when(radicalRepository.save(any(Radical.class))).thenAnswer(invocation -> {
+                Radical r = invocation.getArgument(0);
+                r.setRadicalId(30);
+                r.setCreatedAt(LocalDateTime.now());
+                r.setUpdatedAt(LocalDateTime.now());
+                return r;
+            });
+
+            RadicalDetailResponse response = radicalService.createRadical(request);
+
+            assertThat(response).isNotNull();
+            assertThat(response.getRadicalId()).isEqualTo(30);
+            assertThat(response.getCharacter()).isEqualTo("口");
+            assertThat(response.getPinyin()).isEqualTo("kǒu");
+            assertThat(response.getMeaningHanViet()).isEqualTo("Khẩu");
+            assertThat(response.getMeaningVi()).isEqualTo("Miệng");
+            assertThat(response.getAudioUrl()).isEqualTo("http://audio.mp3");
+            assertThat(response.getVideoWritingUrl()).isEqualTo("http://video.mp4");
+            verify(radicalRepository).save(any(Radical.class));
+        }
+
+        @Test
+        @DisplayName("GIVEN duplicate character WHEN createRadical THEN throws CONFLICT")
+        void testCreateRadicalDuplicate() {
+            com.elearning.dto.request.CreateRadicalRequest request = new com.elearning.dto.request.CreateRadicalRequest(
+                    "一", "yī", "Nhất", "Một", null, null
+            );
+
+            when(radicalRepository.existsByCharacter("一")).thenReturn(true);
+
+            assertThatThrownBy(() -> radicalService.createRadical(request))
+                    .isInstanceOf(BusinessException.class)
+                    .satisfies(ex -> {
+                        BusinessException be = (BusinessException) ex;
+                        assertThat(be.getErrorCode()).isEqualTo(ErrorCode.CONFLICT);
+                    });
+        }
+
+        @Test
+        @DisplayName("GIVEN null request or blank character WHEN createRadical THEN throws VALIDATION_ERROR")
+        void testCreateRadicalValidation() {
+            assertThatThrownBy(() -> radicalService.createRadical(null))
+                    .isInstanceOf(BusinessException.class)
+                    .satisfies(ex -> assertThat(((BusinessException) ex).getErrorCode()).isEqualTo(ErrorCode.VALIDATION_ERROR));
+
+            com.elearning.dto.request.CreateRadicalRequest blankReq = new com.elearning.dto.request.CreateRadicalRequest(
+                    "  ", "yī", "Nhất", "Một", null, null
+            );
+            assertThatThrownBy(() -> radicalService.createRadical(blankReq))
+                    .isInstanceOf(BusinessException.class)
+                    .satisfies(ex -> assertThat(((BusinessException) ex).getErrorCode()).isEqualTo(ErrorCode.VALIDATION_ERROR));
+        }
+    }
+
+    @Nested
+    @DisplayName("5. Update Radical (updateRadical)")
+    class UpdateRadicalTests {
+
+        @Test
+        @DisplayName("GIVEN existing radical and valid update WHEN updateRadical THEN updates and returns detail response")
+        void testUpdateRadicalSuccess() {
+            com.elearning.dto.request.UpdateRadicalRequest request = new com.elearning.dto.request.UpdateRadicalRequest(
+                    "一", "yī", "Nhất", "Số một, đứng đầu", "http://new-audio.mp3", null
+            );
+
+            when(radicalRepository.findById(1)).thenReturn(Optional.of(sampleRadical1));
+            when(radicalRepository.save(any(Radical.class))).thenAnswer(inv -> inv.getArgument(0));
+
+            RadicalDetailResponse response = radicalService.updateRadical(1, request);
+
+            assertThat(response).isNotNull();
+            assertThat(response.getRadicalId()).isEqualTo(1);
+            assertThat(response.getMeaningVi()).isEqualTo("Số một, đứng đầu");
+            assertThat(response.getAudioUrl()).isEqualTo("http://new-audio.mp3");
+            verify(radicalRepository).save(sampleRadical1);
+        }
+
+        @Test
+        @DisplayName("GIVEN nonexistent ID WHEN updateRadical THEN throws NOT_FOUND")
+        void testUpdateRadicalNotFound() {
+            com.elearning.dto.request.UpdateRadicalRequest request = new com.elearning.dto.request.UpdateRadicalRequest(
+                    "一", "yī", "Nhất", "Số một", null, null
+            );
+
+            when(radicalRepository.findById(999)).thenReturn(Optional.empty());
+
+            assertThatThrownBy(() -> radicalService.updateRadical(999, request))
+                    .isInstanceOf(BusinessException.class)
+                    .satisfies(ex -> assertThat(((BusinessException) ex).getErrorCode()).isEqualTo(ErrorCode.NOT_FOUND));
+        }
+
+        @Test
+        @DisplayName("GIVEN character conflict with another radical WHEN updateRadical THEN throws CONFLICT")
+        void testUpdateRadicalCharacterConflict() {
+            com.elearning.dto.request.UpdateRadicalRequest request = new com.elearning.dto.request.UpdateRadicalRequest(
+                    "丨", "gǔn", "Cổn", "Nét sổ", null, null
+            );
+
+            when(radicalRepository.findById(1)).thenReturn(Optional.of(sampleRadical1));
+            when(radicalRepository.findByCharacter("丨")).thenReturn(Optional.of(sampleRadical2));
+
+            assertThatThrownBy(() -> radicalService.updateRadical(1, request))
+                    .isInstanceOf(BusinessException.class)
+                    .satisfies(ex -> assertThat(((BusinessException) ex).getErrorCode()).isEqualTo(ErrorCode.CONFLICT));
+        }
+    }
+
+    @Nested
+    @DisplayName("6. Delete Radical (deleteRadical)")
+    class DeleteRadicalTests {
+
+        @Test
+        @DisplayName("GIVEN existing radical not linked WHEN deleteRadical THEN deletes successfully")
+        void testDeleteRadicalSuccess() {
+            when(radicalRepository.findById(1)).thenReturn(Optional.of(sampleRadical1));
+
+            radicalService.deleteRadical(1);
+
+            verify(radicalRepository).delete(sampleRadical1);
+        }
+
+        @Test
+        @DisplayName("GIVEN nonexistent ID WHEN deleteRadical THEN throws NOT_FOUND")
+        void testDeleteRadicalNotFound() {
+            when(radicalRepository.findById(999)).thenReturn(Optional.empty());
+
+            assertThatThrownBy(() -> radicalService.deleteRadical(999))
+                    .isInstanceOf(BusinessException.class)
+                    .satisfies(ex -> assertThat(((BusinessException) ex).getErrorCode()).isEqualTo(ErrorCode.NOT_FOUND));
+        }
+
+        @Test
+        @DisplayName("GIVEN null ID WHEN deleteRadical THEN throws VALIDATION_ERROR")
+        void testDeleteRadicalNullId() {
+            assertThatThrownBy(() -> radicalService.deleteRadical(null))
+                    .isInstanceOf(BusinessException.class)
+                    .satisfies(ex -> assertThat(((BusinessException) ex).getErrorCode()).isEqualTo(ErrorCode.VALIDATION_ERROR));
+        }
+
+        @Test
+        @DisplayName("GIVEN radical linked to vocabularies WHEN deleteRadical THEN throws CONFLICT")
+        void testDeleteRadicalLinkedToVocabularies() {
+            Radical linkedRadical = new Radical();
+            linkedRadical.setRadicalId(5);
+            linkedRadical.setCharacter("乙");
+            com.elearning.entity.Vocabulary vocab = new com.elearning.entity.Vocabulary();
+            linkedRadical.getVocabularies().add(vocab);
+
+            when(radicalRepository.findById(5)).thenReturn(Optional.of(linkedRadical));
+
+            assertThatThrownBy(() -> radicalService.deleteRadical(5))
+                    .isInstanceOf(BusinessException.class)
+                    .satisfies(ex -> assertThat(((BusinessException) ex).getErrorCode()).isEqualTo(ErrorCode.CONFLICT));
+        }
+    }
 }
