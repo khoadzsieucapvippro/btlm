@@ -1,10 +1,13 @@
 package com.elearning.repository;
 
+import com.elearning.dto.response.LessonSummaryResponse;
+import com.elearning.dto.response.ModerationQueueResponse;
 import com.elearning.entity.Account;
 import com.elearning.entity.Lesson;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -70,4 +73,45 @@ public interface LessonRepository extends JpaRepository<Lesson, Long> {
      * @return List of lessons matching creator and status
      */
     List<Lesson> findByCreatedByAndStatus(Account createdBy, String status);
+
+    /**
+     * Finds approved lessons as summary projections with vocabulary count in a single query.
+     * Prevents N+1 and collection fetch join pagination warnings.
+     *
+     * @param pageable pagination parameters
+     * @return Page of LessonSummaryResponse
+     */
+    @Query(value = "SELECT new com.elearning.dto.response.LessonSummaryResponse(" +
+                   "l.lessonId, l.title, l.status, SIZE(l.lessonVocabularies), l.createdAt, l.updatedAt) " +
+                   "FROM Lesson l WHERE l.status = 'Approved'",
+           countQuery = "SELECT COUNT(l) FROM Lesson l WHERE l.status = 'Approved'")
+    Page<LessonSummaryResponse> findApprovedLessonSummaries(Pageable pageable);
+
+    /**
+     * Finds pending lessons for moderation queue as summary projections with creator info and vocabulary count in a single query.
+     * Prevents N+1 and collection fetch join pagination warnings.
+     *
+     * @param pageable pagination parameters
+     * @return Page of ModerationQueueResponse
+     */
+    @Query(value = "SELECT new com.elearning.dto.response.ModerationQueueResponse(" +
+                   "l.lessonId, l.title, l.status, l.createdBy.accountId, l.createdBy.emailOrPhone, SIZE(l.lessonVocabularies), l.createdAt, l.updatedAt) " +
+                   "FROM Lesson l WHERE l.status = 'Pending'",
+           countQuery = "SELECT COUNT(l) FROM Lesson l WHERE l.status = 'Pending'")
+    Page<ModerationQueueResponse> findPendingLessonSummaries(Pageable pageable);
+
+    /**
+     * Finds lessons across all lifecycle statuses with optional status filtering for administrative oversight.
+     *
+     * @param status optional status filter (Draft, Pending, Approved, Rejected)
+     * @param pageable pagination parameters
+     * @return Page of LessonSummaryResponse
+     */
+    @Query(value = "SELECT new com.elearning.dto.response.LessonSummaryResponse(" +
+                   "l.lessonId, l.title, l.status, SIZE(l.lessonVocabularies), l.createdAt, l.updatedAt) " +
+                   "FROM Lesson l WHERE (:status IS NULL OR l.status = :status) ORDER BY l.createdAt DESC",
+           countQuery = "SELECT COUNT(l) FROM Lesson l WHERE (:status IS NULL OR l.status = :status)")
+    Page<LessonSummaryResponse> findAdminLessonSummaries(
+            @org.springframework.data.repository.query.Param("status") String status,
+            Pageable pageable);
 }
