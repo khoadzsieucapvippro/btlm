@@ -145,6 +145,64 @@ class SrsProgressPersistenceTests {
                 entityManager.flush();
             }).isInstanceOf(PersistenceException.class);
         }
+
+        @Test
+        @DisplayName("GIVEN CardProgress WHEN persisted and updated THEN @Version initializes to 0 and increments monotonically (BE-CONC-001)")
+        void testCardProgress_VersionInitializationAndIncrement() {
+            UserProfile profile = createTestUserProfile("srs_version@example.com");
+
+            CardProgress card = new CardProgress(profile, "VOCABULARY", 99L, new BigDecimal("2.50"), 0, 0, LocalDateTime.now());
+            CardProgress saved = entityManager.persistAndFlush(card);
+
+            assertThat(saved.getVersion()).isEqualTo(0L);
+
+            // Update state and flush
+            saved.setRepetitions(1);
+            saved.setIntervalDays(1);
+            entityManager.flush();
+
+            assertThat(saved.getVersion()).isEqualTo(1L);
+
+            saved.setRepetitions(2);
+            saved.setIntervalDays(6);
+            entityManager.flush();
+
+            assertThat(saved.getVersion()).isEqualTo(2L);
+        }
+
+        @Test
+        @DisplayName("GIVEN two detached instances of same CardProgress WHEN first updates and second attempts stale update THEN optimistic lock triggers (BE-CONC-001)")
+        void testCardProgress_OptimisticLockingPreventsStaleWrite() {
+            UserProfile profile = createTestUserProfile("srs_stale@example.com");
+
+            CardProgress card = new CardProgress(profile, "VOCABULARY", 150L, new BigDecimal("2.50"), 1, 1, LocalDateTime.now());
+            CardProgress saved = entityManager.persistAndFlush(card);
+            Long cardId = saved.getProgressId();
+            assertThat(saved.getVersion()).isEqualTo(0L);
+
+            entityManager.clear();
+
+            // Load instance 1 and instance 2 independently
+            CardProgress instance1 = entityManager.find(CardProgress.class, cardId);
+            entityManager.detach(instance1);
+
+            CardProgress instance2 = entityManager.find(CardProgress.class, cardId);
+
+            // Instance 2 modifies and commits
+            instance2.setRepetitions(2);
+            instance2.setIntervalDays(6);
+            entityManager.flush();
+            assertThat(instance2.getVersion()).isEqualTo(1L);
+
+            // Instance 1 (stale version 0) attempts to merge/save
+            instance1.setRepetitions(3);
+            instance1.setIntervalDays(10);
+
+            assertThatThrownBy(() -> {
+                entityManager.merge(instance1);
+                entityManager.flush();
+            }).isInstanceOf(PersistenceException.class);
+        }
     }
 
     @Nested
