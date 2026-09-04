@@ -37,6 +37,9 @@ class AuthControllerTests {
     @Mock
     private AuthService authService;
 
+    @Mock
+    private com.elearning.security.LoginRateLimiter loginRateLimiter;
+
     @InjectMocks
     private AuthController authController;
 
@@ -45,6 +48,7 @@ class AuthControllerTests {
 
     @BeforeEach
     void setUp() {
+        org.mockito.Mockito.lenient().when(loginRateLimiter.tryAcquire(any())).thenReturn(true);
         mockMvc = MockMvcBuilders.standaloneSetup(authController)
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();

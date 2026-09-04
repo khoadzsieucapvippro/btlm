@@ -281,6 +281,11 @@ class GlobalExceptionHandlerTests {
             public String unexpectedErrorEndpoint() {
                 throw new NullPointerException("Simulated null pointer");
             }
+
+            @GetMapping("/test/illegal-argument")
+            public String illegalArgumentEndpoint() {
+                throw new IllegalArgumentException("Internal parameter invalid");
+            }
         }
 
         private MockMvc mockMvc;
@@ -322,6 +327,28 @@ class GlobalExceptionHandlerTests {
                     .andExpect(jsonPath("$.code").value("INTERNAL_ERROR"))
                     .andExpect(jsonPath("$.message").value(ErrorCode.INTERNAL_ERROR.getDefaultMessage()))
                     .andExpect(jsonPath("$.errors").isEmpty());
+        }
+
+        @Test
+        @DisplayName("GIVEN IllegalArgumentException thrown WHEN handled THEN returns HTTP 400 with BAD_REQUEST without leaking details")
+        void testIllegalArgumentExceptionHandling() {
+            IllegalArgumentException ex = new IllegalArgumentException("Internal DB column id must not be null");
+            ResponseEntity<ApiResponse<Void>> response = handler.handleIllegalArgumentException(ex);
+
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            assertThat(response.getBody()).isNotNull();
+            assertThat(response.getBody().getCode()).isEqualTo(ErrorCode.BAD_REQUEST.getCode());
+            assertThat(response.getBody().getMessage()).isEqualTo("Tham số yêu cầu không hợp lệ");
+            assertThat(response.getBody().getMessage()).doesNotContain("Internal DB column");
+        }
+
+        @Test
+        @DisplayName("GIVEN IllegalArgumentException in MVC pipeline THEN returns HTTP 400 BAD_REQUEST")
+        void testMvcIllegalArgumentPrecedence() throws Exception {
+            mockMvc.perform(get("/test/illegal-argument"))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value("BAD_REQUEST"))
+                    .andExpect(jsonPath("$.message").value("Tham số yêu cầu không hợp lệ"));
         }
     }
 }

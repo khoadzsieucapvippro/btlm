@@ -79,7 +79,11 @@ public class AuthServiceImpl implements AuthService {
 
         // 6. Generate JWT token and return AuthResponse
         List<String> roleNames = List.of(learnerRole.getRoleName());
-        String token = jwtUtil.generateToken(savedAccount.getEmailOrPhone(), roleNames);
+        String token = jwtUtil.generateToken(
+                savedAccount.getEmailOrPhone(),
+                roleNames,
+                savedAccount.getAuthorizationVersion()
+        );
 
         return new AuthResponse(
                 token,
@@ -123,7 +127,11 @@ public class AuthServiceImpl implements AuthService {
         String fullName = account.getUserProfile() != null ? account.getUserProfile().getFullName() : null;
 
         // 5. Generate JWT token
-        String token = jwtUtil.generateToken(account.getEmailOrPhone(), roleNames);
+        String token = jwtUtil.generateToken(
+                account.getEmailOrPhone(),
+                roleNames,
+                account.getAuthorizationVersion()
+        );
 
         return new AuthResponse(
                 token,

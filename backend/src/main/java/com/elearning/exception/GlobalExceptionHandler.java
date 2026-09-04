@@ -104,6 +104,27 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Handles optimistic locking failures / concurrent modification conflicts (HTTP 409 Conflict).
+     * Maps to ErrorCode.CONFLICT according to .agents/API.md specifications (BE-CONC-001, BE-CONC-003).
+     */
+    @ExceptionHandler({
+            org.springframework.dao.ConcurrencyFailureException.class,
+            jakarta.persistence.OptimisticLockException.class,
+            org.hibernate.StaleObjectStateException.class,
+            org.hibernate.exception.LockAcquisitionException.class
+    })
+    public ResponseEntity<ApiResponse<Void>> handleOptimisticLockingFailureException(Exception ex) {
+        log.warn("Concurrency / optimistic locking conflict during modification: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(
+                        ErrorCode.CONFLICT.getCode(),
+                        "Dữ liệu đã bị thay đổi bởi một phiên làm việc khác, vui lòng thử lại"
+                ));
+    }
+
+    /**
      * Handles missing routes/static resources (HTTP 404).
      */
     @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
@@ -113,6 +134,93 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(
                         ErrorCode.NOT_FOUND.getCode(),
                         ErrorCode.NOT_FOUND.getDefaultMessage()
+                ));
+    }
+
+    /**
+     * Handles file upload size limit violations (HTTP 413 Payload Too Large).
+     * Maps to ErrorCode.FILE_TOO_LARGE according to .agents/API.md specifications.
+     */
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMaxUploadSizeExceededException(
+            org.springframework.web.multipart.MaxUploadSizeExceededException ex) {
+        log.warn("File upload size exceeded limit: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.PAYLOAD_TOO_LARGE)
+                .body(ApiResponse.error(
+                        ErrorCode.FILE_TOO_LARGE.getCode(),
+                        ErrorCode.FILE_TOO_LARGE.getDefaultMessage()
+                ));
+    }
+
+    /**
+     * Handles missing request parameters or multipart parts (HTTP 400 Bad Request).
+     */
+    @ExceptionHandler({
+            org.springframework.web.bind.MissingServletRequestParameterException.class,
+            org.springframework.web.multipart.support.MissingServletRequestPartException.class
+    })
+    public ResponseEntity<ApiResponse<Void>> handleMissingRequestParameterOrPartException(Exception ex) {
+        log.warn("Missing required request parameter or part: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(
+                        ErrorCode.VALIDATION_ERROR.getCode(),
+                        "Tham số yêu cầu không hợp lệ hoặc bị thiếu"
+                ));
+    }
+
+    /**
+     * Handles malformed JSON or unreadable HTTP message payloads (HTTP 400 Bad Request).
+     */
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleHttpMessageNotReadableException(org.springframework.http.converter.HttpMessageNotReadableException ex) {
+        log.warn("Malformed HTTP request body: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(
+                        ErrorCode.VALIDATION_ERROR.getCode(),
+                        "Định dạng dữ liệu yêu cầu không hợp lệ"
+                ));
+    }
+
+    /**
+     * Handles Bean Validation constraint violations on parameters or collections (HTTP 400 Bad Request).
+     */
+    @ExceptionHandler(jakarta.validation.ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleConstraintViolationException(jakarta.validation.ConstraintViolationException ex) {
+        List<String> errors = new ArrayList<>();
+        if (ex.getConstraintViolations() != null) {
+            for (jakarta.validation.ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+                errors.add(violation.getPropertyPath() + ": " + violation.getMessage());
+            }
+        }
+        log.warn("Constraint violation encountered: {}", errors);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(
+                        ErrorCode.VALIDATION_ERROR.getCode(),
+                        ErrorCode.VALIDATION_ERROR.getDefaultMessage(),
+                        errors
+                ));
+    }
+
+    /**
+     * Handles illegal argument exceptions safely without exposing internal details (HTTP 400 Bad Request).
+     */
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        log.warn("Illegal argument encountered: {}", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(
+                        ErrorCode.BAD_REQUEST.getCode(),
+                        "Tham số yêu cầu không hợp lệ"
                 ));
     }
 

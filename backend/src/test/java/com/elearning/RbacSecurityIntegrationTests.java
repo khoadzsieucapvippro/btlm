@@ -43,6 +43,23 @@ class RbacSecurityIntegrationTests {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() {
+        for (String email : List.of("learner.jwt@elearning.com", "admin.jwt@elearning.com", "creator.jwt@elearning.com", "moderator.jwt@elearning.com")) {
+            accountRepository.findByEmailOrPhone(email)
+                    .orElseGet(() -> {
+                        com.elearning.entity.Account acc = new com.elearning.entity.Account();
+                        acc.setEmailOrPhone(email);
+                        acc.setPasswordHash("hash1234567890");
+                        acc.setStatus("Active");
+                        return accountRepository.save(acc);
+                    });
+        }
+    }
+
     @Nested
     @DisplayName("1. Unauthenticated Access Boundaries (No JWT -> 401 Unauthorized)")
     class UnauthenticatedBoundaryTests {

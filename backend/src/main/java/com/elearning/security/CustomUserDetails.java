@@ -23,6 +23,7 @@ public class CustomUserDetails implements UserDetails {
     private final String emailOrPhone;
     private final String passwordHash;
     private final String status;
+    private final Long authorizationVersion;
     private final Set<GrantedAuthority> authorities;
 
     public CustomUserDetails(
@@ -31,10 +32,21 @@ public class CustomUserDetails implements UserDetails {
             String passwordHash,
             String status,
             Collection<? extends GrantedAuthority> authorities) {
+        this(accountId, emailOrPhone, passwordHash, status, 1L, authorities);
+    }
+
+    public CustomUserDetails(
+            Long accountId,
+            String emailOrPhone,
+            String passwordHash,
+            String status,
+            Long authorizationVersion,
+            Collection<? extends GrantedAuthority> authorities) {
         this.accountId = accountId;
         this.emailOrPhone = emailOrPhone;
         this.passwordHash = passwordHash;
         this.status = status;
+        this.authorizationVersion = (authorizationVersion != null) ? authorizationVersion : 1L;
         this.authorities = (authorities != null)
                 ? Collections.unmodifiableSet(Set.copyOf(authorities))
                 : Collections.emptySet();
@@ -67,6 +79,7 @@ public class CustomUserDetails implements UserDetails {
                 account.getEmailOrPhone(),
                 account.getPasswordHash(),
                 account.getStatus(),
+                account.getAuthorizationVersion() != null ? account.getAuthorizationVersion() : 1L,
                 grantedAuthorities
         );
     }
@@ -81,6 +94,10 @@ public class CustomUserDetails implements UserDetails {
 
     public String getStatus() {
         return status;
+    }
+
+    public Long getAuthorizationVersion() {
+        return authorizationVersion;
     }
 
     @Override
