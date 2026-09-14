@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nền Tảng Học Bộ Thủ & Từ Vựng Tiếng Trung | Kangxi & SRS</title>
+  <meta name="description" content="Nền tảng học 214 bộ thủ Khang Hy và từ vựng tiếng Trung bài bản kết hợp thuật toán lặp lại ngắt quãng SRS (SM-2), thiết kế hiện đại, đạt chuẩn tiếp cận WCAG 2.2 AA.">
+
+  <!-- Verified Bootstrap 5.3.3 CSS via CDN with Authenticated Subresource Integrity (SRI) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Scholarly Brand Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>字</text></svg>">
+
+  <!-- Core Design Tokens & Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Runtime Environment Configuration (Task FE-REMEDIATION-03) -->
+  <script src="js/config.js"></script>
+</head>
+<body>
+
+  <!-- Accessible Skip Link (WCAG 2.2 SC 2.4.1) -->
+  <a href="#mainContent" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Global Header & Navigation Landmark -->
+  <header class="site-header">
+    <div class="container-xl">
+      <nav class="navbar navbar-expand-lg py-2" aria-label="Điều hướng chính của trang">
+        <!-- Brand identity -->
+        <a class="navbar-brand-custom" href="index.html">
+          <span class="brand-seal-mark" aria-hidden="true">字</span>
+          <span>Hán Ngữ & Bộ Thủ</span>
+        </a>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavMenu" aria-controls="primaryNavMenu" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="primaryNavMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+            <li class="nav-item">
+              <a class="nav-link-custom active" href="index.html" aria-current="page">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="radicals.html">214 Bộ thủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="vocabulary.html">Từ vựng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="lessons.html">Bài học</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="srs-review.html">Ôn tập SRS</a>
+            </li>
+          </ul>
+
+          <!-- User Session / Navigation Actions -->
+          <div id="navAuthContainer" class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <a href="login.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Đăng nhập
+            </a>
+            <a href="register.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Bắt đầu học
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent" class="main-content-wrapper">
+    <div class="container-xl">
+      
+      <!-- Primary Title and Hero Presentation -->
+      <section class="mb-5" aria-labelledby="pageHeroHeading">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-8">
+            <h1 id="pageHeroHeading" class="display-6 fw-bold mb-3">
+              Nền Tảng Học Bộ Thủ & Từ Vựng Tiếng Trung Bài Bản
+            </h1>
+            <p class="lead mb-4 text-secondary">
+              Khám phá cấu trúc chữ Hán qua 214 Bộ thủ Khang Hy kinh điển, mở rộng vốn từ qua hệ thống bài học chuyên sâu và củng cố trí nhớ dài hạn cùng thuật toán lặp lại ngắt quãng Spaced Repetition (SRS SM-2).
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+              <a href="radicals.html" class="btn-chinese-primary">
+                Khám phá 214 Bộ thủ
+              </a>
+              <a href="register.html" class="btn-chinese-outline">
+                Bắt đầu học ngay
+              </a>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <!-- Scholarly Character Card Anchor -->
+            <div class="card-chinese text-center p-4">
+              <span class="hanviet-text d-block mb-1">Mẫu tự điển hình</span>
+              <div class="cjk-character cjk-hero text-dark mb-2" aria-label="Chữ Hán: Học, phát âm xué">學</div>
+              <div class="pinyin-text fs-5 mb-1">xué</div>
+              <div class="fw-semibold text-dark mb-2">Âm Hán-Việt: HỌC</div>
+              <p class="small text-muted mb-0">Ý nghĩa: Học tập, nghiên cứu, tiếp thu kiến thức</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Platform Features & Value Pillars -->
+      <section class="mb-5" aria-labelledby="featuresHeading">
+        <div class="border-top pt-5">
+          <div class="text-center max-w-700 mx-auto mb-5">
+            <h2 id="featuresHeading" class="h3 fw-bold mb-2">Phương Pháp Học Tập Khoa Học & Toàn Diện</h2>
+            <p class="text-secondary">
+              Kết hợp tinh hoa văn hiến Hán tự truyền thống với công nghệ học tập thích ứng hiện đại.
+            </p>
+          </div>
+
+          <div class="row g-4">
+            <!-- Pillar 1: Radicals -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card-chinese h-100 d-flex flex-column">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <span class="cjk-character cjk-dense text-cinnabar" aria-hidden="true">部</span>
+                  <span class="badge-status badge-status-approved">Nền móng</span>
+                </div>
+                <h3 class="h5 fw-bold mb-2">214 Bộ Thủ Khang Hy</h3>
+                <p class="text-secondary small flex-grow-1 mb-3">
+                  Tra cứu chi tiết toàn bộ 214 bộ thủ Khang Hy với đầy đủ âm Hán-Việt, Pinyin, giải nghĩa tiếng Việt, số nét vẽ và mẫu chữ minh họa.
+                </p>
+                <a href="radicals.html" class="btn-chinese-outline btn-sm align-self-start">
+                  Tra cứu ngay &rarr;
+                </a>
+              </div>
+            </div>
+
+            <!-- Pillar 2: SRS -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card-chinese h-100 d-flex flex-column">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <span class="cjk-character cjk-dense text-cinnabar" aria-hidden="true">憶</span>
+                  <span class="badge-status badge-status-active">Khoa học</span>
+                </div>
+                <h3 class="h5 fw-bold mb-2">Lặp Lại Ngắt Quãng SRS</h3>
+                <p class="text-secondary small flex-grow-1 mb-3">
+                  Ứng dụng thuật toán SuperMemo-2 (SM-2) tự động tối ưu hóa khoảng thời gian ôn tập từng thẻ, giúp khắc sâu chữ Hán vào trí nhớ dài hạn.
+                </p>
+                <a href="srs-review.html" class="btn-chinese-outline btn-sm align-self-start">
+                  Tìm hiểu SRS &rarr;
+                </a>
+              </div>
+            </div>
+
+            <!-- Pillar 3: Lessons -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card-chinese h-100 d-flex flex-column">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <span class="cjk-character cjk-dense text-cinnabar" aria-hidden="true">課</span>
+                  <span class="badge-status badge-status-pending">Lộ trình</span>
+                </div>
+                <h3 class="h5 fw-bold mb-2">Hệ Thống Bài Học</h3>
+                <p class="text-secondary small flex-grow-1 mb-3">
+                  Lộ trình học tập phân cấp rõ ràng từ căn bản đến nâng cao, gắn kết chặt chẽ giữa bộ thủ, từ vựng và ngữ cảnh giao tiếp thực tế.
+                </p>
+                <a href="lessons.html" class="btn-chinese-outline btn-sm align-self-start">
+                  Khám phá bài học &rarr;
+                </a>
+              </div>
+            </div>
+
+            <!-- Pillar 4: Accessibility -->
+            <div class="col-md-6 col-lg-3">
+              <div class="card-chinese h-100 d-flex flex-column">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <span class="cjk-character cjk-dense text-cinnabar" aria-hidden="true">準</span>
+                  <span class="badge-status badge-status-draft">Tiếp cận</span>
+                </div>
+                <h3 class="h5 fw-bold mb-2">Thiết Kế Chuẩn Mực</h3>
+                <p class="text-secondary small flex-grow-1 mb-3">
+                  Tuân thủ tiêu chuẩn tiếp cận W3C WCAG 2.2 Level AA, tương thích đầu đọc màn hình, điều hướng bàn phím hoàn hảo và typography CJK tối ưu.
+                </p>
+                <a href="vocabulary.html" class="btn-chinese-outline btn-sm align-self-start">
+                  Xem từ vựng &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Scholarly CTA Banner -->
+      <section class="card-chinese p-4 p-md-5 mb-5 text-center" aria-labelledby="ctaBannerHeading">
+        <h2 id="ctaBannerHeading" class="h3 fw-bold mb-2">Sẵn Sàng Chinh Phục Chữ Hán?</h2>
+        <p class="text-secondary mb-4 mx-auto" style="max-width: 600px;">
+          Bắt đầu với 214 bộ thủ Khang Hy ngay bây giờ, hoặc tạo tài khoản để đồng bộ tiến trình học tập và thẻ nhớ ôn tập cá nhân.
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+          <a href="radicals.html" class="btn-chinese-primary">
+            Khám phá 214 Bộ thủ
+          </a>
+          <a href="register.html" class="btn-chinese-outline">
+            Đăng ký tài khoản miễn phí
+          </a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Global Toast Notification Container (WCAG 2.2 SC 4.1.3) -->
+  <div id="toastContainer" class="toast-container-custom" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Global Semantic Footer Landmark -->
+  <footer class="site-footer">
+    <div class="container-xl">
+      <div class="row align-items-center g-3">
+        <div class="col-md-6 text-center text-md-start">
+          <div class="fw-semibold text-dark mb-1">Hệ Thống Học Bộ Thủ &amp; Từ Vựng Tiếng Trung</div>
+          <div class="small">Xây dựng trên nền tảng HTML5 ngữ nghĩa, CSS Tokens và Vanilla JS chuẩn mực.</div>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <div class="small">Tuân thủ tiêu chuẩn tiếp cận W3C WCAG 2.2 Level AA &bull; Zero-Build Architecture</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Verified Bootstrap 5.3.3 JS Bundle with Authenticated SRI -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- Application Bootstrap Module -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

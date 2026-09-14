@@ -1,0 +1,21 @@
+{
+  "name": "elearning-frontend-verification",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Permanent Frontend Verification Infrastructure for eLearning Kangxi & SRS project (Task 9A.1.1)",
+  "scripts": {
+    "verify:frontend:fast": "node tests/frontend/runner.mjs --tier=fast",
+    "verify:frontend:static": "node tests/frontend/runner.mjs --tier=static",
+    "verify:frontend:unit": "node tests/frontend/runner.mjs --tier=unit",
+    "verify:frontend:browser": "node tests/frontend/runner.mjs --tier=browser",
+    "verify:frontend:a11y": "node tests/frontend/runner.mjs --tier=a11y",
+    "verify:frontend:gate": "node tests/frontend/runner.mjs --tier=gate",
+    "verify:frontend": "node tests/frontend/runner.mjs --tier=full",
+    "verify:backend:integration": "node tests/frontend/integration/backend-integration.mjs",
+    "verify:fullstack": "node tests/fullstack/runner.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.57.0"
+  }
+}

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thống Kê Học Tập &amp; Cài Đặt SRS | Hán Ngữ &amp; Bộ Thủ</title>
+  <meta name="description" content="Quản lý hạn mức thẻ mới, lượt ôn tập hàng ngày và theo dõi thống kê học tập lặp lại ngắt quãng SuperMemo-2 (SRS).">
+
+  <!-- Verified Bootstrap 5.3.3 CSS via CDN with Authenticated Subresource Integrity (SRI) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Scholarly Brand Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>策</text></svg>">
+
+  <!-- Core Design Tokens & Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Runtime Environment Configuration -->
+  <script src="js/config.js"></script>
+</head>
+<body>
+
+  <!-- Accessible Skip Link (WCAG 2.2 SC 2.4.1) -->
+  <a href="#mainContent" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Global Header & Navigation Landmark -->
+  <header class="site-header">
+    <div class="container-xl">
+      <nav class="navbar navbar-expand-lg py-2" aria-label="Điều hướng chính của trang">
+        <!-- Brand identity -->
+        <a class="navbar-brand-custom" href="index.html">
+          <span class="brand-seal-mark" aria-hidden="true">字</span>
+          <span>Hán Ngữ &amp; Bộ Thủ</span>
+        </a>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavMenu" aria-controls="primaryNavMenu" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="primaryNavMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+            <li class="nav-item">
+              <a class="nav-link-custom" href="index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="radicals.html">214 Bộ thủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="vocabulary.html">Từ vựng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="lessons.html">Bài học</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom active" href="srs-dashboard.html" aria-current="page">Thống kê SRS</a>
+            </li>
+          </ul>
+
+          <!-- User Session / Navigation Actions (Authoritatively rendered by nav.js) -->
+          <div id="navAuthContainer" class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <a href="login.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Đăng nhập
+            </a>
+            <a href="register.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Bắt đầu học
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent" class="main-content-wrapper py-4 py-md-5">
+    <div class="container-xl srs-dashboard-wrapper">
+      
+      <!-- Page Header & Action Bar -->
+      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 mb-4 pb-3 border-bottom">
+        <div>
+          <div class="d-inline-flex align-items-center gap-2 mb-1">
+            <span class="brand-seal-mark" aria-hidden="true" style="width: 28px; height: 28px; font-size: 0.95rem;">策</span>
+            <span class="text-secondary small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Học Tập Cá Nhân Hóa (SRS Settings &amp; Stats)</span>
+          </div>
+          <h1 class="h2 fw-bold text-dark mb-1" id="srsDashboardHeading">Thống Kê Học Tập &amp; Cài Đặt SRS</h1>
+          <p class="text-secondary mb-0">
+            Theo dõi tiến trình ôn tập trong ngày và tùy chỉnh hạn mức lặp lại ngắt quãng SuperMemo-2.
+          </p>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+          <a href="srs-review.html" id="btnGoToReview" class="btn-chinese-primary py-2 px-3 text-decoration-none d-inline-flex align-items-center gap-2">
+            <span>Vào phòng ôn tập</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- State 1: Loading State -->
+      <section id="dashboardLoadingState" class="state-container py-5 text-center" role="status" aria-live="polite">
+        <div class="state-spinner" aria-hidden="true"></div>
+        <p class="state-loading-text mt-3 text-secondary">Đang nạp dữ liệu thống kê và cấu hình SRS...</p>
+      </section>
+
+      <!-- State 2: Unauthenticated State -->
+      <section id="dashboardAuthState" class="d-none text-center py-5">
+        <div class="p-4 p-md-5 rounded-3 border bg-surface mx-auto" style="max-width: 500px;">
+          <div class="display-5 mb-3" aria-hidden="true">🔒</div>
+          <h2 class="h4 fw-bold text-dark mb-2">Yêu cầu đăng nhập</h2>
+          <p class="text-secondary mb-4">
+            Bảng thống kê và cài đặt học tập SRS gắn liền với tài khoản học viên cá nhân. Vui lòng đăng nhập để xem và quản lý cấu hình.
+          </p>
+          <a href="login.html?redirect=srs-dashboard.html" id="btnDashboardLoginRedirect" class="btn-chinese-primary py-2 px-4 text-decoration-none">
+            Đăng nhập ngay
+          </a>
+        </div>
+      </section>
+
+      <!-- State 3: Error State -->
+      <section id="dashboardErrorState" class="d-none text-center py-5" role="alert">
+        <div class="p-4 rounded-3 border border-danger-subtle bg-danger-subtle mx-auto" style="max-width: 500px;">
+          <div class="h3 text-danger mb-2" aria-hidden="true">⚠️</div>
+          <h2 class="h5 fw-bold text-danger mb-2">Không thể tải thông tin SRS</h2>
+          <p id="dashboardErrorMessage" class="text-secondary small mb-3">Đã xảy ra lỗi khi nạp dữ liệu từ máy chủ.</p>
+          <button type="button" id="btnDashboardRetry" class="btn btn-outline-danger btn-sm px-3">
+            Thử lại
+          </button>
+        </div>
+      </section>
+
+      <!-- State 4: Loaded Content Dashboard Section -->
+      <section id="dashboardContentSection" class="d-none">
+
+        <!-- 5 Authoritative Study Statistics Cards -->
+        <section class="mb-4" aria-labelledby="statsSectionHeading">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <h2 id="statsSectionHeading" class="h5 fw-bold mb-0">Thống kê học tập hôm nay</h2>
+            <button type="button" id="btnRefreshStats" class="btn btn-sm btn-outline-secondary py-1 px-3 d-inline-flex align-items-center gap-1" title="Tải lại số liệu từ máy chủ">
+              <span aria-hidden="true">🔄</span>
+              <span>Làm mới số liệu</span>
+            </button>
+          </div>
+
+          <div class="srs-metric-grid">
+            <!-- 1. Cards Due -->
+            <div class="srs-metric-card srs-metric-due" id="cardCardsDue">
+              <div class="srs-metric-header">
+                <span class="srs-metric-title">Thẻ đến hạn</span>
+                <span class="srs-metric-icon" aria-hidden="true">⏰</span>
+              </div>
+              <div class="srs-metric-value" id="statCardsDue">-</div>
+              <div class="srs-metric-meta">Thẻ cần ôn tập ngay hôm nay</div>
+            </div>
+
+            <!-- 2. Reviews Today -->
+            <div class="srs-metric-card srs-metric-reviewed" id="cardReviewsToday">
+              <div class="srs-metric-header">
+                <span class="srs-metric-title">Đã ôn tập hôm nay</span>
+                <span class="srs-metric-icon" aria-hidden="true">📝</span>
+              </div>
+              <div class="srs-metric-value" id="statReviewsToday">-</div>
+              <div class="srs-metric-meta d-flex justify-content-between align-items-center">
+                <span>Hạn mức:</span>
+                <span class="fw-semibold" id="statReviewsQuotaText">- / -</span>
+              </div>
+              <div class="srs-progress-track" aria-hidden="true">
+                <div class="srs-progress-fill srs-progress-fill-review" id="statReviewsProgressBar" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- 3. New Cards Today -->
+            <div class="srs-metric-card srs-metric-new" id="cardNewCardsToday">
+              <div class="srs-metric-header">
+                <span class="srs-metric-title">Thẻ mới hôm nay</span>
+                <span class="srs-metric-icon" aria-hidden="true">🌱</span>
+              </div>
+              <div class="srs-metric-value" id="statNewCardsToday">-</div>
+              <div class="srs-metric-meta d-flex justify-content-between align-items-center">
+                <span>Hạn mức:</span>
+                <span class="fw-semibold" id="statNewCardsQuotaText">- / -</span>
+              </div>
+              <div class="srs-progress-track" aria-hidden="true">
+                <div class="srs-progress-fill srs-progress-fill-new" id="statNewCardsProgressBar" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- 4. New Cards Limit -->
+            <div class="srs-metric-card srs-metric-limit-new" id="cardNewCardsLimit">
+              <div class="srs-metric-header">
+                <span class="srs-metric-title">Hạn mức thẻ mới</span>
+                <span class="srs-metric-icon" aria-hidden="true">🎯</span>
+              </div>
+              <div class="srs-metric-value" id="statNewCardsLimit">-</div>
+              <div class="srs-metric-meta">Thẻ mới tối đa / ngày</div>
+            </div>
+
+            <!-- 5. Max Review Limit -->
+            <div class="srs-metric-card srs-metric-limit-review" id="cardMaxReviewLimit">
+              <div class="srs-metric-header">
+                <span class="srs-metric-title">Hạn mức ôn tập</span>
+                <span class="srs-metric-icon" aria-hidden="true">⚡</span>
+              </div>
+              <div class="srs-metric-value" id="statMaxReviewLimit">-</div>
+              <div class="srs-metric-meta">Lượt ôn tối đa / ngày</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Personal Daily SRS Settings Section -->
+        <section class="srs-settings-card" aria-labelledby="settingsSectionHeading">
+          <div class="mb-4">
+            <h2 id="settingsSectionHeading" class="h5 fw-bold mb-1">Cài đặt học tập SRS hàng ngày</h2>
+            <p class="text-secondary small mb-0">
+              Tùy chỉnh số lượng thẻ mới muốn học và số lượt ôn tập tối đa mỗi ngày. Sau khi cập nhật, hạn mức mới sẽ được áp dụng ngay lập tức trên các phiên ôn tập.
+            </p>
+          </div>
+
+          <form id="srsSettingsForm" novalidate>
+            <div class="row g-3 mb-4">
+              <!-- newCardsPerDay -->
+              <div class="col-md-6">
+                <label for="newCardsPerDayInput" class="form-label fw-semibold text-dark">
+                  Thẻ mới mỗi ngày (newCardsPerDay) <span class="text-danger" aria-hidden="true">*</span>
+                </label>
+                <input type="number" id="newCardsPerDayInput" name="newCardsPerDay" class="form-control" min="1" step="1" inputmode="numeric" required aria-describedby="newCardsPerDayHelp newCardsPerDayError">
+                <div id="newCardsPerDayHelp" class="form-text text-secondary small">
+                  Số thẻ mới tối đa nạp vào ôn tập mỗi ngày (số nguyên dương &gt; 0).
+                </div>
+                <div id="newCardsPerDayError" class="srs-field-error" aria-live="polite"></div>
+              </div>
+
+              <!-- maxReviewPerDay -->
+              <div class="col-md-6">
+                <label for="maxReviewPerDayInput" class="form-label fw-semibold text-dark">
+                  Lượt ôn tập tối đa mỗi ngày (maxReviewPerDay) <span class="text-danger" aria-hidden="true">*</span>
+                </label>
+                <input type="number" id="maxReviewPerDayInput" name="maxReviewPerDay" class="form-control" min="1" step="1" inputmode="numeric" required aria-describedby="maxReviewPerDayHelp maxReviewPerDayError">
+                <div id="maxReviewPerDayHelp" class="form-text text-secondary small">
+                  Số lượt ôn tập thẻ tối đa cho phép mỗi ngày (số nguyên dương &gt; 0).
+                </div>
+                <div id="maxReviewPerDayError" class="srs-field-error" aria-live="polite"></div>
+              </div>
+            </div>
+
+            <!-- Form Actions & Status -->
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+              <button type="submit" id="btnSaveSettings" class="btn-chinese-primary py-2 px-4">
+                Lưu thay đổi
+              </button>
+              <button type="button" id="btnResetSettings" class="btn-chinese-secondary py-2 px-3">
+                Khôi phục giá trị
+              </button>
+              <div id="settingsFormStatus" class="small" role="status" aria-live="polite"></div>
+            </div>
+          </form>
+        </section>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Global Footer Landmark -->
+  <footer class="site-footer mt-auto py-4 border-top">
+    <div class="container-xl">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <span class="brand-seal-mark" aria-hidden="true" style="width: 24px; height: 24px; font-size: 0.85rem;">字</span>
+          <span class="fw-semibold text-dark">Hán Ngữ &amp; Bộ Thủ</span>
+          <span class="text-muted small">&copy; 2026 E-learning Platform</span>
+        </div>
+        <ul class="list-inline mb-0 small text-secondary">
+          <li class="list-inline-item"><a href="index.html" class="text-decoration-none text-secondary">Trang chủ</a></li>
+          <li class="list-inline-item">&bull;</li>
+          <li class="list-inline-item"><a href="radicals.html" class="text-decoration-none text-secondary">214 Bộ thủ</a></li>
+          <li class="list-inline-item">&bull;</li>
+          <li class="list-inline-item"><a href="vocabulary.html" class="text-decoration-none text-secondary">Từ vựng</a></li>
+          <li class="list-inline-item">&bull;</li>
+          <li class="list-inline-item"><a href="lessons.html" class="text-decoration-none text-secondary">Bài học</a></li>
+          <li class="list-inline-item">&bull;</li>
+          <li class="list-inline-item"><a href="srs-review.html" class="text-decoration-none text-secondary">Ôn tập SRS</a></li>
+          <li class="list-inline-item">&bull;</li>
+          <li class="list-inline-item"><a href="ui-verification.html" class="text-decoration-none text-secondary">Kiểm chứng UI</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5.3.3 JavaScript Bundle with Authenticated SRI -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- SRS Dashboard Page Module Entrypoint -->
+  <script type="module" src="js/pages/srs-dashboard-page.js"></script>
+</body>
+</html>
