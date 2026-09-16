@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Trị Vòng Đời Tài Khoản | Hán Ngữ &amp; Bộ Thủ</title>
+  <meta name="description" content="Khu vực quản trị vòng đời tài khoản dành cho Quản trị viên (Admin): Xem danh sách, tìm kiếm, lọc trạng thái, phân trang và cập nhật trạng thái hoạt động với cơ chế thu hồi token tức thì.">
+
+  <!-- Verified Bootstrap 5.3.3 CSS via CDN with Authenticated Subresource Integrity (SRI) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Scholarly Brand Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>管</text></svg>">
+
+  <!-- Core Design Tokens & Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Runtime Environment Configuration -->
+  <script src="js/config.js"></script>
+</head>
+<body>
+
+  <!-- Accessible Skip Link (WCAG 2.2 SC 2.4.1) -->
+  <a href="#mainContent" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Global Header & Navigation Landmark -->
+  <header class="site-header">
+    <div class="container-xl">
+      <nav class="navbar navbar-expand-lg py-2" aria-label="Điều hướng chính của trang">
+        <!-- Brand identity -->
+        <a class="navbar-brand-custom" href="index.html">
+          <span class="brand-seal-mark" aria-hidden="true">字</span>
+          <span>Hán Ngữ &amp; Bộ Thủ</span>
+        </a>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavMenu" aria-controls="primaryNavMenu" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="primaryNavMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+            <li class="nav-item">
+              <a class="nav-link-custom" href="index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="radicals.html">214 Bộ thủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="vocabulary.html">Từ vựng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="lessons.html">Bài học</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="srs-review.html">Ôn tập SRS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom active" href="admin-accounts.html" aria-current="page">Quản trị</a>
+            </li>
+          </ul>
+
+          <!-- User Session / Navigation Actions (Authoritatively rendered by nav.js) -->
+          <div id="navAuthContainer" class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <a href="login.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Đăng nhập
+            </a>
+            <a href="register.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Bắt đầu học
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent" class="py-4 py-md-5">
+    <div class="container-xl creator-studio-wrapper">
+
+      <!-- Breadcrumbs Landmark -->
+      <nav aria-label="Đường dẫn điều hướng" class="mb-3">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Trang chủ</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Quản trị tài khoản</li>
+        </ol>
+      </nav>
+
+      <!-- Admin Section Sub-navigation Tabs -->
+      <nav class="moderator-nav-tabs" aria-label="Phân khu quản trị hệ thống">
+        <a href="admin-accounts.html" class="moderator-nav-tab active" id="tabAdminAccounts" aria-current="page">
+          Quản trị tài khoản
+        </a>
+        <a href="admin-roles.html" class="moderator-nav-tab" id="tabAdminRoles">
+          Phân quyền vai trò
+        </a>
+        <a href="admin-radicals.html" class="moderator-nav-tab" id="tabAdminRadicals">
+          Quản trị bộ thủ
+        </a>
+        <a href="admin-vocabulary.html" class="moderator-nav-tab" id="tabAdminVocabulary">
+          Quản trị từ vựng
+        </a>
+        <a href="admin-lessons.html" class="moderator-nav-tab" id="tabAdminLessons">
+          Giám sát bài học
+        </a>
+      </nav>
+
+      <!-- Role Guard Message Container (Shown if unauthorized) -->
+      <div id="adminAuthGuardContainer" class="d-none mb-4">
+        <div class="creator-panel-card text-center py-5">
+          <div class="state-error-icon mx-auto mb-3" aria-hidden="true">&#9888;</div>
+          <h2 class="h5 fw-bold text-dark mb-2">Yêu Cầu Quyền Quản Trị Viên (Admin)</h2>
+          <p class="text-secondary small mb-4" id="adminAuthGuardMessage">
+            Bạn cần đăng nhập với vai trò Quản trị viên (Admin) để sử dụng trang quản trị vòng đời tài khoản.
+          </p>
+          <a href="login.html?redirect=admin-accounts.html" class="btn-chinese-primary">Đăng nhập tài khoản Admin</a>
+        </div>
+      </div>
+
+      <!-- Admin Accounts Workspace Section -->
+      <section id="adminAccountsWorkspaceSection" aria-labelledby="accountsHeading">
+        <!-- Page Header & Actions Bar -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+          <div>
+            <h1 id="accountsHeading" class="h3 fw-bold text-dark mb-1">Quản Trị Vòng Đời Tài Khoản</h1>
+            <p class="text-secondary small mb-0" id="accountsSubHeading">
+              Xem danh sách, tìm kiếm theo email/SĐT/họ tên, lọc và cập nhật trạng thái hoạt động của người dùng trong hệ thống.
+            </p>
+          </div>
+
+          <!-- Controls: Badge & Result Count -->
+          <div class="d-flex align-items-center flex-wrap gap-2">
+            <span class="badge-status badge-status-approved" id="adminOversightBadge">
+              Quản Trị Hệ Thống (Admin)
+            </span>
+
+            <span id="accountResultCountBadge" class="badge-status badge-status-draft text-nowrap" aria-live="polite">
+              Đang tải...
+            </span>
+          </div>
+        </div>
+
+        <!-- Filter & Search Toolbar Card -->
+        <div class="card-chinese p-3 mb-4" id="accountToolbarCard">
+          <div class="row g-3 align-items-end">
+            <!-- Search Query Input -->
+            <div class="col-md-5 col-lg-5">
+              <label for="accountSearchInput" class="form-label small fw-semibold text-secondary mb-1">
+                Tìm kiếm tài khoản
+              </label>
+              <div class="input-group input-group-sm">
+                <input type="text" id="accountSearchInput" class="form-control" placeholder="Tìm theo email, SĐT hoặc họ tên..." aria-label="Tìm kiếm theo email, số điện thoại hoặc họ tên">
+                <button type="button" id="btnAccountSearch" class="btn btn-chinese-primary">
+                  Tìm kiếm
+                </button>
+                <button type="button" id="btnAccountClearSearch" class="btn btn-outline-secondary" title="Xóa bộ lọc tìm kiếm">
+                  Xóa
+                </button>
+              </div>
+            </div>
+
+            <!-- Status Filter Select -->
+            <div class="col-sm-6 col-md-4 col-lg-4">
+              <label for="statusFilterSelect" class="form-label small fw-semibold text-secondary mb-1">
+                Lọc trạng thái
+              </label>
+              <select id="statusFilterSelect" class="form-select form-select-sm" aria-label="Bộ lọc trạng thái tài khoản">
+                <option value="" selected>Tất cả trạng thái</option>
+                <option value="Active">Hoạt động (Active)</option>
+                <option value="Inactive">Tạm khóa (Inactive)</option>
+                <option value="Banned">Bị cấm (Banned)</option>
+              </select>
+            </div>
+
+            <!-- Page Size Select -->
+            <div class="col-sm-6 col-md-3 col-lg-3">
+              <label for="pageSizeSelect" class="form-label small fw-semibold text-secondary mb-1">
+                Hiển thị mỗi trang
+              </label>
+              <select id="pageSizeSelect" class="form-select form-select-sm" aria-label="Số lượng tài khoản hiển thị mỗi trang">
+                <option value="10">10 tài khoản / trang</option>
+                <option value="20" selected>20 tài khoản / trang</option>
+                <option value="50">50 tài khoản / trang</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Three-State UI Container (Loading / Empty / Error) -->
+        <div id="accountStateContainer" aria-live="polite"></div>
+
+        <!-- Accounts Table Container -->
+        <div id="accountsTableContainer" class="creator-panel-card p-0 overflow-hidden d-none">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="accountsTable">
+              <caption class="visually-hidden">Danh sách tài khoản người dùng và trạng thái hoạt động</caption>
+              <thead class="table-light border-bottom">
+                <tr>
+                  <th scope="col" class="py-3 px-3 text-center" style="width: 70px;">ID</th>
+                  <th scope="col" class="py-3 px-3" style="min-width: 190px;">Tài khoản (Email / SĐT)</th>
+                  <th scope="col" class="py-3 px-3" style="min-width: 160px;">Họ và tên</th>
+                  <th scope="col" class="py-3 px-3" style="min-width: 150px;">Vai trò</th>
+                  <th scope="col" class="text-center py-3 px-2" style="width: 130px;">Trạng thái</th>
+                  <th scope="col" class="py-3 px-3" style="width: 160px;">Thời gian tạo</th>
+                  <th scope="col" class="text-center py-3 px-3" style="width: 150px;">Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="accountsTableBody">
+                <!-- Dynamically populated safely by admin-accounts-page.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Accessible Server-Side Pagination Landmark -->
+        <nav id="accountsPaginationNav" class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-4 d-none" aria-label="Phân trang danh sách tài khoản">
+          <div class="small text-secondary" id="accountsPaginationSummary">
+            <!-- Rendered e.g.: Hiển thị 1 - 20 trong 45 tài khoản -->
+          </div>
+          <ul class="pagination pagination-sm mb-0 gap-1" id="accountsPaginationList">
+            <!-- Dynamically populated safely -->
+          </ul>
+        </nav>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Status Mutation Native Dialog Modal (Task 9F.1 & POL-8D-01) -->
+  <dialog id="statusConfirmModal" class="notes-dialog" aria-labelledby="statusModalTitle" aria-describedby="statusModalDesc">
+    <div class="notes-modal-card">
+      <div class="notes-modal-header p-3 border-bottom d-flex align-items-center justify-content-between">
+        <h2 id="statusModalTitle" class="h6 fw-bold mb-0">Cập Nhật Trạng Thái Tài Khoản</h2>
+        <button type="button" id="btnCloseStatusModal" class="toast-close-btn" aria-label="Đóng cửa sổ cập nhật trạng thái">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="p-3">
+        <p id="statusModalDesc" class="text-secondary small mb-3">
+          Chọn trạng thái mới cho tài khoản người dùng dưới đây:
+        </p>
+
+        <!-- Target Account Identity Summary Box -->
+        <div class="p-3 bg-light rounded border mb-3">
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="small text-secondary">Tài khoản (Email / SĐT):</span>
+            <strong class="text-dark small" id="modalTargetEmail">--</strong>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="small text-secondary">Họ và tên:</span>
+            <span class="text-dark small" id="modalTargetFullName">--</span>
+          </div>
+          <div class="d-flex align-items-center justify-content-between mb-1">
+            <span class="small text-secondary">Mã tài khoản (ID):</span>
+            <code class="small text-dark" id="modalTargetAccountId">#--</code>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="small text-secondary">Trạng thái hiện tại:</span>
+            <span id="modalCurrentStatusBadge" class="badge-status badge-status-active">Active</span>
+          </div>
+        </div>
+
+        <!-- New Status Selection -->
+        <div class="mb-3" id="modalStatusSelectGroup">
+          <label for="modalNewStatusSelect" class="form-label small fw-semibold text-secondary mb-1">
+            Trạng thái mới cần áp dụng:
+          </label>
+          <select id="modalNewStatusSelect" class="form-select form-select-sm">
+            <option value="Active">Hoạt động (Active)</option>
+            <option value="Inactive">Tạm khóa (Inactive)</option>
+            <option value="Banned">Bị cấm (Banned)</option>
+          </select>
+        </div>
+
+        <!-- Security Warning Notice (DEC-42: Server-side authorization_version invalidation) -->
+        <div class="alert alert-warning py-2 px-3 small mb-2 d-flex align-items-start gap-2" id="statusModalWarningNotice">
+          <span aria-hidden="true">&#9888;</span>
+          <div>
+            <strong>Lưu ý bảo mật:</strong> Thay đổi trạng thái tài khoản sẽ làm toàn bộ token và phiên làm việc hiện tại của tài khoản mục tiêu bị thu hồi tức thì theo cơ chế <code>authorization_version</code> phía máy chủ.
+          </div>
+        </div>
+
+        <!-- Self-Protection Warning Notice (POL-8D-01) -->
+        <div class="alert alert-danger py-2 px-3 small mb-2 d-none d-flex align-items-start gap-2" id="statusModalSelfProtectionNotice">
+          <span aria-hidden="true">&#9940;</span>
+          <div>
+            <strong>Bảo vệ tự thân (POL-8D-01):</strong> Đây là tài khoản Admin hiện đang đăng nhập của bạn. Giao diện và máy chủ không cho phép tự vô hiệu hóa hoặc khóa tài khoản của chính mình.
+          </div>
+        </div>
+
+        <!-- Modal Error Message Container -->
+        <div id="statusModalError" class="srs-field-error mt-2 d-none" role="alert"></div>
+      </div>
+
+      <div class="p-3 border-top bg-light d-flex align-items-center justify-content-end gap-2">
+        <button type="button" id="btnCancelStatusModal" class="btn-chinese-secondary btn-sm">
+          Hủy bỏ
+        </button>
+        <button type="button" id="btnConfirmStatusUpdate" class="btn-chinese-primary btn-sm">
+          Xác nhận cập nhật
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Global Toast Notification Container (WCAG 2.2 SC 4.1.3) -->
+  <div id="toastContainer" class="toast-container-custom" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Global Footer Landmark -->
+  <footer class="site-footer mt-auto py-4">
+    <div class="container-xl text-center">
+      <p class="text-muted small mb-0">
+        &copy; 2026 Hán Ngữ &amp; Bộ Thủ. Nền tảng học chữ Hán trực quan &amp; ôn tập thông minh SRS.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Page Initialization Entrypoint -->
+  <script type="module" src="js/pages/admin-accounts-page.js"></script>
+</body>
+</html>

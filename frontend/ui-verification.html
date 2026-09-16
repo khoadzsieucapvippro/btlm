@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trung Tâm Kiểm Chứng Giao Diện &amp; Năng Lực Hệ Thống | Hán Ngữ &amp; Bộ Thủ</title>
+  <meta name="description" content="Khu vực kiểm chứng kỹ thuật tập trung: Nền tảng UI (9A.1), API Client & Quản lý phiên (9A.2), Xác thực & Hồ sơ (9B.1), 214 Bộ thủ (9B.2) và Chẩn đoán Full-Stack thời gian thực.">
+
+  <!-- Verified Bootstrap 5.3.3 CSS via CDN with Authenticated Subresource Integrity (SRI) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Scholarly Brand Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>字</text></svg>">
+
+  <!-- Core Design Tokens & Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Runtime Environment Configuration (Task FE-REMEDIATION-03) -->
+  <script src="js/config.js"></script>
+</head>
+<body>
+
+  <!-- Accessible Skip Link (WCAG 2.2 SC 2.4.1) -->
+  <a href="#mainContent" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Global Header & Navigation Landmark -->
+  <header class="site-header">
+    <div class="container-xl">
+      <nav class="navbar navbar-expand-lg py-2" aria-label="Điều hướng chính của trang">
+        <!-- Brand identity -->
+        <a class="navbar-brand-custom" href="index.html">
+          <span class="brand-seal-mark" aria-hidden="true">字</span>
+          <span>Hán Ngữ &amp; Bộ Thủ</span>
+        </a>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavMenu" aria-controls="primaryNavMenu" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="primaryNavMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+            <li class="nav-item">
+              <a class="nav-link-custom" href="index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="radicals.html">214 Bộ thủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="vocabulary.html">Từ vựng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="lessons.html">Bài học</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="srs-review.html">Ôn tập SRS</a>
+            </li>
+          </ul>
+
+          <!-- User Session / Navigation Actions -->
+          <div id="navAuthContainer" class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <a href="login.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Đăng nhập
+            </a>
+            <a href="register.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Bắt đầu học
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent" class="main-content-wrapper">
+    <div class="container-xl">
+
+      <!-- Header & Scope Introduction -->
+      <section class="mb-4" aria-labelledby="verificationHeading">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <div>
+            <h1 id="verificationHeading" class="h3 fw-bold mb-1">
+              Trung Tâm Kiểm Chứng Giao Diện &amp; Năng Lực Hệ Thống (Verification Center)
+            </h1>
+            <p class="text-secondary small mb-0">
+              Bề mặt chẩn đoán kỹ thuật tập trung dành cho Developer &amp; QA: Kiểm chứng thủ công, trực quan hóa trạng thái và hỗ trợ kiểm thử tự động toàn dự án.
+            </p>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge-status badge-status-approved">Permanent Diagnostic Surface</span>
+            <a href="index.html" class="btn-chinese-outline btn-sm">Về Trang chủ</a>
+          </div>
+        </div>
+
+        <!-- Quick Navigation Jump Bar & Badge Legend -->
+        <div class="p-3 border rounded bg-white shadow-sm mb-4">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <nav class="d-flex flex-wrap gap-2" aria-label="Điều hướng nhanh các phân khu kiểm chứng">
+              <a href="#section-9a1" class="btn btn-sm btn-outline-secondary">1. 9A.1 UI Foundation</a>
+              <a href="#section-9a2" class="btn btn-sm btn-outline-secondary">2. 9A.2 API &amp; Session</a>
+              <a href="#section-9b1" class="btn btn-sm btn-outline-secondary">3. 9B.1 Auth &amp; Profile</a>
+              <a href="#section-9b2" class="btn btn-sm btn-outline-secondary">4. 9B.2 214 Bộ Thủ</a>
+              <a href="#section-9b3" class="btn btn-sm btn-outline-secondary">5. 9B.3 Từ Vựng</a>
+              <a href="#section-9c1" class="btn btn-sm btn-outline-secondary">6. 9C.1 Bài Học</a>
+              <a href="#section-9c2" class="btn btn-sm btn-outline-secondary">7. 9C.2 Ghi Chú</a>
+              <a href="#section-9c3" class="btn btn-sm btn-outline-secondary">8. 9C.3 Ôn Tập SRS</a>
+              <a href="#section-9d1" class="btn btn-sm btn-outline-secondary">9. 9D.1 Creator Studio</a>
+              <a href="#section-9d2" class="btn btn-sm btn-outline-secondary">10. 9D.2 Import Excel</a>
+              <a href="#section-9d3" class="btn btn-sm btn-outline-secondary">11. 9D.3 Nộp Duyệt</a>
+              <a href="#section-fullstack" class="btn btn-sm btn-outline-secondary">12. Live Full-Stack</a>
+            </nav>
+            <div class="d-flex align-items-center gap-2 flex-wrap small">
+              <span class="text-muted fw-semibold me-1">Chú giải nhãn:</span>
+              <span class="badge-status badge-mode-live">LIVE</span>
+              <span class="text-muted">Kết nối BE/DB thật &bull;</span>
+              <span class="badge-status badge-mode-mocked">MOCKED</span>
+              <span class="text-muted">Mô phỏng cô lập &bull;</span>
+              <span class="badge-status badge-mode-unit">UNIT</span>
+              <span class="text-muted">Thuần Logic JS</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 1. SECTION 9A.1: UI FOUNDATION & PRIMITIVES                         -->
+      <!-- =================================================================== -->
+      <section id="section-9a1" class="mb-5" aria-labelledby="heading-9a1">
+        <h2 id="heading-9a1" class="h5 fw-bold mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+          <span>1. Phân Hệ 9A.1 — Nền Tảng Giao Diện &amp; UI Primitives</span>
+          <span class="badge-status badge-mode-unit">UNIT / UI</span>
+        </h2>
+
+        <!-- Grid: Design Tokens Swatches & CJK Hierarchy -->
+        <div class="row g-4 mb-4">
+          <!-- Col 1: Semantic Color Tokens -->
+          <div class="col-md-6 col-lg-7">
+            <div class="card-chinese h-100">
+              <h3 class="h6 fw-bold mb-3">Hệ thống Màu sắc Ngữ nghĩa (Semantic Roles)</h3>
+              <p class="small text-secondary mb-3">Tất cả màu sắc đạt tỷ lệ tương phản chuẩn WCAG 2.2 Level AA (&ge; 4.5:1 cho chữ thường, &ge; 3:1 cho large text &amp; UI border).</p>
+              <div class="row g-3">
+                <div class="col-sm-6">
+                  <div class="p-3 rounded border" style="background-color: var(--color-bg-canvas);">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <span class="d-inline-block rounded-circle" style="width: 1rem; height: 1rem; background-color: var(--color-accent-primary);"></span>
+                      <strong class="small text-dark">Scholarly Cinnabar</strong>
+                    </div>
+                    <code class="small text-muted">--color-accent-primary</code>
+                    <div class="small text-secondary mt-1">Nút bấm chính, điểm nhấn thư viện</div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="p-3 rounded border" style="background-color: var(--color-status-success-bg); border-color: var(--color-status-success-border) !important;">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <span class="d-inline-block rounded-circle" style="width: 1rem; height: 1rem; background-color: var(--color-status-success);"></span>
+                      <strong class="small" style="color: var(--color-status-success);">Celadon Success</strong>
+                    </div>
+                    <code class="small text-muted">--color-status-success</code>
+                    <div class="small text-secondary mt-1">Bài học Approved, tài khoản Active</div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="p-3 rounded border" style="background-color: var(--color-status-warning-bg); border-color: var(--color-status-warning-border) !important;">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <span class="d-inline-block rounded-circle" style="width: 1rem; height: 1rem; background-color: var(--color-status-warning);"></span>
+                      <strong class="small" style="color: var(--color-status-warning);">Amber Warning</strong>
+                    </div>
+                    <code class="small text-muted">--color-status-warning</code>
+                    <div class="small text-secondary mt-1">Bài học Pending, cảnh báo kiểm duyệt</div>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="p-3 rounded border" style="background-color: var(--color-status-danger-bg); border-color: var(--color-status-danger-border) !important;">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                      <span class="d-inline-block rounded-circle" style="width: 1rem; height: 1rem; background-color: var(--color-status-danger);"></span>
+                      <strong class="small" style="color: var(--color-status-danger);">Crimson Danger</strong>
+                    </div>
+                    <code class="small text-muted">--color-status-danger</code>
+                    <div class="small text-secondary mt-1">Từ chối Rejected, tài khoản Banned</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: CJK Typography Scale -->
+          <div class="col-md-6 col-lg-5">
+            <div class="card-chinese h-100">
+              <h3 class="h6 fw-bold mb-3">Phân cấp Kiểu chữ Hán (CJK Typography)</h3>
+              <div class="d-flex flex-column gap-3">
+                <div class="d-flex align-items-baseline gap-3 pb-2 border-bottom">
+                  <span class="cjk-character cjk-radical-cell" aria-label="Bộ mộc">木</span>
+                  <div>
+                    <div class="fw-semibold">Radical Grid Scale (36px)</div>
+                    <div class="small text-muted pinyin-text">mù &bull; MỘC &bull; Cây cối</div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-baseline gap-3 pb-2 border-bottom">
+                  <span class="cjk-character cjk-item-card" aria-label="Từ vựng">你好</span>
+                  <div>
+                    <div class="fw-semibold">Vocabulary Card Scale (24px)</div>
+                    <div class="small text-muted pinyin-text">nǐ hǎo &bull; Chào bạn</div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-baseline gap-3">
+                  <span class="cjk-character cjk-dense" aria-label="Chữ Hán trong bảng biểu">汉语词汇</span>
+                  <div>
+                    <div class="fw-semibold">Dense Table Scale (18px)</div>
+                    <div class="small text-muted pinyin-text">hànyǔ cíhuì &bull; Từ vựng Hán ngữ</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primitives Interactive Controls -->
+        <div class="card-chinese mb-4">
+          <h3 class="h6 fw-bold mb-3">Kiểm Thử UI Primitives Tương Tác</h3>
+          <div class="row g-4">
+            <!-- Toast Triggers -->
+            <div class="col-lg-6">
+              <h4 class="h6 text-uppercase tracking-wide text-muted mb-2">1.1 Toast Notifications (aria-live="polite")</h4>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="triggerToastSuccess" class="btn-chinese-secondary btn-sm">
+                  Toast Thành công
+                </button>
+                <button type="button" id="triggerToastWarning" class="btn-chinese-secondary btn-sm">
+                  Toast Cảnh báo
+                </button>
+                <button type="button" id="triggerToastDanger" class="btn-chinese-secondary btn-sm">
+                  Toast Lỗi
+                </button>
+                <button type="button" id="triggerToastInfo" class="btn-chinese-secondary btn-sm">
+                  Toast Thông tin
+                </button>
+              </div>
+
+              <h4 class="h6 text-uppercase tracking-wide text-muted mb-2 mt-4">1.2 Modal Dialog (Focus Trap &amp; Restore)</h4>
+              <button type="button" id="triggerModalDemo" class="btn-chinese-primary btn-sm">
+                Mở Modal Xác Nhận
+              </button>
+              <span id="modalResultText" class="small text-secondary ms-2" aria-live="polite"></span>
+            </div>
+
+            <!-- Three-State UI Switcher -->
+            <div class="col-lg-6">
+              <h4 class="h6 text-uppercase tracking-wide text-muted mb-2">1.3 Động Cơ 3-State UI (Loading &bull; Empty &bull; Error)</h4>
+              <div class="btn-group btn-group-sm mb-3 w-100" role="group" aria-label="Chuyển đổi trạng thái giao diện">
+                <button type="button" id="btnStateLoading" class="btn btn-outline-secondary">Loading</button>
+                <button type="button" id="btnStateEmpty" class="btn btn-outline-secondary">Empty</button>
+                <button type="button" id="btnStateError" class="btn btn-outline-secondary">Error</button>
+                <button type="button" id="btnStateReady" class="btn btn-outline-secondary active">Ready</button>
+              </div>
+
+              <!-- 3-State Dynamic Container -->
+              <div id="demoStateContainer" class="p-3 border rounded bg-white">
+                <div class="p-4 text-center">
+                  <span class="badge-status badge-status-approved mb-2">Trạng Thái Sẵn Sàng (Ready)</span>
+                  <p class="mb-0 text-secondary">Nội dung hiển thị bình thường khi tải dữ liệu thành công.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 2. SECTION 9A.2: API CLIENT & SESSION MANAGER                       -->
+      <!-- =================================================================== -->
+      <section id="section-9a2" class="mb-5" aria-labelledby="heading-9a2">
+        <h2 id="heading-9a2" class="h5 fw-bold mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+          <span>2. Phân Hệ 9A.2 — Centralized API Client &amp; Session Manager</span>
+          <div class="d-flex gap-1">
+            <span class="badge-status badge-mode-live">LIVE</span>
+            <span class="badge-status badge-mode-mocked">MOCKED</span>
+          </div>
+        </h2>
+
+        <!-- 2.1 Runtime Configuration & Live Health Probes -->
+        <div class="row g-4 mb-4">
+          <div class="col-lg-5">
+            <div class="card-chinese h-100">
+              <h3 class="h6 fw-bold mb-3">2.1 Cấu Hình Runtime API &amp; Origin Routing</h3>
+              <div class="p-3 border rounded bg-light mb-3">
+                <div class="mb-2">
+                  <span class="small text-muted d-block">Active API Base URL:</span>
+                  <code id="currentApiBaseUrl" class="fw-bold text-dark fs-6">Đang xác định...</code>
+                </div>
+                <div class="mb-2">
+                  <span class="small text-muted d-block">Cấu hình nguồn:</span>
+                  <span id="apiConfigSource" class="small fw-semibold text-secondary">Tự động nhận diện port</span>
+                </div>
+                <div class="mb-2">
+                  <span class="small text-muted d-block">Chế độ Origin:</span>
+                  <span id="apiOriginMode" class="badge-status badge-status-active">Cross-Origin (Dev)</span>
+                </div>
+                <div class="row g-2 small">
+                  <div class="col-6">
+                    <span class="text-muted d-block">Client Origin:</span>
+                    <code id="apiClientOrigin" class="small text-secondary">--</code>
+                  </div>
+                  <div class="col-6">
+                    <span class="text-muted d-block">Expected Target:</span>
+                    <code id="apiTargetOrigin" class="small text-secondary">http://localhost:8080</code>
+                  </div>
+                </div>
+              </div>
+              <div class="alert alert-info py-2 px-3 small mb-0" role="status">
+                <strong>Chính sách Bảo Mật:</strong> Tuyệt đối không lưu hoặc hiển thị token, mật khẩu hay Authorization header thô trên giao diện.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                <h3 class="h6 fw-bold mb-0">2.2 Kiểm Tra Backend Health &amp; API Protocol</h3>
+                <span id="apiHealthStatusBadge" class="badge-status badge-status-pending">Chưa kiểm tra</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Thực hiện probe trực tiếp tới <code>/actuator/health</code> (tách biệt với <code>/api/v1</code>) và kiểm tra giao thức gọi dữ liệu công khai qua <code>apiClient()</code>.
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeHealth" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Kiểm tra Backend Health (/actuator/health)
+                </button>
+                <button type="button" id="btnProbeApiSuccess" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Kiểm tra API Success (GET /radicals)
+                </button>
+              </div>
+              <div class="p-3 border rounded bg-light">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="small fw-semibold text-secondary">Kết quả phản hồi</span>
+                  <span id="healthLatencyBadge" class="small text-muted">Latency: --</span>
+                </div>
+                <pre id="apiSuccessOutput" class="small text-dark mb-0 bg-white p-2 rounded border" style="max-height: 120px; overflow-y: auto;" aria-live="polite">Nhấn một trong các nút bên trên để kiểm tra kết nối thời gian thực.</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2.3 Mocked Error Handling & Edge Demonstrations -->
+        <div class="card-chinese mb-4">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h3 class="h6 fw-bold mb-1">2.3 Mô Phỏng Các Kịch Bản Lỗi &amp; Biên Mạng (Mocked Edge Diagnostics)</h3>
+              <p class="small text-secondary mb-0">
+                Kiểm chứng năng lực xử lý lỗi của <code>apiClient</code> và <code>authManager</code> bằng kịch bản cô lập mà không làm gián đoạn CSDL thật.
+              </p>
+            </div>
+            <span class="badge-status badge-mode-mocked">MOCKED BEHAVIOR</span>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6 col-lg-3">
+              <button type="button" id="btnMock401" class="btn btn-outline-danger btn-sm w-100 py-2">
+                <strong>401 Unauthorized</strong>
+                <span class="d-block small text-muted">Chặn redirect test</span>
+              </button>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <button type="button" id="btnMock403" class="btn btn-outline-warning btn-sm w-100 py-2">
+                <strong>403 Forbidden</strong>
+                <span class="d-block small text-muted">Bảo toàn phiên học</span>
+              </button>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <button type="button" id="btnMock429" class="btn btn-outline-secondary btn-sm w-100 py-2">
+                <strong>429 Rate Limit</strong>
+                <span class="d-block small text-muted">Không retry vô hạn</span>
+              </button>
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <button type="button" id="btnMock204" class="btn btn-outline-info btn-sm w-100 py-2">
+                <strong>204 No Content</strong>
+                <span class="d-block small text-muted">Xử lý body rỗng</span>
+              </button>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <button type="button" id="btnMockTimeout" class="btn btn-outline-dark btn-sm w-100 py-2">
+                <strong>Timeout (408)</strong>
+                <span class="d-block small text-muted">Phân loại lỗi thời gian chờ</span>
+              </button>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <button type="button" id="btnMockGetRetry" class="btn btn-outline-primary btn-sm w-100 py-2">
+                <strong>Idempotent GET Retry</strong>
+                <span class="d-block small text-muted">1 thất bại &rarr; 1 thành công</span>
+              </button>
+            </div>
+            <div class="col-md-6 col-lg-4">
+              <button type="button" id="btnMockMutationNoRetry" class="btn btn-outline-danger btn-sm w-100 py-2">
+                <strong>Mutation No-Retry</strong>
+                <span class="d-block small text-muted">POST/PUT không tự ý retry</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="p-3 border rounded bg-light">
+            <span class="small fw-semibold text-secondary d-block mb-1">Nhật ký chẩn đoán lỗi mô phỏng:</span>
+            <div id="mockedDiagnosticsOutput" class="small font-monospace p-2 rounded bg-white border text-dark" style="min-height: 60px;" aria-live="polite">
+              Sẵn sàng kiểm thử. Nhấn một trong các nút mô phỏng mã lỗi bên trên.
+            </div>
+          </div>
+        </div>
+
+        <!-- 2.4 Query Parameter Serialization & 2.5 Session Manager State -->
+        <div class="row g-4">
+          <!-- Col 1: Query Serialization -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h6 fw-bold mb-0">2.4 Thử Nghiệm Query Parameter Serialization</h3>
+                <span class="badge-status badge-mode-unit">UNIT</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Kiểm tra khả năng mã hóa an toàn các tham số qua <code>buildUrl()</code> mà không gửi request mạng.
+              </p>
+              <div class="row g-2 mb-3">
+                <div class="col-6">
+                  <label for="queryTestPath" class="form-label small text-muted mb-1">Endpoint Path:</label>
+                  <input type="text" id="queryTestPath" class="form-control form-control-sm" value="/radicals">
+                </div>
+                <div class="col-3">
+                  <label for="queryTestPage" class="form-label small text-muted mb-1">Page:</label>
+                  <input type="number" id="queryTestPage" class="form-control form-control-sm" value="0" min="0">
+                </div>
+                <div class="col-3">
+                  <label for="queryTestSize" class="form-label small text-muted mb-1">Size:</label>
+                  <input type="number" id="queryTestSize" class="form-control form-control-sm" value="20" min="1">
+                </div>
+                <div class="col-6">
+                  <label for="queryTestSort" class="form-label small text-muted mb-1">Sort:</label>
+                  <input type="text" id="queryTestSort" class="form-control form-control-sm" value="radicalId,asc">
+                </div>
+                <div class="col-6">
+                  <label for="queryTestSearch" class="form-label small text-muted mb-1">Search Query:</label>
+                  <input type="text" id="queryTestSearch" class="form-control form-control-sm" value="木">
+                </div>
+              </div>
+              <button type="button" id="btnTestBuildUrl" class="btn-chinese-secondary btn-sm mb-3">
+                Tạo URL với buildUrl()
+              </button>
+              <div class="p-2 border rounded bg-light">
+                <span class="small text-muted d-block mb-1">URL xuất xưởng:</span>
+                <code id="serializedUrlOutput" class="small text-dark font-monospace d-block text-break">--</code>
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: Session Manager State -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h6 fw-bold mb-0">2.5 Trạng Thái Quản Lý Phiên (Session Manager)</h3>
+                <span id="sessionStatusBadge" class="badge-status badge-status-draft">GUEST</span>
+              </div>
+              <div class="p-3 border rounded bg-light mb-3">
+                <div class="d-flex justify-content-between mb-1 small">
+                  <span class="text-muted">Trạng thái xác thực:</span>
+                  <span id="sessionAuthLabel" class="fw-semibold text-secondary">Chưa đăng nhập</span>
+                </div>
+                <div class="d-flex justify-content-between mb-1 small">
+                  <span class="text-muted">Token Hiện diện:</span>
+                  <span id="tokenPresenceBadge" class="badge-status badge-status-draft">ABSENT</span>
+                </div>
+                <div class="d-flex justify-content-between mb-1 small flex-wrap gap-1">
+                  <span class="text-muted">Người dùng:</span>
+                  <span id="sessionUserName" class="fw-semibold text-dark text-break text-end">Khách viếng thăm</span>
+                </div>
+                <div class="d-flex justify-content-between small flex-wrap gap-1">
+                  <span class="text-muted">Vai trò (Roles):</span>
+                  <span id="sessionRoles" class="text-dark font-monospace text-break text-end">[]</span>
+                </div>
+              </div>
+
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnSetTestSession" class="btn btn-outline-success btn-sm">
+                  <span class="badge-status badge-mode-mocked me-1">MOCKED</span> Nạp Session Test (Learner)
+                </button>
+                <button type="button" id="btnClearTestSession" class="btn btn-outline-danger btn-sm">
+                  <span class="badge-status badge-mode-mocked me-1">MOCKED</span> Xóa Session Test
+                </button>
+                <button type="button" id="btnSimulateLogout" class="btn btn-outline-secondary btn-sm">
+                  Mô phỏng Logout
+                </button>
+                <button type="button" id="btnSimulateExpiry" class="btn btn-outline-warning btn-sm">
+                  Mô phỏng Hết Hạn
+                </button>
+              </div>
+
+              <div class="small text-muted">
+                <strong>Đồng Bộ Đa Thẻ:</strong> <span id="multiTabSyncStatus" class="text-success">Đang kích hoạt</span>. Mở trang này trên 2 tab khác nhau để quan sát session tự động đồng bộ qua StorageEvent.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 3. SECTION 9B.1: AUTHENTICATION & PROFILE                           -->
+      <!-- =================================================================== -->
+      <section id="section-9b1" class="mb-5" aria-labelledby="heading-9b1">
+        <h2 id="heading-9b1" class="h5 fw-bold mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+          <span>3. Phân Hệ 9B.1 — Xác Thực &amp; Hồ Sơ Cá Nhân (Auth &amp; Profile)</span>
+          <div class="d-flex gap-1">
+            <span class="badge-status badge-mode-live">LIVE</span>
+            <span class="badge-status badge-status-approved">PRODUCT REUSE</span>
+          </div>
+        </h2>
+
+        <div class="row g-4">
+          <!-- Col 1: Capabilities & Links -->
+          <div class="col-lg-5">
+            <div class="card-chinese h-100">
+              <h3 class="h6 fw-bold mb-3">3.1 Điều Hướng Tính Năng Xác Thực</h3>
+              <p class="small text-secondary mb-3">
+                Verification Center không sao chép lại form đăng nhập/đăng ký nhằm bảo đảm tính toàn vẹn sản phẩm. Sử dụng các liên kết sau để trải nghiệm trực tiếp giao diện sản phẩm:
+              </p>
+              <div class="d-flex flex-column gap-2 mb-3">
+                <a href="register.html" class="btn-chinese-outline btn-sm d-flex justify-content-between align-items-center">
+                  <span>Trang Đăng Ký Tài Khoản (register.html)</span>
+                  <span>&rarr;</span>
+                </a>
+                <a href="login.html" class="btn-chinese-outline btn-sm d-flex justify-content-between align-items-center">
+                  <span>Trang Đăng Nhập Hệ Thống (login.html)</span>
+                  <span>&rarr;</span>
+                </a>
+                <a href="profile.html" class="btn-chinese-outline btn-sm d-flex justify-content-between align-items-center">
+                  <span>Trang Hồ Sơ Cá Nhân (profile.html)</span>
+                  <span>&rarr;</span>
+                </a>
+              </div>
+
+              <div class="border-top pt-3">
+                <h4 class="h6 fw-bold mb-2 small text-uppercase text-muted">Probe API Profile (GET /users/profile)</h4>
+                <button type="button" id="btnProbeProfileApi" class="btn-chinese-secondary btn-sm mb-2 w-100">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Kiểm tra API Profile Hiện Tại
+                </button>
+                <div id="profileProbeOutput" class="small p-2 border rounded bg-light text-secondary font-monospace" style="min-height: 50px;" aria-live="polite">
+                  Chưa kiểm tra. Nhấn nút để gửi request có Bearer token (hoặc không có token).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: Auth Events Monitor -->
+          <div class="col-lg-7">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                <div>
+                  <h3 class="h6 fw-bold mb-0">3.2 Bộ Giám Sát Sự Kiện Xác Thực (Auth Events Monitor)</h3>
+                  <span class="small text-muted">Lắng nghe auth:login, auth:logout, auth:expired, auth:update</span>
+                </div>
+                <button type="button" id="btnClearAuthEvents" class="btn btn-outline-secondary btn-sm">
+                  Xóa Lịch Sử
+                </button>
+              </div>
+
+              <div class="p-3 border rounded bg-light">
+                <div id="authEventsLog" class="small font-monospace" style="height: 220px; overflow-y: auto; background-color: var(--color-bg-surface);" aria-live="polite">
+                  <div class="text-muted p-2">Đang theo dõi sự kiện... Chưa có sự kiện xác thực nào phát sinh.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 4. SECTION 9B.2: 214 KANGXI RADICALS CATALOG                         -->
+      <!-- =================================================================== -->
+      <section id="section-9b2" class="mb-5" aria-labelledby="heading-9b2">
+        <h2 id="heading-9b2" class="h5 fw-bold mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+          <span>4. Phân Hệ 9B.2 — Tra Cứu 214 Bộ Thủ Khang Hy (Kangxi Radicals)</span>
+          <div class="d-flex gap-1">
+            <span class="badge-status badge-mode-live">LIVE</span>
+            <span class="badge-status badge-mode-unit">UNIT</span>
+          </div>
+        </h2>
+
+        <div class="row g-4">
+          <!-- Col 1: Catalog & Detail Probes -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <h3 class="h6 fw-bold mb-3">4.1 Kiểm Tra Toàn Vẹn CSDL &amp; Hợp Đồng DTO</h3>
+              <p class="small text-secondary mb-3">
+                Xác minh trực tiếp với backend Spring Boot: đảm bảo đủ 214 bộ thủ, tuần tự 1..214 và không chứa trường giả mạo <code>strokes</code>/<code>strokeCount</code>.
+              </p>
+
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeRadicalsCatalog" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Kiểm tra Danh Mục (GET /radicals)
+                </button>
+                <button type="button" id="btnProbeRadicalDetail" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Kiểm tra Chi Tiết #1 (GET /radicals/1)
+                </button>
+                <a href="radicals.html" class="btn-chinese-primary btn-sm">
+                  Mở Catalog 214 Bộ Thủ &rarr;
+                </a>
+              </div>
+
+              <div class="p-3 border rounded bg-light mb-2">
+                <span class="small fw-semibold text-secondary d-block mb-1">Kết quả kiểm tra Danh mục:</span>
+                <div id="radicalsCatalogOutput" class="small text-secondary font-monospace p-2 rounded bg-white border" style="min-height: 60px;" aria-live="polite">
+                  Chưa kiểm tra. Nhấn "Kiểm tra Danh Mục" để gọi API thật.
+                </div>
+              </div>
+
+              <div class="p-3 border rounded bg-light">
+                <span class="small fw-semibold text-secondary d-block mb-1">Kết quả kiểm tra Chi tiết Bộ thủ #1:</span>
+                <div id="radicalDetailOutput" class="small text-secondary font-monospace p-2 rounded bg-white border" style="min-height: 60px;" aria-live="polite">
+                  Chưa kiểm tra. Nhấn "Kiểm tra Chi Tiết #1" để xác minh DTO.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: Client-side Search Engine Diagnostic -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h6 fw-bold mb-0">4.2 Thử Nghiệm Tìm Kiếm Client-Side (filterRadicals)</h3>
+                <span class="badge-status badge-mode-unit">UNIT</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Kiểm tra giải thuật tìm kiếm tiếng Việt có dấu/không dấu và Hán tự bằng logic sản phẩm được tái sử dụng trực tiếp từ <code>radicals-page.js</code>.
+              </p>
+
+              <div class="mb-3">
+                <label for="searchRadicalTestInput" class="form-label small text-muted mb-1">Từ khóa tra cứu thử nghiệm:</label>
+                <div class="input-group input-group-sm mb-2">
+                  <input type="text" id="searchRadicalTestInput" class="form-control" value="木" placeholder="Nhập Hán tự hoặc âm Hán-Việt...">
+                  <button type="button" id="btnTestClientSearch" class="btn-chinese-secondary">
+                    Tìm kiếm
+                  </button>
+                </div>
+                <div class="d-flex flex-wrap gap-1">
+                  <button type="button" id="btnSearchGlyph" class="btn btn-outline-secondary btn-sm py-1 px-2" style="min-height: 24px; font-size: 0.75rem;">Mẫu: 木</button>
+                  <button type="button" id="btnSearchWithDiacritics" class="btn btn-outline-secondary btn-sm py-1 px-2" style="min-height: 24px; font-size: 0.75rem;">Mẫu: Mộc</button>
+                  <button type="button" id="btnSearchWithoutDiacritics" class="btn btn-outline-secondary btn-sm py-1 px-2" style="min-height: 24px; font-size: 0.75rem;">Mẫu: moc</button>
+                </div>
+              </div>
+
+              <div class="p-3 border rounded bg-light">
+                <span class="small fw-semibold text-secondary d-block mb-1">Kết quả khớp giải thuật:</span>
+                <div id="searchRadicalsResult" class="small font-monospace p-2 rounded bg-white border" style="min-height: 120px; max-height: 160px; overflow-y: auto;" aria-live="polite">
+                  Nhấn "Tìm kiếm" hoặc chọn từ khóa mẫu để chạy giải thuật.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 5. SECTION 9B.3: CHINESE VOCABULARY CATALOG & SEARCH               -->
+      <!-- =================================================================== -->
+      <section id="section-9b3" class="mb-5" aria-labelledby="heading-9b3">
+        <h2 id="heading-9b3" class="h5 fw-bold mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+          <span>5. Phân Hệ 9B.3 — Danh Mục &amp; Tra Cứu Từ Vựng (Chinese Vocabulary)</span>
+          <div class="d-flex gap-1">
+            <span class="badge-status badge-mode-live">LIVE</span>
+            <span class="badge-status badge-mode-unit">CAPABILITY</span>
+          </div>
+        </h2>
+
+        <div class="row g-4">
+          <!-- Col 1: Backend Catalog & Detail Probes -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <h3 class="h6 fw-bold mb-3">5.1 Kiểm Tra Hợp Đồng DTO &amp; Bộ Thủ Cấu Thành</h3>
+              <p class="small text-secondary mb-3">
+                Xác minh trực tiếp với backend Spring Boot: kiểm tra phân trang chuẩn <code>PageResponse</code> và cấu trúc phân rã bộ thủ qua <code>GET /api/v1/vocabulary/{id}</code> (Zero N+1).
+              </p>
+
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeVocabCatalog" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Kiểm tra Danh Mục (GET /vocabulary?page=0&amp;size=20)
+                </button>
+                <button type="button" id="btnProbeVocabDetail" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Kiểm tra Chi Tiết &amp; Bộ Thủ
+                </button>
+                <a href="vocabulary.html" class="btn-chinese-primary btn-sm">
+                  Mở Catalog Từ Vựng &rarr;
+                </a>
+              </div>
+
+              <div class="p-3 border rounded bg-light mb-2">
+                <span class="small fw-semibold text-secondary d-block mb-1">Kết quả kiểm tra Danh mục:</span>
+                <div id="vocabCatalogOutput" class="small text-secondary font-monospace p-2 rounded bg-white border" style="min-height: 60px;" aria-live="polite">
+                  Chưa kiểm tra. Nhấn "Kiểm tra Danh Mục" để gọi API thật.
+                </div>
+              </div>
+
+              <div class="p-3 border rounded bg-light">
+                <span class="small fw-semibold text-secondary d-block mb-1">Kết quả kiểm tra Chi tiết Từ vựng:</span>
+                <div id="vocabDetailOutput" class="small text-secondary font-monospace p-2 rounded bg-white border" style="min-height: 60px;" aria-live="polite">
+                  Chưa kiểm tra. Nhấn "Kiểm tra Chi Tiết &amp; Bộ Thủ" để xác minh DTO và radicals.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: Multi-Criteria Search & Speech Capability -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h6 fw-bold mb-0">5.2 Tìm Kiếm Đa Tiêu Chí &amp; Năng Lực Phát Âm</h3>
+                <div class="d-flex gap-1">
+                  <span class="badge-status badge-mode-live">LIVE</span>
+                  <span class="badge-status badge-mode-unit">CAPABILITY</span>
+                </div>
+              </div>
+              <p class="small text-secondary mb-3">
+                Kiểm tra khả năng tìm kiếm backend (Hán tự, Pinyin có dấu, Pinyin không dấu) và năng lực phát âm Web Speech API trên trình duyệt hiện tại.
+              </p>
+
+              <div class="mb-3">
+                <span class="small fw-semibold text-secondary d-block mb-1">Kiểm tra tìm kiếm backend (search=...):</span>
+                <div class="d-flex flex-wrap gap-2 mb-2">
+                  <button type="button" id="btnProbeVocabSearchShu" class="btn btn-outline-secondary btn-sm">
+                    Probe: search=shu
+                  </button>
+                  <button type="button" id="btnProbeVocabSearchNi" class="btn btn-outline-secondary btn-sm">
+                    Probe: search=ni
+                  </button>
+                  <button type="button" id="btnProbeVocabSearchHanzi" class="btn btn-outline-secondary btn-sm">
+                    Probe: search=书
+                  </button>
+                </div>
+                <div id="vocabSearchOutput" class="small font-monospace p-2 rounded bg-white border mb-3" style="min-height: 60px;" aria-live="polite">
+                  Chọn một probe tìm kiếm để kiểm tra phản hồi backend.
+                </div>
+              </div>
+
+              <div class="p-3 border rounded bg-light">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="small fw-semibold text-secondary">Chẩn đoán Web Speech API (Phát âm tiếng Trung):</span>
+                  <button type="button" id="btnCheckSpeechApi" class="btn-chinese-secondary btn-sm py-1 px-2" style="font-size: 0.8rem;">
+                    Kiểm Tra Web Speech
+                  </button>
+                </div>
+                <div id="speechCapabilityOutput" class="small font-monospace p-2 rounded bg-white border" style="min-height: 70px;" aria-live="polite">
+                  Chưa kiểm tra. Nhấn "Kiểm Tra Web Speech" để kiểm tra API speechSynthesis và voice zh-CN.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 6. SECTION 9C.1: PUBLIC LESSONS & ORDERED CONTENT                   -->
+      <!-- =================================================================== -->
+      <section id="section-9c1" class="mb-5" aria-labelledby="heading-9c1">
+        <h2 id="heading-9c1" class="h5 fw-bold mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+          <span>6. Phân Hệ 9C.1 — Bài Học &amp; Danh Mục Từ Vựng Theo Bài (Public Lessons)</span>
+          <div class="d-flex gap-2">
+            <span class="badge-status badge-mode-live">LIVE</span>
+            <span class="badge-status badge-mode-unit">UNIT / CONTRACT</span>
+          </div>
+        </h2>
+
+        <div class="row g-4 mb-4">
+          <!-- Col 1: Public Catalog & Approved Filter Probe -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <h3 class="h6 fw-bold mb-2">1. Kiểm Tra Public Lesson Catalog &amp; Bộ Lọc Approved</h3>
+              <p class="small text-secondary mb-3">
+                Endpoint: <code>GET /api/v1/lessons?page=0&amp;size=20</code> (Chỉ hỗ trợ <code>page</code>, <code>size</code>; KHÔNG search). Bất biến bảo mật: Chỉ bài học Approved mới hiển thị; Draft/Pending/Rejected tuyệt đối không trả về catalog công khai.
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeLessonCatalog" class="btn-chinese-primary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Probe Catalog (/api/v1/lessons)
+                </button>
+                <button type="button" id="btnProbeLessonApprovedFilter" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Xác Minh Filter Approved
+                </button>
+              </div>
+              <div id="lessonCatalogOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn "Probe Catalog" để gọi GET /api/v1/lessons hoặc "Xác Minh Filter Approved".
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: Lesson Detail, Ordering & 404 Defense -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <h3 class="h6 fw-bold mb-2">2. Lesson Detail, Thứ Tự Từ Vựng &amp; Phòng Thủ 404</h3>
+              <p class="small text-secondary mb-3">
+                Endpoint: <code>GET /api/v1/lessons/{id}</code>. Kiểm tra bảo toàn thứ tự <code>orderIndex</code> (1, 2, 3...) và kiểm tra thông báo trung lập khi 404 (bài học không tồn tại hoặc chưa duyệt).
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeLessonDetail" class="btn-chinese-primary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Probe Detail (Dynamic / First Public)
+                </button>
+                <button type="button" id="btnProbeLesson404" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Probe 404 Trung Lập (ID=99999999)
+                </button>
+                <button type="button" id="btnProbeLessonSortLogic" class="btn btn-outline-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">UNIT</span> Logic Sort orderIndex
+                </button>
+              </div>
+              <div id="lessonDetailOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Chọn probe để kiểm tra chi tiết bài học, bảo toàn thứ tự từ vựng hoặc cơ chế phòng thủ 404.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 7. SECTION 9C.2: CONTEXTUAL PERSONAL NOTES                           -->
+      <!-- =================================================================== -->
+      <section id="section-9c2" class="mb-5" aria-labelledby="heading-9c2">
+        <h2 id="heading-9c2" class="h5 fw-bold mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+          <span>7. Phân Hệ 9C.2 — Ghi Chú Cá Nhân Theo Ngữ Cảnh (Personal Notes)</span>
+          <div class="d-flex gap-2">
+            <span class="badge-status badge-mode-live">LIVE</span>
+            <span class="badge-status badge-mode-unit">CAPABILITY</span>
+          </div>
+        </h2>
+
+        <div class="row g-4 mb-4">
+          <!-- Col 1: Character Limit & Anonymous Guard Capability -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <h3 class="h6 fw-bold mb-2">1. Giới Hạn 500 Ký Tự &amp; Bảo Vệ Người Dùng Khách</h3>
+              <p class="small text-secondary mb-3">
+                Quy tắc hợp lệ: Bắt buộc, tối đa 500 ký tự (Unicode length), không cho phép chuỗi rỗng. Khách vãng lai (unauthenticated) nhấn Ghi chú sẽ được chuyển hướng đăng nhập mà không gọi API hoặc tiết lộ sự tồn tại của ghi chú.
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeCharLimitValidation" class="btn-chinese-primary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">CAPABILITY</span> Kiểm Tra Biên 500 Ký Tự
+                </button>
+                <button type="button" id="btnProbeAnonymousNoteGuard" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">CAPABILITY</span> Kiểm Tra Anonymous Guard
+                </button>
+                <button type="button" id="btnLaunchNotesModalDemo" class="btn btn-outline-secondary btn-sm">
+                  Mở Notes Modal Demo (Vocab #1)
+                </button>
+              </div>
+              <div id="notesValidationOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn probe để xác minh logic biên 0, 1, 499, 500, 501 ký tự và bảo vệ phiên khách.
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: Notes API & Ownership Invariant Probe -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h3 class="h6 fw-bold mb-0">2. Notes API &amp; Bất Biến Quyền Sở Hữu (Ownership Invariant)</h3>
+                <span class="badge-status badge-mode-live">LIVE / CONTRACT</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Endpoint: <code>GET /api/v1/vocabularies/{vocabId}/notes?page=0&amp;size=20</code>. Bất biến bảo mật IDOR: Frontend KHÔNG BAO GIỜ gửi <code>userId</code> lên API; quyền sở hữu do Backend xác thực thông qua JWT Bearer token.
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeNotesApi" class="btn-chinese-primary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Probe Notes API (Vocab #1)
+                </button>
+                <button type="button" id="btnProbeNoteOwnershipInvariant" class="btn btn-outline-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">CONTRACT</span> Bất Biến Không Gửi UserId
+                </button>
+              </div>
+              <div id="notesApiOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn probe để kiểm tra kết nối API Ghi chú hoặc xác minh hợp đồng bảo mật không lộ UserId.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 8. SECTION 9C.3: INTERACTIVE SRS REVIEW SESSION                     -->
+      <!-- =================================================================== -->
+      <section id="section-9c3" class="mb-5" aria-labelledby="heading-9c3">
+        <h2 id="heading-9c3" class="h5 fw-bold mb-3 pb-2 border-bottom d-flex align-items-center justify-content-between">
+          <span>8. Phân Hệ SRS (9C.3 Review Session &amp; 9C.4 Stats / Daily Settings)</span>
+          <div class="d-flex gap-2">
+            <span class="badge-status badge-mode-live">LIVE</span>
+            <span class="badge-status badge-mode-unit">CAPABILITY</span>
+          </div>
+        </h2>
+
+        <div class="row g-4 mb-4">
+          <!-- Col 1: Contract, Rating Mapping & Timer Integrity -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <h3 class="h6 fw-bold mb-2">1. Hợp Đồng SRS, Rating 1..4 &amp; Reaction Timer</h3>
+              <p class="small text-secondary mb-3">
+                Quy tắc backend: Rating là số nguyên 1..4 (1: Again, 2: Hard, 3: Good, 4: Easy), trường thời gian là <code>reviewTimeSeconds &gt;= 0</code>, giới hạn cài đặt SRS là số nguyên dương <code>&gt; 0</code>.
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeSrsRatingMapping" class="btn-chinese-primary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">CONTRACT</span> Probe Rating 1..4
+                </button>
+                <button type="button" id="btnProbeSrsTimer" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">CAPABILITY</span> Probe Reaction Timer
+                </button>
+                <button type="button" id="btnProbeSrsRequeue" class="btn btn-outline-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">LOGIC</span> Probe Again Requeue
+                </button>
+                <button type="button" id="btnProbeSrsSettingsValidation" class="btn-chinese-primary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">UNIT</span> Probe Cài Đặt SRS &amp; Quota
+                </button>
+              </div>
+              <div id="srsContractOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn probe để kiểm tra mapping đánh giá 1..4, logic reaction timer, hàng đợi Again, hoặc kiểm tra tính hợp lệ của cấu hình SRS hàng ngày.
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: SRS Anonymous Guard & Live Due Cards API -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h3 class="h6 fw-bold mb-0">2. Anonymous Guard &amp; API Thống Kê / Cài Đặt SRS</h3>
+                <span class="badge-status badge-mode-live">LIVE / CONTRACT</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Endpoints: <code>GET /api/v1/srs/due</code>, <code>GET /api/v1/srs/stats</code>, <code>GET /api/v1/srs/settings</code> (Yêu cầu xác thực Learner). Khách vãng lai bị chặn an toàn.
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeSrsAnonymousGuard" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">CAPABILITY</span> Probe Anonymous Guard
+                </button>
+                <button type="button" id="btnProbeSrsDueApi" class="btn-chinese-primary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Probe GET /api/v1/srs/due
+                </button>
+                <button type="button" id="btnProbeSrsStatsApi" class="btn-chinese-primary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Probe GET Stats &amp; Settings
+                </button>
+                <a href="srs-review.html" class="btn btn-outline-secondary btn-sm">
+                  Mở Phòng Review
+                </a>
+                <a href="srs-dashboard.html" class="btn btn-outline-secondary btn-sm">
+                  Mở Dashboard SRS
+                </a>
+              </div>
+              <div id="srsApiOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn probe để kiểm tra bảo vệ người dùng khách, gọi API thẻ đến hạn hoặc kiểm tra số liệu thống kê / cấu hình SRS thực tế.
+              </div>
+            </div>
+          </div>
+        </div>
+      <!-- =================================================================== -->
+      <!-- 9. SECTION 9D.1: CREATOR STUDIO & VOCABULARY REORDERING (TASK 9D.1) -->
+      <!-- =================================================================== -->
+      <section id="section-9d1" class="mb-5" aria-labelledby="creatorVerificationHeading">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <div>
+            <h2 id="creatorVerificationHeading" class="h5 fw-bold mb-1">
+              9. Module 9D.1: Creator Lesson Studio &amp; Quản Lý Thứ Tự Từ Vựng
+            </h2>
+            <p class="text-secondary small mb-0">
+              Kiểm chứng năng lực biên soạn bài học nháp (Draft), xác thực hợp đồng sắp xếp thứ tự từ vựng (Reorder), và phân quyền vai trò Creator / Admin.
+            </p>
+          </div>
+          <span class="badge-status badge-status-approved">Verified Scope (9D.1)</span>
+        </div>
+
+        <div class="row g-3">
+          <!-- Col 1: Unit Logic & Contract -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h3 class="h6 fw-bold mb-0">1. Reorder Logic, Payload &amp; Editable States</h3>
+                <span class="badge-status badge-mode-unit">UNIT CONTRACT</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Kiểm tra logic sắp xếp mảng thuần túy, payload <code>orderedVocabIds</code>, kiểm soát biên giới hạn (boundary clamping), và quy tắc vòng đời (Draft/Rejected vs Pending/Approved).
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeCreatorReorderLogic" class="btn btn-outline-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">UNIT</span> Probe Reorder Logic &amp; Payload
+                </button>
+                <button type="button" id="btnProbeCreatorValidation" class="btn btn-outline-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">UNIT</span> Probe Title Validation
+                </button>
+              </div>
+              <div id="creatorContractOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn probe để kiểm chứng logic swap mảng, payload orderedVocabIds, hoặc quy tắc kiểm thực tiêu đề bài học.
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: Role Capability & Read-Only API Probe -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h3 class="h6 fw-bold mb-0">2. Role Guard &amp; Creator Lessons API Probe</h3>
+                <span class="badge-status badge-mode-live">LIVE / CAPABILITY</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Endpoint: <code>GET /api/v1/creator/lessons</code> (Yêu cầu vai trò Creator hoặc Admin). Kiểm tra cơ chế bảo vệ và gọi API an toàn chỉ đọc (read-only).
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeCreatorRoleGuard" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">CAPABILITY</span> Probe Role Guard
+                </button>
+                <button type="button" id="btnProbeCreatorLessonsApi" class="btn-chinese-primary btn-sm">
+                  <span class="badge-status badge-mode-live me-1">LIVE</span> Probe GET /creator/lessons
+                </button>
+                <a href="creator-lessons.html" class="btn btn-outline-secondary btn-sm">
+                  Mở Creator Studio
+                </a>
+              </div>
+              <div id="creatorApiOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn probe để kiểm tra bảo vệ vai trò hoặc thực hiện gọi thử API bài học tác giả chỉ đọc.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 10. SECTION 9D.2: TWO-STEP EXCEL IMPORT & VALIDATION (TASK 9D.2)    -->
+      <!-- =================================================================== -->
+      <section id="section-9d2" class="mb-5" aria-labelledby="creatorImportVerificationHeading">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <div>
+            <h2 id="creatorImportVerificationHeading" class="h5 fw-bold mb-1">
+              10. Module 9D.2: Nhập Bài Học Từ Excel Hai Bước (Preview != Confirm)
+            </h2>
+            <p class="text-secondary small mb-0">
+              Kiểm chứng quy trình nhập tệp Excel 2 bước an toàn: Bước 1 Xem trước không lưu CSDL &rarr; Bước 2 Đặt tên (giới hạn 100 ký tự) &amp; Lưu nguyên tử (Atomic).
+            </p>
+          </div>
+          <span class="badge-status badge-status-approved">Verified Scope (9D.2)</span>
+        </div>
+
+        <div class="row g-3">
+          <!-- Col 1: File & Title Validation Logic -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h3 class="h6 fw-bold mb-0">1. File &amp; Title Validation Contract</h3>
+                <span class="badge-status badge-mode-unit">UNIT CONTRACT</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Kiểm tra kiểm thực tệp client (.xlsx, &le;10MB, rỗng) và kiểm thực tiêu đề bài học xác nhận (&le;100 ký tự theo hợp đồng <code>CreatorLessonServiceImpl</code>).
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeImportValidation" class="btn btn-outline-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">UNIT</span> Probe File &amp; Title Rules
+                </button>
+              </div>
+              <div id="importContractOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn probe để kiểm chứng logic kiểm thực định dạng .xlsx, ngưỡng 10MB, và ràng buộc tiêu đề 1..100 ký tự.
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: Invariant & Report Mapping Logic -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h3 class="h6 fw-bold mb-0">2. Two-Step Invariant &amp; Report Model</h3>
+                <span class="badge-status badge-mode-unit">CAPABILITY / INVARIANT</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Xác thực quy tắc bất biến: Bước Confirm tải lại file gốc, đổi file sẽ hủy bỏ preview cũ, và phân tích báo cáo <code>ImportValidationReport</code> an toàn.
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeImportReportLogic" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">CAPABILITY</span> Probe Two-Step Invariant
+                </button>
+                <a href="creator-import.html" class="btn btn-outline-secondary btn-sm">
+                  Mở Giao Diện Import
+                </a>
+              </div>
+              <div id="importLogicOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn probe để kiểm chứng chuẩn hóa dữ liệu báo cáo, cơ chế hủy preview khi đổi file, và ranh giới không lưu CSDL ở Bước 1.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 11. SECTION 9D.3: SUBMISSION WORKFLOW & STATUS VISIBILITY (TASK 9D.3)-->
+      <!-- =================================================================== -->
+      <section id="section-9d3" class="mb-5" aria-labelledby="creatorSubmitVerificationHeading">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+          <div>
+            <h2 id="creatorSubmitVerificationHeading" class="h5 fw-bold mb-1">
+              11. Module 9D.3: Quy Trình Nộp Bài Duyệt &amp; Trạng Thái Khóa (Submission Workflow)
+            </h2>
+            <p class="text-secondary small mb-0">
+              Kiểm chứng hợp đồng nộp bài học kiểm duyệt (POST /creator/lessons/{id}/submit), chuyển trạng thái Draft/Rejected &rarr; Pending, khóa chỉnh sửa, và ranh giới phản hồi từ chối.
+            </p>
+          </div>
+          <span class="badge-status badge-status-approved">Verified Scope (9D.3)</span>
+        </div>
+
+        <div class="row g-3">
+          <!-- Col 1: Submission Eligibility & Transition Contract -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h3 class="h6 fw-bold mb-0">1. Submission Eligibility &amp; Transition Rules</h3>
+                <span class="badge-status badge-mode-unit">UNIT CONTRACT</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Kiểm tra điều kiện nộp duyệt (Draft/Rejected có &gt;0 từ vựng), chặn nộp bài rỗng, chặn nộp bài Pending/Approved, và cấu hình nút bấm theo trạng thái.
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeSubmissionEligibility" class="btn btn-outline-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">UNIT</span> Probe Eligibility Rules
+                </button>
+              </div>
+              <div id="submissionEligibilityOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn probe để kiểm chứng logic canSubmitLesson, nhãn nút Nộp duyệt/Nộp lại, và bảo vệ trạng thái Draft/Rejected.
+              </div>
+            </div>
+          </div>
+
+          <!-- Col 2: Rejection Feedback Contract & Fallback Verification -->
+          <div class="col-lg-6">
+            <div class="card-chinese h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <h3 class="h6 fw-bold mb-0">2. Rejection Feedback Contract &amp; Graceful Fallback</h3>
+                <span class="badge-status badge-mode-unit">CONTRACT / SECURITY</span>
+              </div>
+              <p class="small text-secondary mb-3">
+                Kiểm chứng ranh giới hợp đồng backend đối với bài Rejected: Backend đã sealed không cấp rejectionReason/flaggedFields cho Creator &rarr; Client kích hoạt fallback trung thực, cấm gọi trái phép moderator history.
+              </p>
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button type="button" id="btnProbeRejectionContract" class="btn-chinese-secondary btn-sm">
+                  <span class="badge-status badge-mode-unit me-1">CONTRACT</span> Probe Rejection Feedback
+                </button>
+                <a href="creator-lessons.html" class="btn btn-outline-secondary btn-sm">
+                  Mở Creator Studio
+                </a>
+              </div>
+              <div id="rejectionContractOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+                Chưa kiểm tra. Nhấn probe để kiểm chứng parseRejectionFeedback, phát hiện contract gap backend, và bảo vệ ranh giới bảo mật RBAC.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 12. SECTION 9E.1: MODERATOR REVIEW QUEUE (TASK 9E.1)                -->
+      <!-- =================================================================== -->
+      <section id="section-moderator-queue" class="mb-5" aria-labelledby="moderatorQueueHeading">
+        <div class="card-chinese">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h2 id="moderatorQueueHeading" class="h5 fw-bold mb-1">
+                12. Hàng Đợi Kiểm Duyệt Bài Học (Moderator Review Queue - Task 9E.1)
+              </h2>
+              <p class="text-secondary small mb-0">
+                Kiểm chứng chuẩn mực Hợp đồng Hàng đợi duyệt (GET /api/v1/moderator/lessons/pending), RBAC phân quyền (Moderator/Admin), phân trang máy chủ, và bảo toàn trường DTO thực tế.
+              </p>
+            </div>
+            <span class="badge-status badge-status-pending">Task 9E.1</span>
+          </div>
+
+          <div class="p-3 border rounded bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+              <span class="fw-bold small text-dark">Kiểm chứng Hợp đồng Moderator Queue (Read-Only Contract Probe)</span>
+              <button type="button" id="btnProbeModeratorQueueContract" class="btn-chinese-primary py-1 px-3 small">
+                Chạy Probe Hợp Đồng Queue
+              </button>
+            </div>
+            <p class="text-muted small mb-2">
+              Kiểm chứng thuật toán <code>parseModerationQueue</code>, định dạng ngày tháng <code>formatQueueDate</code> (Cập nhật lần cuối), đường dẫn điều hướng <code>getReviewUrl</code>, và gửi yêu cầu GET thực tế nếu phiên đăng nhập có quyền Moderator/Admin (Zero DB mutations).
+            </p>
+            <div id="moderatorQueueProbeOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+              Chưa kiểm tra. Nhấn probe để kiểm chứng hợp đồng hàng đợi kiểm duyệt.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 13. SECTION 9E.2: MODERATOR LESSON REVIEW (TASK 9E.2)               -->
+      <!-- =================================================================== -->
+      <section id="section-moderator-review" class="mb-5" aria-labelledby="moderatorReviewHeading">
+        <div class="card-chinese">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h2 id="moderatorReviewHeading" class="h5 fw-bold mb-1">
+                13. Kiểm Tra Chi Tiết Bài Học &amp; Từ Vựng (Moderator Lesson Review - Task 9E.2)
+              </h2>
+              <p class="text-secondary small mb-0">
+                Kiểm chứng chuẩn mực Hợp đồng Thẩm định chi tiết (GET /api/v1/moderator/lessons/{id}), bảo toàn tuyệt đối thứ tự orderIndex, kiểm tra Pinyin &amp; Audio trực tiếp, tra cứu lazy bộ thủ cấu thành và xử lý sự cố hàng đợi stale 404.
+              </p>
+            </div>
+            <span class="badge-status badge-status-pending">Task 9E.2</span>
+          </div>
+
+          <div class="p-3 border rounded bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+              <span class="fw-bold small text-dark">Kiểm chứng Hợp đồng Moderator Lesson Review (Read-Only Contract Probe)</span>
+              <button type="button" id="btnProbeModeratorReviewContract" class="btn-chinese-primary py-1 px-3 small">
+                Chạy Probe Hợp Đồng Review
+              </button>
+            </div>
+            <p class="text-muted small mb-2">
+              Kiểm chứng <code>parseLessonReviewDetail</code>, bảo toàn thứ tự từ vựng, thông điệp xử lý 404 hàng đợi cũ (<code>getStaleQueueErrorMessage</code>), chuẩn hóa bộ thủ <code>normalizeRadicalList</code>, và thực hiện yêu cầu đọc an toàn nếu có bài học Pending.
+            </p>
+            <div id="moderatorReviewProbeOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+              Chưa kiểm tra. Nhấn probe để kiểm chứng hợp đồng thẩm định chi tiết bài học.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 14. SECTION 9E.3: MODERATOR DECISION WORKFLOW (TASK 9E.3)           -->
+      <!-- =================================================================== -->
+      <section id="section-moderator-decision" class="mb-5" aria-labelledby="moderatorDecisionHeading">
+        <div class="card-chinese">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h2 id="moderatorDecisionHeading" class="h5 fw-bold mb-1">
+                14. Quyết Định Duyệt / Từ Chối Bài Học (Moderator Decision Workflow - Task 9E.3)
+              </h2>
+              <p class="text-secondary small mb-0">
+                Kiểm chứng chuẩn mực Hợp đồng Phê duyệt (POST /approve) &amp; Từ chối (POST /reject), hợp lệ hóa lý do từ chối (&le;500 ký tự), định dạng JSON flaggedFields, chống submit trùng lặp, xử lý xung đột đồng thời 409, và bảo toàn tính toàn vẹn kiểm toán (Read-Only / Zero Persistent Junk Logs).
+              </p>
+            </div>
+            <span class="badge-status badge-status-pending">Task 9E.3</span>
+          </div>
+
+          <div class="p-3 border rounded bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+              <span class="fw-bold small text-dark">Kiểm chứng Hợp đồng &amp; Hình dạng Quyết định (Safe Contract &amp; Capability Probe)</span>
+              <button type="button" id="btnProbeModeratorDecisionContract" class="btn-chinese-primary py-1 px-3 small">
+                Chạy Probe Hợp Đồng Quyết Định
+              </button>
+            </div>
+            <p class="text-muted small mb-2">
+              Kiểm chứng thuật toán <code>serializeApprovePayload</code>, <code>serializeRejectPayload</code>, <code>validateRejectionReason</code> (bắt buộc, &le;500 ký tự), định dạng chuỗi JSON <code>flaggedFields</code>, ánh xạ lỗi <code>mapModerationError</code> (400, 401, 403, 404, 409 Concurrency Conflict), và kiểm tra an toàn trạng thái bài học Pending nếu có quyền Moderator/Admin (Tuyệt đối KHÔNG thực hiện Approve/Reject thật từ Verification Center để không làm ô nhiễm nhật ký kiểm toán CSDL).
+            </p>
+            <div id="moderatorDecisionProbeOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+              Chưa kiểm tra. Nhấn probe để kiểm chứng hợp đồng phê duyệt/từ chối và xử lý xung đột đồng thời.
+            </div>
+          </div>
+      <!-- =================================================================== -->
+      <!-- 15. SECTION 15: ADMIN ACCOUNTS LIFECYCLE (TASK 9F.1)               -->
+      <!-- =================================================================== -->
+      <section id="section-admin-accounts" class="mb-5" aria-labelledby="adminAccountsDiagHeading">
+        <div class="card-chinese">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h2 id="adminAccountsDiagHeading" class="h5 fw-bold mb-1">
+                15. Quản Trị Vòng Đời Tài Khoản (Admin Accounts Lifecycle - Task 9F.1)
+              </h2>
+              <p class="text-secondary small mb-0">
+                Kiểm chứng chuẩn mực Quản trị tài khoản Admin: Role Guard (Admin), Hợp đồng danh sách phân trang (PageResponse), Tìm kiếm &amp; Lọc trạng thái, Bảo vệ tự thân (POL-8D-01) và cơ chế thu hồi token phía máy chủ qua authorization_version (DEC-42).
+              </p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status badge-mode-unit">CAPABILITY</span>
+              <span class="badge-status badge-mode-live">READ-ONLY</span>
+            </div>
+          </div>
+
+          <div class="p-3 border rounded bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+              <span class="fw-bold small text-dark">Kiểm chứng Năng lực Quản trị &amp; Cơ chế Bảo vệ Tự thân (Safe Probe)</span>
+              <div class="d-flex gap-2">
+                <a href="admin-accounts.html" class="btn-chinese-outline py-1 px-3 small text-decoration-none">
+                  Mở Giao Diện Admin
+                </a>
+                <button type="button" id="btnProbeAdminAccountsCapability" class="btn-chinese-primary py-1 px-3 small">
+                  Chạy Probe Năng Lực 9F.1
+                </button>
+              </div>
+            </div>
+            <p class="text-muted small mb-2">
+              Kiểm tra logic client (<code>hasAdminAccess</code>, <code>isSelfAccount</code>, <code>buildAccountsQueryParams</code>, <code>getStatusBadgeMeta</code>), xác thực vai trò phiên hiện tại và thực hiện truy vấn đọc an toàn (Read-Only GET /api/v1/admin/accounts?page=0&amp;size=5) nếu phiên có quyền Admin. Tuyệt đối KHÔNG thực hiện thay đổi trạng thái tài khoản thật từ Verification Center.
+            </p>
+            <div id="adminAccountsProbeOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+              Chưa kiểm tra. Nhấn "Chạy Probe Năng Lực 9F.1" để kiểm tra tính sẵn sàng của phân hệ.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 16. SECTION 16: ADMIN ROLE MANAGEMENT & ROLE ASSIGNMENT (TASK 9F.2) -->
+      <!-- =================================================================== -->
+      <section id="section-admin-roles" class="mb-5" aria-labelledby="adminRolesDiagHeading">
+        <div class="card-chinese">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h2 id="adminRolesDiagHeading" class="h5 fw-bold mb-1">
+                16. Phân Quyền Vai Trò Hệ Thống (Admin Role Management - Task 9F.2)
+              </h2>
+              <p class="text-secondary small mb-0">
+                Kiểm chứng năng lực Phân quyền vai trò: Danh mục vai trò máy chủ (Role Catalog), Thay thế toàn bộ tập hợp vai trò (Complete Role Set), Bảo vệ tự thân (POL-8D-02: Không tự tước quyền Admin), Phát hiện No-op tránh lãng phí đường truyền và Thu hồi token qua authorization_version (DEC-42).
+              </p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status badge-mode-unit">CAPABILITY</span>
+              <span class="badge-status badge-mode-live">READ-ONLY</span>
+            </div>
+          </div>
+
+          <div class="p-3 border rounded bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+              <span class="fw-bold small text-dark">Kiểm chứng Năng lực Phân Quyền &amp; Hợp Đồng Máy Chủ (Safe Probe)</span>
+              <div class="d-flex gap-2">
+                <a href="admin-roles.html" class="btn-chinese-outline py-1 px-3 small text-decoration-none">
+                  Mở Giao Diện Phân Quyền
+                </a>
+                <button type="button" id="btnProbeAdminRolesCapability" class="btn-chinese-primary py-1 px-3 small">
+                  Chạy Probe Năng Lực 9F.2
+                </button>
+              </div>
+            </div>
+            <p class="text-muted small mb-2">
+              Kiểm tra logic client (<code>parseRoleResponse</code>, <code>areRoleSetsEqual</code>, <code>validateRoleSelection</code>, <code>buildRoleUpdatePayload</code>), xác thực quy tắc tự bảo vệ POL-8D-02 và thực hiện truy vấn đọc danh mục vai trò (Read-Only GET /api/v1/admin/roles) nếu có quyền Admin. <strong>Tuyệt đối KHÔNG thực hiện thay đổi vai trò (PUT) từ Verification Center.</strong>
+            </p>
+            <div id="adminRolesProbeOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+              Chưa kiểm tra. Nhấn "Chạy Probe Năng Lực 9F.2" để kiểm tra tính sẵn sàng của phân hệ.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 17. SECTION 17: 9F.3 — ADMIN RADICALS CRUD MANAGEMENT CAPABILITY     -->
+      <!-- =================================================================== -->
+      <section id="section-admin-radicals" class="mb-5" aria-labelledby="adminRadicalsHeading">
+        <div class="card-chinese">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h2 id="adminRadicalsHeading" class="h5 fw-bold mb-1">
+                17. Quản Trị Danh Mục Bộ Thủ Khang Hy (Admin Radicals CRUD — Task 9F.3)
+              </h2>
+              <p class="text-secondary small mb-0">
+                Kiểm chứng năng lực Quản trị bộ thủ: Tra cứu catalog động, Tìm kiếm client-side không phụ thuộc tham số backend, Xác thực giới hạn DTO, Bắt lỗi xung đột 409 (Ký tự trùng lặp &amp; Xóa bộ thủ có liên kết từ vựng), Xử lý 204 No Content và DOM an toàn.
+              </p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status badge-mode-unit">CAPABILITY</span>
+              <span class="badge-status badge-mode-live">READ-ONLY</span>
+            </div>
+          </div>
+
+          <div class="p-3 border rounded bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+              <span class="fw-bold small text-dark">Kiểm chứng Năng lực Quản Trị Bộ Thủ &amp; Thẩm Định Hợp Đồng (Safe Probe)</span>
+              <div class="d-flex gap-2">
+                <a href="admin-radicals.html" class="btn-chinese-outline py-1 px-3 small text-decoration-none">
+                  Mở Giao Diện Bộ Thủ
+                </a>
+                <button type="button" id="btnProbeAdminRadicalsCapability" class="btn-chinese-primary py-1 px-3 small">
+                  Chạy Probe Năng Lực 9F.3
+                </button>
+              </div>
+            </div>
+            <p class="text-muted small mb-2">
+              Kiểm tra logic client (<code>validateRadicalForm</code>, <code>filterRadicals</code>, <code>buildRadicalPayload</code>, <code>classifyApiError</code>, <code>isValidMediaUrl</code>) và thực hiện truy vấn đọc danh mục bộ thủ (Read-Only GET /api/v1/radicals?page=0&amp;size=1) nếu có quyền Admin. <strong>Tuyệt đối KHÔNG thực hiện thay đổi dữ liệu (POST/PUT/DELETE) từ Verification Center.</strong>
+            </p>
+            <div id="adminRadicalsProbeOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+              Chưa kiểm tra. Nhấn "Chạy Probe Năng Lực 9F.3" để kiểm tra tính sẵn sàng của phân hệ.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 17B. SECTION 17B: 9F.4 — ADMIN VOCABULARY CRUD MANAGEMENT CAPABILITY -->
+      <!-- =================================================================== -->
+      <section id="section-admin-vocabulary" class="mb-5" aria-labelledby="adminVocabularyHeading">
+        <div class="card-chinese">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h2 id="adminVocabularyHeading" class="h5 fw-bold mb-1">
+                17B. Quản Trị Danh Mục Từ Vựng Tiếng Trung (Admin Vocabulary CRUD — Task 9F.4)
+              </h2>
+              <p class="text-secondary small mb-0">
+                Kiểm chứng năng lực Quản trị từ vựng: Tra cứu catalog &amp; tìm kiếm máy chủ (GET /api/v1/vocabulary), Tra cứu chi tiết quan hệ bộ thủ (GET /api/v1/vocabulary/{id}), Xác thực chuẩn hóa PinyinRaw, Giới hạn DTO, Bắt lỗi xung đột 409 (Trùng hanzi+pinyinRaw &amp; Xóa từ vựng có tham chiếu bài học/SRS), Xử lý 204 No Content và DOM an toàn.
+              </p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status badge-mode-unit">CAPABILITY</span>
+              <span class="badge-status badge-mode-live">READ-ONLY</span>
+            </div>
+          </div>
+
+          <div class="p-3 border rounded bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+              <span class="fw-bold small text-dark">Kiểm chứng Năng lực Quản Trị Từ Vựng &amp; Thẩm Định Hợp Đồng (Safe Probe)</span>
+              <div class="d-flex gap-2">
+                <a href="admin-vocabulary.html" class="btn-chinese-outline py-1 px-3 small text-decoration-none">
+                  Mở Giao Diện Từ Vựng
+                </a>
+                <button type="button" id="btnProbeAdminVocabCapability" class="btn-chinese-primary py-1 px-3 small">
+                  Chạy Probe Năng Lực 9F.4
+                </button>
+              </div>
+            </div>
+            <p class="text-muted small mb-2">
+              Kiểm tra logic client (<code>validateVocabularyForm</code>, <code>toPinyinRaw</code>, <code>buildVocabularyPayload</code>, <code>isNoOpUpdate</code>, <code>classifyApiError</code>, <code>isValidMediaUrl</code>) và thực hiện truy vấn đọc danh mục từ vựng (Read-Only GET /api/v1/vocabulary?page=0&amp;size=1) nếu có quyền Admin. <strong>Tuyệt đối KHÔNG thực hiện thay đổi dữ liệu (POST/PUT/DELETE) từ Verification Center.</strong>
+            </p>
+            <div id="adminVocabProbeOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+              Chưa kiểm tra. Nhấn "Chạy Probe Năng Lực 9F.4" để kiểm tra tính sẵn sàng của phân hệ.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 17C. SECTION 17C: 9F.5 — ADMIN LESSON OVERSIGHT CAPABILITY          -->
+      <!-- =================================================================== -->
+      <section id="section-admin-lessons" class="mb-5" aria-labelledby="adminLessonsHeading">
+        <div class="card-chinese">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h2 id="adminLessonsHeading" class="h5 fw-bold mb-1">
+                17C. Giám Sát Bài Học Toàn Hệ Thống (Admin Lesson Oversight — Task 9F.5)
+              </h2>
+              <p class="text-secondary small mb-0">
+                Kiểm chứng năng lực Giám sát bài học: Danh mục đọc toàn hệ thống (GET /api/v1/admin/lessons), Lọc theo trạng thái vòng đời (Draft, Pending, Approved, Rejected), Phân trang máy chủ, Thống kê tổng số lượng toàn cục theo máy chủ (totalElements), Chiến lược chi tiết bài học chỉ đọc theo trạng thái và Thông báo chân thực về giới hạn hợp đồng.
+              </p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge-status badge-mode-unit">CAPABILITY</span>
+              <span class="badge-status badge-mode-live">READ-ONLY</span>
+            </div>
+          </div>
+
+          <div class="p-3 border rounded bg-white">
+            <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+              <span class="fw-bold small text-dark">Kiểm chứng Năng lực Giám Sát Bài Học &amp; Thẩm Định Hợp Đồng (Safe Probe)</span>
+              <div class="d-flex gap-2">
+                <a href="admin-lessons.html" class="btn-chinese-outline py-1 px-3 small text-decoration-none">
+                  Mở Giao Diện Giám Sát
+                </a>
+                <button type="button" id="btnProbeAdminLessonsCapability" class="btn-chinese-primary py-1 px-3 small">
+                  Chạy Probe Năng Lực 9F.5
+                </button>
+              </div>
+            </div>
+            <p class="text-muted small mb-2">
+              Kiểm tra logic client (<code>normalizeStatusFilter</code>, <code>buildAdminLessonsParams</code>, <code>determineDetailStrategy</code>, <code>calculatePaginationSummary</code>, <code>extractStatusCounts</code>) và thực hiện truy vấn đọc bài học (Read-Only GET /api/v1/admin/lessons?page=0&amp;size=1) nếu có quyền Admin. <strong>Tuyệt đối KHÔNG thực hiện thay đổi dữ liệu bài học (POST/PUT/PATCH/DELETE) từ trang này hay Verification Center.</strong>
+            </p>
+            <div id="adminLessonsProbeOutput" class="small font-monospace p-2 rounded bg-light border" style="min-height: 90px;" aria-live="polite">
+              Chưa kiểm tra. Nhấn "Chạy Probe Năng Lực 9F.5" để kiểm tra tính sẵn sàng của phân hệ.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- 18. SECTION 18: LIVE FULL-STACK DIAGNOSTICS                         -->
+      <!-- =================================================================== -->
+      <section id="section-fullstack" class="mb-5" aria-labelledby="liveDiagnosticsHeading">
+        <div class="card-chinese">
+          <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div>
+              <h2 id="liveDiagnosticsHeading" class="h5 fw-bold mb-1">
+                18. Chẩn Đoán Trực Tiếp Toàn Trình (Live Full-Stack Diagnostics)
+              </h2>
+              <p class="text-secondary small mb-0">
+                Bề mặt quan sát kết nối thực tế giữa Trình duyệt &rarr; Frontend (:3000) &rarr; Spring Boot (:8080) &rarr; MySQL (:3306).
+              </p>
+            </div>
+            <span id="liveStackStatusBadge" class="badge-status badge-status-pending">Chưa kiểm tra</span>
+          </div>
+
+          <div class="row g-4 mb-3">
+            <!-- Active Stack Architecture Card -->
+            <div class="col-lg-5">
+              <div class="p-3 border rounded bg-light h-100">
+                <h3 class="h6 fw-bold mb-2">Kiến Trúc Đang Hoạt Động</h3>
+                <ul class="list-unstyled small mb-3">
+                  <li class="mb-1">&bull; <strong>Frontend:</strong> <code>http://localhost:3000</code> (Static Server)</li>
+                  <li class="mb-1">&bull; <strong>Spring Boot:</strong> <code>http://localhost:8080</code> (Port 8080 Active)</li>
+                  <li class="mb-1">&bull; <strong>Database:</strong> MySQL Community Server 8.4 (Port 3306)</li>
+                  <li>&bull; <strong>Authentication:</strong> Stateless JWT Bearer Token</li>
+                </ul>
+
+                <div class="d-flex flex-wrap gap-2">
+                  <button type="button" id="btnProbeFullstackAll" class="btn-chinese-primary btn-sm">
+                    <span class="badge-status badge-mode-live me-1">LIVE</span> Probe Toàn Diện Full-Stack
+                  </button>
+                  <button type="button" id="btnProbeRadicals" class="btn-chinese-secondary btn-sm">
+                    Kiểm tra Radicals API
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Full-Stack Console Output -->
+            <div class="col-lg-7">
+              <div class="p-3 border rounded bg-white h-100">
+                <div class="d-flex align-items-center justify-content-between mb-2">
+                  <span class="small fw-semibold text-secondary">Nhật Ký Phản Hồi Trực Tiếp</span>
+                  <span id="diagnosticLatencyBadge" class="small text-muted">Latency: --</span>
+                </div>
+                <pre id="diagnosticResultOutput" class="small text-secondary p-2 bg-light rounded border mb-0" style="min-height: 100px; max-height: 160px; overflow-y: auto; white-space: pre-wrap;" aria-live="polite">Nhấn "Probe Toàn Diện Full-Stack" để kiểm tra tính sẵn sàng của toàn bộ chuỗi dịch vụ.</pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- Official Runner Note -->
+          <div class="p-3 rounded border bg-light small text-secondary">
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="badge-status badge-status-approved">Thẩm quyền Chính Thức</span>
+              <strong class="text-dark">Bộ Kiểm Thử Tự Động Toàn Trình (Official Full-Stack Runner)</strong>
+            </div>
+            <span>Để kiểm thử tự động toàn bộ 19 kịch bản <code>FS-001</code> đến <code>FS-019</code> (Real Browser &rarr; FE &rarr; BE &rarr; DB không route-mock), hãy thực thi trong terminal: <code>npm run verify:fullstack</code>.</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Global Toast Notification Container (WCAG 2.2 SC 4.1.3) -->
+  <div id="toastContainer" class="toast-container-custom" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Global Semantic Footer Landmark -->
+  <footer class="site-footer">
+    <div class="container-xl">
+      <div class="row align-items-center g-3">
+        <div class="col-md-6 text-center text-md-start">
+          <div class="fw-semibold text-dark mb-1">Hệ Thống Học Bộ Thủ &amp; Từ Vựng Tiếng Trung</div>
+          <div class="small">Khu vực kiểm chứng kỹ thuật UI Primitives &bull; Vanilla JS &amp; Design Tokens.</div>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <div class="small">Tuân thủ tiêu chuẩn tiếp cận W3C WCAG 2.2 Level AA &bull; Zero-Build Architecture</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Verified Bootstrap 5.3.3 JS Bundle with Authenticated SRI -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- Verification Page Controller Module -->
+  <script type="module" src="js/pages/ui-verification-page.js"></script>
+
+</body>
+</html>
