@@ -4,9 +4,9 @@
 > **Dự án:** Hệ thống Website học Bộ thủ và Từ vựng Tiếng Trung (E-learning Chinese Radicals & Vocabulary)  
 > **Vị trí file:** `.agents/CURRENT_STATE.md`  
 > **Cam kết tính xác thực:** Mô tả **HIỆN TRẠNG THỰC TẾ (REAL ACTUAL STATE)** của mã nguồn, CSDL và cấu hình trong repository; KHÔNG phản ánh hiện trạng mong muốn (intended state) hay báo cáo lạc quan.  
-> **Phiên bản cập nhật:** Sau khi hoàn thành Task 4A.1 (Phase 4 — Module 4A). Hiện đang ở Task 4A.2.  
-> **Commit hash hiện tại:** `ef17a4d`  
-> **Bằng chứng kiểm thử gần nhất:** **`201/201 tests PASS, Failures: 0, Errors: 0, Build SUCCESS`** (thời gian: 43.69s).  
+> **Phiên bản cập nhật:** Sau khi hoàn thành Task 9G.5 Kiểm chứng Bố cục Đa màn hình & Đa thiết bị (Responsive Baseline, DEC-47) và hoàn tất 100% Phase 9 Frontend.  
+> **Commit hash hiện tại:** Working tree có các thay đổi và file mới chưa commit; KHÔNG clean; sẵn sàng cho review bàn giao; không tự ý commit theo chỉ thị dự án.  
+> **Bằng chứng kiểm thử gần nhất:** **`1101/1101 backend tests PASS`**; Frontend Responsive Tier: **`10/10 PASS`** (`responsive-layout.browser.mjs`, 38.3s); Frontend A11y Tier: **`19/19 PASS`** (`a11y.browser.mjs`, 18.9s); Fast Tier: **`535/535 PASS`** (2.48s); Static Tier: **`177/177 PASS`** (0.59s); Unit Tier: **`358/358 PASS`** (2.08s); Static CSP & Resource Graph: **`10/10 PASS`** (`csp-resource-graph.test.mjs`); Browser CSP Enforcement: **`8/8 PASS`** (`csp-enforcement.browser.mjs`); Security Unit: **`29/29 PASS`** (`security.test.mjs`); Static DOM Sinks: **`5/5 PASS`** (`dom-sinks.test.mjs`); Adversarial Browser E2E: **`5/5 PASS`** (`dom-xss-adversarial.browser.mjs`); Personal Notes E2E: **`7/7 PASS`**; Creator Lessons E2E: **`4/4 PASS`**; **Tổng cộng 741/741 frontend tests PASS**, 27 ảnh chụp màn hình Chromium độ phân giải cao tại `tests/frontend/artifacts/screenshots/`.  
 
 ---
 
@@ -16,12 +16,12 @@ Một AI coding agent khi mở tài liệu này cần nắm ngay 6 câu trả l�
 
 | Câu hỏi | Câu trả lời chuẩn xác (Authoritative Answer) |
 | :--- | :--- |
-| **1. Where are we now?** | **Phase 4 — Radical and Vocabulary Catalog Domain**, phân hệ **Module 4A — Radical Catalog Vertical Slice**. |
-| **2. What has been completed?** | **Phase 0** (Spec & DB Design), **Phase 1** (Scaffold & Web Infrastructure), **Phase 2** (Persistence & Seed Data V1-V3), **Phase 3** (Security, JWT, Auth, User Profile, RBAC Verification), và **Task 4A.1** (Radical DTOs & RadicalService). |
-| **3. What is currently in progress?** | **Phase 4 — Radical and Vocabulary Catalog Domain** (chuẩn bị triển khai **Task 4A.2**). |
-| **4. What is the next task?** | **`Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ`** (`GET /api/v1/radicals/**` công khai và `POST/PUT/DELETE /api/v1/admin/radicals/**` yêu cầu role `Admin`). |
-| **5. What must not be changed?** | - Tuyệt đối **không sửa** các file Flyway migration cũ (`V1`, `V2`, `V3`).<br>- Giữ nguyên cấu hình Hibernate `ddl-auto: none`.<br>- Admin CRUD là thao tác nghiệp vụ tại runtime qua Service/Repository, **tuyệt đối không sửa Flyway**.<br>- Tuyệt đối **không leak JPA Entity** ra Controller (100% qua DTO).<br>- Không tự ý thêm trường `radicalNumber` hay `strokeCount` (không có trong schema vật lý).<br>- Không can thiệp sang phân hệ Từ vựng (Module 4B). |
-| **6. What evidence confirms the state?** | - `mvn clean test` PASS **201/201 tests**, 0 failures, 0 errors.<br>- MySQL `elearning_db` có 15 bảng (14 bảng nghiệp vụ + 1 bảng Flyway ở version 3), 4 roles, 214 bộ thủ Khang Hy.<br>- Git commit log sạch sẽ trên nhánh `main`. |
+| **1. Where are we now?** | **Last Completed: Task 9G.5 (Responsive & Multi-Viewport Layout Verification, Remediation & Browser Testing: 10/10 Responsive PASS, 177/177 Static PASS, 535/535 Fast PASS, 19/19 A11y PASS, 22/22 HTML pages verified 0px document overflow across 375/414/768/1200/1440 viewports và 320px reflow spot-check, `.table-responsive` localized scroll preserved, flashcard & creator-import verified, 27 Chromium screenshots, DEC-47 ban hành). Phase 9 Frontend is 100% COMPLETED (Modules 9A..9G). Backend Phase is CLOSED and SEALED.** |
+| **2. What has been completed?** | - **Phase 0–8 (Backend Core Modules):** Hoàn thành 100% (1101 backend tests PASS).<br>- **Module 8D (Backend Functional Completion):** Hoàn thành 8D.1..8D.8.<br>- **Backend Remediation Tasks (R1 → R3.11) & Final Adversarial Remediation:** Hoàn thành 100% (DEC-41, DEC-42).<br>- **Phase 9 Frontend:** Hoàn thành 100% Module 9A..9F, Task 9G.1 (Token Storage Threat Model, DEC-43), Task 9G.2 (DOM XSS Prevention & Safe Dynamic Rendering, DEC-44), Task 9G.3 (Content Security Policy & Resource Graph Governance, DEC-45), Task 9G.4 (Comprehensive WCAG 2.2 AA Accessibility Audit, DEC-46), và Task 9G.5 (Responsive & Multi-Viewport Layout Verification, DEC-47). |
+| **3. What is currently in progress?** | **Phase 9 Frontend Gate Cleared (741/741 tests PASS). Sẵn sàng chuyển giao Checkpoint Phase 9 -> Phase 10.** |
+| **4. What is the next task?** | **`Checkpoint Phase 9 / Phase 10 Module 10A Task 10A.1: Rà soát Hồi quy Ranh giới Tiêm nhiễm & OWASP API Security`**. |
+| **5. What must not be changed?** | - Không sửa các migration Flyway cũ (`V1`..`V7`).<br>- Không nhận `user_id` từ client body, luôn trích xuất từ `SecurityContextHolder`.<br>- Giữ nguyên các bất biến nghiệp vụ và chính sách bảo vệ tự thân (`POL-8D-01`, `POL-8D-02`, `DEC-30`..`DEC-47`).<br>- Không thêm npm runtime dependencies vào thư mục `frontend/` (Zero-Build Vanilla JS invariant).<br>- Không thay đổi API contract đã niêm phong trừ khi có bug blocker phát hiện trong quá trình tích hợp FE.<br>- Không gọi `window.fetch()` trực tiếp trong các page module (bắt buộc qua `apiClient`).<br>- `authManager` là abstraction DUY NHẤT quản lý session/token.<br>- Tuyệt đối không đưa verification harness hoặc test-only IDs/buttons trở lại production pages. |
+| **6. What evidence confirms the state?** | - `mvn clean test` PASS **1101/1101 tests**, 0 failures, 0 errors, 0 skipped (~04:38 min trên MySQL 8.4 Testcontainer).<br>- `node --test tests/frontend/e2e/responsive-layout.browser.mjs` PASS **10/10 tests** (38.3s).<br>- `node tests/frontend/runner.mjs --tier=a11y` PASS **19/19 tests** (18.9s; full WCAG 2.2 AA coverage).<br>- `node tests/frontend/runner.mjs --tier=fast` PASS **535/535 tests** across 141 suites (2.48s).<br>- `node tests/frontend/runner.mjs --tier=static` PASS **177/177 tests** across 31 suites (0.59s).<br>- `node tests/frontend/runner.mjs --tier=unit` PASS **358/358 tests** across 110 suites (2.08s).<br>- **Tổng cộng 741/741 frontend tests PASS** (0 regressions).<br>- 27 visual screenshot artifacts trong `tests/frontend/artifacts/screenshots/`.<br>- **Live Full-Stack Verification PASS 100%** trên Real Stack khi dịch vụ trực tuyến (Playwright -> FE :3000 -> Spring Boot :8080 -> MySQL 8.4 :3306). |
 
 ---
 
@@ -237,16 +237,18 @@ Hệ thống gồm đúng **14 bảng nghiệp vụ** (chi tiết tại `.agents
 
 ## 8. GIAI ĐOẠN VÀ NHIỆM VỤ TIẾP THEO (CURRENT PHASE & NEXT TASK)
 
-Dựa trên kết quả triển khai và nghiệm thu thành công `Task 4A.1`:
-* **Giai đoạn hiện tại (Current Phase):** **`Phase 4 — Radical and Vocabulary Catalog Domain`**
-* **Phân hệ hiện tại (Current Module):** **`Module 4A — Radical Catalog Vertical Slice`**
-* **Nhiệm vụ vừa hoàn thành:** **`Task 4A.1 — Radical DTOs & RadicalService tra cứu Bộ thủ (COMPLETED)`**
-* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ`**
-* **Trạng thái:** **`NOT_STARTED`**
-* **Vì sao đây là task tiếp theo duy nhất được chọn (Evidence-based Decision):**
-  1. *Hoàn tất nền tảng Service Layer Bộ thủ:* `RadicalResponse`, `RadicalDetailResponse`, `RadicalService`, `RadicalServiceImpl` đã hoàn thiện và được kiểm chứng 100% qua cả Mockito unit tests và Spring Boot integration tests với CSDL MySQL thực tế (214 bộ thủ Khang Hy).
-  2. *Tuân thủ lộ trình ROADMAP.md:* Theo đồ thị phụ thuộc (`depends_on: Task 1B.1, 1B.2, Task 4A.1, Mod 3A`), `Task 4A.2` là bước tiếp theo để công bố REST API controller công khai (`GET /api/v1/radicals`, `GET /api/v1/radicals/{id}`) và bảo vệ các thao tác CRUD quản trị của Admin (`POST/PUT/DELETE /api/v1/admin/radicals/**`) qua Spring Security.
-  3. *Nhiệm vụ tiếp sau đó:* `Checkpoint 4A` $\rightarrow$ `Module 4B: Vocabulary Catalog & Search Vertical Slice`.
+* **Giai đoạn hiện tại (Current Phase):** **`Checkpoint Phase 9 — Frontend Gate Cleared (Ready for Phase 10 Transition)`**
+* **Phân hệ vừa hoàn thành (Last Completed Module):** **`Module 9G — Frontend Security Architecture & Layout Verification (Tasks 9G.1..9G.5 100% COMPLETED)`**
+* **Nhiệm vụ vừa hoàn thành:** **`Task 9G.5 — Responsive & Multi-Viewport Layout Verification, Remediation & Browser Testing [COMPLETED]`**
+* **Nhiệm vụ kế tiếp duy nhất (Current Next Task):** **`Checkpoint Phase 9 / Phase 10 Module 10A Task 10A.1 — Rà soát Hồi quy Ranh giới Tiêm nhiễm & OWASP API Security`**
+* **Trạng thái:** **`READY`**
+* **Tóm tắt hiện trạng nghiệm thu:**
+  1. *Backend 100% Sealed:* 1101/1101 tests PASS trên Testcontainers MySQL 8.4; toàn bộ API contracts đã được niêm phong (DEC-41).
+  2. *Frontend 100% Core, Security, A11y & Responsive Delivered:* Toàn bộ các module Phase 9 từ 9A (Foundation), 9B (Auth/Catalog), 9C (Lessons/SRS), 9D (Creator), 9E (Moderation), 9F (Admin Accounts, Admin Roles, Admin Radicals CRUD), đến 9G.1 (Token Storage Threat Model), 9G.2 (DOM XSS Prevention), 9G.3 (Content Security Policy), 9G.4 (WCAG 2.2 AA A11y Audit), và 9G.5 (Responsive Layout Baseline) đã hoàn thành, tích hợp và kiểm thử đạt 100%.
+  3. *Hạ tầng kiểm thử toàn diện:* 741/741 frontend tests PASS (535/535 fast tier tests, 177/177 static checks, 19/19 WCAG 2.2 AA a11y tests, 10/10 responsive layout browser tests); 27 ảnh chụp màn hình Chromium thực tế lưu trữ tại `tests/frontend/artifacts/screenshots/`.
+  4. *Zero Unintended Document Overflow:* 22/22 trang HTML không có hiện tượng tràn ngang tài liệu (0px overflow) trên cả 5 kích thước viewport chuẩn (375, 414, 768, 1200, 1440) và 320px reflow spot-check; cuộn ngang cục bộ `.table-responsive` được bảo toàn an toàn.
+
+
 
 ---
 

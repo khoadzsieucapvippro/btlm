@@ -44,4 +44,33 @@ public interface RadicalService {
      * @throws com.elearning.exception.BusinessException with NOT_FOUND if radical does not exist
      */
     RadicalDetailResponse getRadicalByCharacter(String character);
+
+    /**
+     * Creates a new Kangxi radical (Admin operation).
+     *
+     * @param request creation payload
+     * @return RadicalDetailResponse of created radical
+     * @throws com.elearning.exception.BusinessException with CONFLICT if character already exists
+     */
+    RadicalDetailResponse createRadical(com.elearning.dto.request.CreateRadicalRequest request);
+
+    /**
+     * Updates an existing Kangxi radical (Admin operation).
+     *
+     * @param radicalId ID of radical to update
+     * @param request update payload
+     * @return RadicalDetailResponse of updated radical
+     * @throws com.elearning.exception.BusinessException with NOT_FOUND if radical does not exist,
+     *                                                   or CONFLICT if character belongs to another radical
+     */
+    RadicalDetailResponse updateRadical(Integer radicalId, com.elearning.dto.request.UpdateRadicalRequest request);
+
+    /**
+     * Deletes an existing Kangxi radical (Admin operation).
+     *
+     * @param radicalId ID of radical to delete
+     * @throws com.elearning.exception.BusinessException with NOT_FOUND if radical does not exist,
+     *                                                   or CONFLICT if radical is linked to vocabularies
+     */
+    void deleteRadical(Integer radicalId);
 }

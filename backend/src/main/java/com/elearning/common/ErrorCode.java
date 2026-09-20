@@ -18,6 +18,7 @@ public enum ErrorCode {
     UNPROCESSABLE_ENTITY("UNPROCESSABLE_ENTITY", "Vi phạm quy tắc nghiệp vụ", HttpStatus.UNPROCESSABLE_ENTITY),
     FILE_TOO_LARGE("FILE_TOO_LARGE", "File import vượt quá dung lượng cho phép", HttpStatus.PAYLOAD_TOO_LARGE),
     FILE_TYPE_INVALID("FILE_TYPE_INVALID", "File không đúng định dạng cho phép", HttpStatus.UNSUPPORTED_MEDIA_TYPE),
+    TOO_MANY_REQUESTS("TOO_MANY_REQUESTS", "Quá nhiều yêu cầu đăng nhập, vui lòng thử lại sau", HttpStatus.TOO_MANY_REQUESTS),
     INTERNAL_ERROR("INTERNAL_ERROR", "Lỗi nội bộ hệ thống", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final String code;

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chi Tiết Bài Học | Hán Ngữ &amp; Bộ Thủ</title>
+  <meta name="description" content="Học từ vựng tiếng Trung theo lộ trình tuần tự chuẩn hóa, ghi nhớ mặt chữ, phát âm Pinyin và ngữ nghĩa tiếng Việt.">
+
+  <!-- Verified Bootstrap 5.3.3 CSS via CDN with Authenticated Subresource Integrity (SRI) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Scholarly Brand Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>学</text></svg>">
+
+  <!-- Core Design Tokens & Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Runtime Environment Configuration (Task FE-REMEDIATION-03) -->
+  <script src="js/config.js"></script>
+</head>
+<body>
+
+  <!-- Accessible Skip Link (WCAG 2.2 SC 2.4.1) -->
+  <a href="#mainContent" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Global Header & Navigation Landmark -->
+  <header class="site-header">
+    <div class="container-xl">
+      <nav class="navbar navbar-expand-lg py-2" aria-label="Điều hướng chính của trang">
+        <!-- Brand identity -->
+        <a class="navbar-brand-custom" href="index.html">
+          <span class="brand-seal-mark" aria-hidden="true">字</span>
+          <span>Hán Ngữ &amp; Bộ Thủ</span>
+        </a>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavMenu" aria-controls="primaryNavMenu" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="primaryNavMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+            <li class="nav-item">
+              <a class="nav-link-custom" href="index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="radicals.html">214 Bộ thủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="vocabulary.html">Từ vựng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom active" href="lessons.html" aria-current="page">Bài học</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="srs-review.html">Ôn tập SRS</a>
+            </li>
+          </ul>
+
+          <!-- User Session / Navigation Actions (Authoritatively rendered by nav.js) -->
+          <div id="navAuthContainer" class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <a href="login.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Đăng nhập
+            </a>
+            <a href="register.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Bắt đầu học
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent" class="py-4 py-md-5">
+    <div class="container-xl">
+
+      <!-- Breadcrumb Navigation Landmark -->
+      <nav aria-label="Đường dẫn bài học" class="breadcrumb-nav">
+        <ol class="breadcrumb-custom">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="lessons.html">Bài học</a></li>
+          <li id="breadcrumbLessonTitle" aria-current="page">Đang tải bài học...</li>
+        </ol>
+      </nav>
+
+      <!-- 3-State UI Container (Loading / Error + Neutral 404 message) -->
+      <div id="lessonDetailStateContainer" class="mb-4"></div>
+
+      <!-- Main Lesson Content Wrapper (Revealed when data is ready) -->
+      <div id="lessonDetailContent" class="d-none">
+        
+        <!-- Lesson Detail Header Section -->
+        <article class="lesson-detail-header mb-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="badge-status badge-status-approved">Đã kiểm duyệt</span>
+                <span id="detailVocabCount" class="lesson-vocab-count-badge">0 từ vựng</span>
+              </div>
+              <h1 id="lessonDetailHeading" class="h2 fw-bold text-dark mb-1">Tiêu đề bài học</h1>
+              <div class="small text-muted">
+                <span>Ngày cập nhật: </span>
+                <time id="detailLessonDate" datetime="">-</time>
+              </div>
+            </div>
+
+            <!-- Header Action Controls -->
+            <div class="d-flex align-items-center gap-2">
+              <a href="lessons.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+                &larr; Danh sách bài học
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Ordered Vocabulary Learning Sequence Section -->
+        <section aria-labelledby="lessonVocabHeading" class="mb-5">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <h2 id="lessonVocabHeading" class="h4 fw-bold text-dark mb-0">Trình Tự Từ Vựng Bài Học</h2>
+            <span class="small text-secondary fst-italic">Thứ tự chuẩn hóa do tác giả bài học thiết kế</span>
+          </div>
+
+          <!-- Semantic Ordered List for Learning Items -->
+          <ol id="lessonVocabList" class="lesson-vocab-list" aria-label="Trình tự từ vựng bài học"></ol>
+        </section>
+
+        <!-- Post-Study Action Banner -->
+        <section class="p-4 rounded-3 border bg-surface text-center mb-4">
+          <h3 class="h5 fw-bold text-dark mb-2">Sẵn sàng ghi nhớ dài hạn qua SRS?</h3>
+          <p class="text-secondary small mb-3">Ôn tập các từ vựng này cùng thuật toán lặp lại ngắt quãng SuperMemo-2 tối ưu hóa trí nhớ.</p>
+          <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
+            <a href="srs-review.html" class="btn-chinese-primary py-2 px-4 text-decoration-none">
+              Vào phòng ôn tập SRS &rarr;
+            </a>
+            <a href="lessons.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Khám phá bài học khác
+            </a>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Global Academic Footer -->
+  <footer class="site-footer mt-auto py-4 border-top">
+    <div class="container-xl">
+      <div class="row align-items-center gy-3">
+        <div class="col-12 col-md-6 text-center text-md-start">
+          <p class="mb-0 text-secondary small">
+            &copy; 2026 Hệ Thống Học Hán Ngữ &amp; 214 Bộ Thủ Khang Hy. Bản quyền bảo lưu.
+          </p>
+        </div>
+        <div class="col-12 col-md-6 text-center text-md-end">
+          <ul class="list-inline mb-0 small">
+            <li class="list-inline-item"><a href="index.html" class="text-secondary text-decoration-none">Trang chủ</a></li>
+            <li class="list-inline-item">&middot;</li>
+            <li class="list-inline-item"><a href="radicals.html" class="text-secondary text-decoration-none">214 Bộ thủ</a></li>
+            <li class="list-inline-item">&middot;</li>
+            <li class="list-inline-item"><a href="vocabulary.html" class="text-secondary text-decoration-none">Từ vựng</a></li>
+            <li class="list-inline-item">&middot;</li>
+            <li class="list-inline-item"><a href="lessons.html" class="text-secondary text-decoration-none">Bài học</a></li>
+            <li class="list-inline-item">&middot;</li>
+            <li class="list-inline-item"><a href="ui-verification.html" class="text-secondary text-decoration-none">Trung tâm kiểm chứng</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5.3.3 Bundle with Popper via CDN with Verified SRI -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- Page Logic Module (ESM) -->
+  <script type="module" src="js/pages/lesson-detail-page.js"></script>
+</body>
+</html>

@@ -8,7 +8,7 @@ description: Điều phối luồng Authentication & Authorization. Quản lý R
 
 # 2. When to use
 - Cấu hình phân quyền (Role/Authority) cho endpoint.
-- Code logic Login (tạo token) / Logout.
+- Logic Login (xác thực mật khẩu BCrypt, tạo JWT kèm claim `auth_ver`). Lưu ý: Backend KHÔNG có endpoint `/logout` phía server (logout là thao tác xóa token phía client).
 - Khắc phục lỗi 401 Unauthorized, 403 Forbidden.
 - Cấu hình CORS khi Frontend và Backend nằm ở port khác nhau.
 
@@ -21,10 +21,10 @@ description: Điều phối luồng Authentication & Authorization. Quản lý R
 
 # 5. Core workflow
 1. **Analyze Security Need**: Endpoint mới cần public hay private? Cần Role gì?
-2. **Update SecurityFilterChain**: Thêm vào `requestMatchers(..).permitAll()` nếu public.
-3. **Controller/Service Authorization**: Đánh dấu `@PreAuthorize("hasRole('ADMIN')")` nếu private.
-4. **JWT Flow Verification**: Xác minh luồng Filter xử lý tốt.
-5. **Exception Translation**: Bọc lại lỗi Authentication/AccessDenied thành JSON chuẩn.
+2. **Update SecurityFilterChain**: Thêm vào `requestMatchers(..).permitAll()` nếu public (tra cứu, login, register, health probe).
+3. **Controller/Service Authorization**: Đánh dấu `@PreAuthorize("hasAnyRole('Admin', 'ADMIN')")` nếu private.
+4. **JWT Flow Verification**: Xác minh luồng Filter xử lý tốt (chữ ký, thời hạn 24h, `authorization_version` DEC-42).
+5. **Exception Translation**: Bọc lại lỗi AuthenticationEntryPoint (401) và AccessDeniedHandler (403) thành JSON chuẩn `ApiResponse`.
 
 # 6. Decision points
 - Lỗi từ chối truy cập là do Authentication (401) hay Authorization (403)? Đọc `references/troubleshooting-matrix.md`.

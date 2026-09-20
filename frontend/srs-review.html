@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phòng Ôn Tập Flashcard SRS | Hán Ngữ &amp; Bộ Thủ</title>
+  <meta name="description" content="Ôn tập từ vựng và bộ thủ tiếng Trung qua thuật toán lặp lại ngắt quãng SuperMemo-2 (SRS). Lật thẻ kiểm tra phản xạ, phát âm và củng cố trí nhớ dài hạn.">
+
+  <!-- Verified Bootstrap 5.3.3 CSS via CDN with Authenticated Subresource Integrity (SRI) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Scholarly Brand Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>复</text></svg>">
+
+  <!-- Core Design Tokens & Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Runtime Environment Configuration (Task FE-REMEDIATION-03) -->
+  <script src="js/config.js"></script>
+</head>
+<body>
+
+  <!-- Accessible Skip Link (WCAG 2.2 SC 2.4.1) -->
+  <a href="#mainContent" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Global Header & Navigation Landmark -->
+  <header class="site-header">
+    <div class="container-xl">
+      <nav class="navbar navbar-expand-lg py-2" aria-label="Điều hướng chính của trang">
+        <!-- Brand identity -->
+        <a class="navbar-brand-custom" href="index.html">
+          <span class="brand-seal-mark" aria-hidden="true">字</span>
+          <span>Hán Ngữ &amp; Bộ Thủ</span>
+        </a>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavMenu" aria-controls="primaryNavMenu" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="primaryNavMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+            <li class="nav-item">
+              <a class="nav-link-custom" href="index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="radicals.html">214 Bộ thủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="vocabulary.html">Từ vựng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="lessons.html">Bài học</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom active" href="srs-review.html" aria-current="page">Ôn tập SRS</a>
+            </li>
+          </ul>
+
+          <!-- User Session / Navigation Actions (Authoritatively rendered by nav.js) -->
+          <div id="navAuthContainer" class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <a href="login.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Đăng nhập
+            </a>
+            <a href="register.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Bắt đầu học
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent" class="main-content-wrapper py-4 py-md-5">
+    <div class="container-xl">
+      
+      <!-- Session Room Header -->
+      <div class="text-center mb-4">
+        <div class="d-inline-flex align-items-center gap-2 mb-1">
+          <span class="brand-seal-mark" aria-hidden="true" style="width: 28px; height: 28px; font-size: 0.95rem;">复</span>
+          <span class="text-secondary small fw-semibold text-uppercase" style="letter-spacing: 0.05em;">Hệ Thống Lặp Lại Ngắt Quãng (SuperMemo-2)</span>
+        </div>
+        <h1 class="h2 fw-bold text-dark mb-2" id="srsPageHeading">Phòng Ôn Tập Flashcard SRS</h1>
+        <p class="text-secondary mb-0 mx-auto" style="max-width: 44rem;">
+          Rèn luyện trí nhớ dài hạn thông qua phương pháp lặp lại ngắt quãng khoa học. Lật thẻ kiểm tra phản xạ, nghe phát âm và đánh giá mức độ ghi nhớ.
+        </p>
+        <div class="mt-2">
+          <a href="srs-dashboard.html" id="linkToSrsDashboard" class="btn btn-sm btn-chinese-outline py-1 px-3 text-decoration-none">
+            📊 Thống kê &amp; Cài đặt SRS
+          </a>
+        </div>
+      </div>
+
+      <!-- State 1: Loading State -->
+      <section id="srsLoadingState" class="state-container py-5 text-center" role="status" aria-live="polite">
+        <div class="state-spinner" aria-hidden="true"></div>
+        <p class="state-loading-text mt-3 text-secondary">Đang nạp dữ liệu thẻ ôn tập SRS...</p>
+      </section>
+
+      <!-- State 2: Unauthenticated State -->
+      <section id="srsAuthState" class="d-none text-center py-5">
+        <div class="p-4 p-md-5 rounded-3 border bg-surface mx-auto" style="max-width: 500px;">
+          <div class="display-5 mb-3" aria-hidden="true">🔒</div>
+          <h2 class="h4 fw-bold text-dark mb-2">Yêu cầu đăng nhập</h2>
+          <p class="text-secondary mb-4">
+            Tính năng ôn tập lặp lại ngắt quãng SRS lưu trữ tiến trình học tập cá nhân. Vui lòng đăng nhập để bắt đầu phiên học của bạn.
+          </p>
+          <a href="login.html?redirect=srs-review.html" id="btnSrsLoginRedirect" class="btn-chinese-primary py-2 px-4 text-decoration-none">
+            Đăng nhập ngay
+          </a>
+        </div>
+      </section>
+
+      <!-- State 3: Empty State (No Due/New Cards) -->
+      <section id="srsEmptyState" class="d-none text-center py-5">
+        <div class="p-4 p-md-5 rounded-3 border bg-surface mx-auto" style="max-width: 540px;">
+          <div class="srs-completion-glyph mb-2" aria-hidden="true">完</div>
+          <h2 class="h4 fw-bold text-dark mb-2" id="srsEmptyTitle">Không có thẻ đến hạn hôm nay!</h2>
+          <p id="srsEmptyDescription" class="text-secondary mb-4">
+            Bạn đã hoàn thành toàn bộ các thẻ ôn tập cần thiết. Hãy học thêm bài mới hoặc quay lại vào ngày mai để tiếp tục củng cố kiến thức!
+          </p>
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="srs-dashboard.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Xem thống kê &amp; Cài đặt &rarr;
+            </a>
+            <a href="lessons.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Khám phá bài học mới
+            </a>
+            <a href="vocabulary.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Tra cứu từ điển từ vựng
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- State 4: Error State -->
+      <section id="srsErrorState" class="d-none text-center py-5" role="alert">
+        <div class="p-4 rounded-3 border border-danger-subtle bg-danger-subtle mx-auto" style="max-width: 500px;">
+          <div class="h3 text-danger mb-2" aria-hidden="true">⚠️</div>
+          <h2 class="h5 fw-bold text-danger mb-2">Không thể tải phiên ôn tập</h2>
+          <p id="srsErrorMessage" class="text-secondary small mb-3">Đã xảy ra lỗi khi nạp thẻ ôn tập từ máy chủ.</p>
+          <button type="button" id="btnSrsRetry" class="btn btn-outline-danger btn-sm px-3">
+            Thử lại
+          </button>
+        </div>
+      </section>
+
+      <!-- State 5: Active Flashcard Session Room -->
+      <section id="srsActiveSession" class="d-none srs-review-wrapper" aria-label="Khu vực ôn tập thẻ ghi nhớ">
+        
+        <!-- Session Progress & Reaction Timer Bar -->
+        <div class="srs-session-header mb-3">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex align-items-center gap-2">
+              <span id="srsSessionModeBadge" class="badge bg-secondary-subtle text-secondary border">Thẻ đến hạn</span>
+              <span id="srsProgressText" class="fw-semibold text-dark small">Thẻ 1 / 1</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <span id="reactionTimerBadge" class="srs-timer-badge" title="Thời gian phản xạ của thẻ hiện tại">⏱️ 0s</span>
+            </div>
+          </div>
+          
+          <!-- Progress Bar Fill -->
+          <div class="srs-progress-bar-container mt-2" role="progressbar" id="srsProgressBarContainer" aria-valuenow="1" aria-valuemin="1" aria-valuemax="1" aria-label="Tiến độ buổi học">
+            <div id="srsProgressBarFill" class="srs-progress-bar-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <!-- 3D Interactive Flashcard -->
+        <div class="flashcard-scene">
+          <div id="flashcard" class="flashcard" tabindex="0" role="button" aria-label="Thẻ ghi nhớ SRS. Nhấn Phím cách hoặc Enter để lật thẻ." aria-expanded="false">
+            
+            <!-- Front Face -->
+            <div id="cardFront" class="flashcard-face flashcard-face-front" aria-hidden="false">
+              <div class="d-flex justify-content-between align-items-center w-100">
+                <span id="cardTypeBadgeFront" class="badge bg-light text-secondary border">Từ vựng</span>
+                <span id="cardStatusBadgeFront" class="badge bg-primary-subtle text-primary border border-primary-subtle d-none">Mới</span>
+              </div>
+              
+              <div class="my-auto py-3">
+                <div id="cardFrontHanzi" class="flashcard-hanzi" lang="zh-CN">学</div>
+                <div id="cardFrontPinyin" class="flashcard-pinyin">xué</div>
+                <button type="button" id="btnAudioPronounceFront" class="flashcard-audio-btn" aria-label="Phát âm chữ Hán">
+                  <span aria-hidden="true">🔊</span> <span>Phát âm</span>
+                </button>
+              </div>
+
+              <div class="flashcard-reveal-hint mt-auto">
+                <span>Nhấn <kbd class="bg-white text-dark border px-1 rounded">Space</kbd> hoặc click để xem đáp án</span>
+              </div>
+            </div>
+
+            <!-- Back Face (Answer) -->
+            <div id="cardBack" class="flashcard-face flashcard-face-back" aria-hidden="true">
+              <div class="d-flex justify-content-between align-items-center w-100">
+                <span id="cardTypeBadgeBack" class="badge bg-light text-secondary border">Từ vựng</span>
+                <button type="button" id="btnCardNote" class="btn btn-sm btn-outline-secondary py-1 px-2" aria-label="Xem và tạo ghi chú cá nhân cho từ vựng này">
+                  <span aria-hidden="true">📝</span> Ghi chú
+                </button>
+              </div>
+
+              <div class="my-auto py-2 w-100">
+                <div id="cardBackHanzi" class="flashcard-hanzi" lang="zh-CN" style="font-size: clamp(2.5rem, 7vw, 3.5rem); margin-bottom: 0.25rem;">学</div>
+                <div id="cardBackPinyin" class="flashcard-pinyin mb-2" style="font-size: 1.25rem;">xué</div>
+                <div class="mb-3">
+                  <span id="cardBackMeaningHv" class="badge bg-secondary-subtle text-secondary me-2">Học</span>
+                  <span id="cardBackMeaningVi" class="flashcard-meaning-vi">Học tập, nghiên cứu</span>
+                </div>
+                <div id="cardBackExampleBox" class="flashcard-example-box d-none">
+                  <div class="text-secondary small fw-semibold mb-1">Ví dụ ngữ cảnh:</div>
+                  <div id="cardBackExampleSentence" class="fw-medium text-dark mb-1" lang="zh-CN"></div>
+                  <div id="cardBackExampleTranslation" class="text-secondary small"></div>
+                </div>
+              </div>
+
+              <div class="text-muted small mt-auto">
+                <span>Chọn 1 trong 4 mức đánh giá bên dưới để tiếp tục</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Rating Controls Toolbar -->
+        <section id="srsRatingSection" class="mt-3 text-center" aria-label="Đánh giá kết quả ghi nhớ">
+          <div id="ratingControlsBar" class="srs-rating-bar">
+            <button type="button" id="btnRatingAgain" class="btn-rating btn-rating-again" data-rating="1" disabled aria-label="1. Học lại (Again) - Quên hoàn toàn">
+              <span>Học lại</span>
+              <span class="btn-rating-shortcut">(Phím 1)</span>
+            </button>
+            <button type="button" id="btnRatingHard" class="btn-rating btn-rating-hard" data-rating="2" disabled aria-label="2. Khó (Hard) - Nhớ khó khăn">
+              <span>Khó</span>
+              <span class="btn-rating-shortcut">(Phím 2)</span>
+            </button>
+            <button type="button" id="btnRatingGood" class="btn-rating btn-rating-good" data-rating="3" disabled aria-label="3. Tốt (Good) - Nhớ sau suy nghĩ">
+              <span>Tốt</span>
+              <span class="btn-rating-shortcut">(Phím 3)</span>
+            </button>
+            <button type="button" id="btnRatingEasy" class="btn-rating btn-rating-easy" data-rating="4" disabled aria-label="4. Dễ (Easy) - Nhớ tức thì">
+              <span>Dễ</span>
+              <span class="btn-rating-shortcut">(Phím 4)</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Status / Submission Feedback -->
+          <div id="ratingFeedback" class="mt-2 text-secondary small" role="status" aria-live="polite"></div>
+
+          <!-- Keyboard helper legend -->
+          <div class="text-secondary small mt-2 opacity-75">
+            <span>Phím tắt: <strong>Space/Enter</strong> (Lật thẻ) &bull; <strong>1</strong> (Học lại) &bull; <strong>2</strong> (Khó) &bull; <strong>3</strong> (Tốt) &bull; <strong>4</strong> (Dễ)</span>
+          </div>
+        </section>
+
+      </section>
+
+      <!-- State 6: Completed Session Screen -->
+      <section id="srsCompletedState" class="d-none text-center py-4">
+        <div class="srs-completion-card">
+          <div class="srs-completion-glyph mb-2" aria-hidden="true">完</div>
+          <h2 class="h4 fw-bold text-dark mb-1">Hoàn Thành Phiên Ôn Tập!</h2>
+          <p class="text-secondary small mb-4">Các đánh giá của bạn đã được ghi nhận vào tiến trình trí nhớ dài hạn.</p>
+
+          <div class="row g-2 mb-4 text-center">
+            <div class="col-6 col-sm-3">
+              <div class="p-3 bg-light rounded border">
+                <div class="text-secondary small">Tổng thẻ</div>
+                <div id="statTotalReviewed" class="h4 fw-bold text-dark mb-0">0</div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-3">
+              <div class="p-3 bg-light rounded border">
+                <div class="text-danger small">Học lại (1)</div>
+                <div id="statAgainCount" class="h4 fw-bold text-danger mb-0">0</div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-3">
+              <div class="p-3 bg-light rounded border">
+                <div class="text-primary small">Tốt / Dễ (3-4)</div>
+                <div id="statGoodEasyCount" class="h4 fw-bold text-success mb-0">0</div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-3">
+              <div class="p-3 bg-light rounded border">
+                <div class="text-secondary small">Tổng thời gian</div>
+                <div id="statTotalTime" class="h4 fw-bold text-dark mb-0">0s</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="srs-review.html" id="btnRestartSession" class="btn-chinese-primary py-2 px-4 text-decoration-none">
+              Ôn tập tiếp
+            </a>
+            <a href="srs-dashboard.html" id="btnCompletionToDashboard" class="btn-chinese-outline py-2 px-3 text-decoration-none">
+              Thống kê &amp; Cài đặt SRS
+            </a>
+            <a href="lessons.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Danh mục bài học
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Global Footer Landmark -->
+  <footer class="site-footer mt-auto py-4 border-top">
+    <div class="container-xl">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-2">
+          <span class="brand-seal-mark" aria-hidden="true" style="width: 24px; height: 24px; font-size: 0.85rem;">字</span>
+          <span class="fw-semibold text-dark">Hán Ngữ &amp; Bộ Thủ</span>
+          <span class="text-muted small">&copy; 2026 E-learning Platform</span>
+        </div>
+        <ul class="list-inline mb-0 small text-secondary">
+          <li class="list-inline-item"><a href="index.html" class="text-decoration-none text-secondary">Trang chủ</a></li>
+          <li class="list-inline-item">&bull;</li>
+          <li class="list-inline-item"><a href="radicals.html" class="text-decoration-none text-secondary">214 Bộ thủ</a></li>
+          <li class="list-inline-item">&bull;</li>
+          <li class="list-inline-item"><a href="vocabulary.html" class="text-decoration-none text-secondary">Từ vựng</a></li>
+          <li class="list-inline-item">&bull;</li>
+          <li class="list-inline-item"><a href="lessons.html" class="text-decoration-none text-secondary">Bài học</a></li>
+          <li class="list-inline-item">&bull;</li>
+          <li class="list-inline-item"><a href="ui-verification.html" class="text-decoration-none text-secondary">Kiểm chứng UI</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Verified Bootstrap 5.3.3 JS Bundle with Subresource Integrity (SRI) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- Page Application Entry Point (Module) -->
+  <script type="module" src="js/pages/srs-review-page.js"></script>
+</body>
+</html>

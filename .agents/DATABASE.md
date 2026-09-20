@@ -3,8 +3,8 @@
 > **Source of Truth:** Authoritative Database Baseline (User Specification)  
 > **Status:**  
 > - `APPROVED SPECIFICATION`: **14 TABLES APPROVED** (Nghiệp vụ, trường dữ liệu, quan hệ và quy tắc nghiệp vụ đã được phê duyệt)  
-> - `PHYSICAL DATABASE STATE`: **IMPLEMENTED & VERIFIED** (MySQL 8.4 LTS `elearning_db`, Flyway V1-V3 applied, 14 domain tables + `flyway_schema_history`, 4 roles, 214 radicals)  
-> - `JPA ENTITIES & REPOSITORIES`: **IMPLEMENTED & VERIFIED** (12 Entities, 12 Repositories, Hibernate `ddl-auto: validate` PASS trong Phase 2)  
+> - `PHYSICAL DATABASE STATE`: **IMPLEMENTED & VERIFIED** (MySQL 8.4 LTS `elearning_db`, Flyway V1-V7 applied, 14 domain tables + `flyway_schema_history`, 4 roles, 214 radicals, optimistic locking version columns on `card_progress` and `lesson`, `authorization_version` on `account`)  
+> - `JPA ENTITIES & REPOSITORIES`: **IMPLEMENTED & VERIFIED** (12 Entities, 12 Repositories, Hibernate `ddl-auto: none` / `validate` PASS)  
 
 ---
 
@@ -30,13 +30,16 @@ Luồng nghiệp vụ cốt lõi của hệ thống:
 #### 1. Bảng `ACCOUNT`
 - **Mục đích:** Lưu trữ thông tin tài khoản và danh tính xác thực người dùng.
 - **Các trường dữ liệu:**
-  - `account_id`: Primary Key — Mã định danh tài khoản.
-  - `email_or_phone`: Thông tin đăng nhập (Email hoặc số điện thoại).
-  - `password_hash`: Chuỗi băm mật khẩu đã lưu.
-  - `status`: Trạng thái tài khoản, nhận một trong các giá trị:
+  - `account_id`: Primary Key — Mã định danh tài khoản (`BIGINT UNSIGNED AUTO_INCREMENT`).
+  - `email_or_phone`: Thông tin đăng nhập (Email hoặc số điện thoại, `VARCHAR(100) UNIQUE`).
+  - `password_hash`: Chuỗi băm mật khẩu đã lưu (`VARCHAR(255)`).
+  - `status`: Trạng thái tài khoản, nhận một trong các giá trị (`VARCHAR(20)`):
     - `Active`
     - `Inactive`
     - `Banned`
+  - `authorization_version`: Phiên bản phân quyền phục vụ thu hồi token tức thì (`BIGINT UNSIGNED NOT NULL DEFAULT 1`, Flyway `V6`).
+  - `created_at`: Thời điểm tạo tài khoản (`DATETIME`).
+  - `updated_at`: Thời điểm cập nhật tài khoản (`DATETIME`).
 
 #### 2. Bảng `USER_PROFILE`
 - **Mục đích:** Thông tin chi tiết hồ sơ người dùng.
@@ -224,16 +227,18 @@ Luồng nghiệp vụ cốt lõi của hệ thống:
 
 ---
 
-## 5. CÁC QUYẾT ĐỊNH TRIỂN KHAI CHƯA XÁC ĐỊNH (IMPLEMENTATION DECISIONS PENDING)
+## 5. QUYẾT ĐỊNH THIẾT KẾ VẬT LÝ ĐÃ HIỆN THỰC HÓA (FINALIZED PHYSICAL DATABASE DECISIONS)
 
-Các chi tiết dưới đây **KHÔNG PHẢI** là đặc tả nghiệp vụ đã phê duyệt, mà là các quyết định kỹ thuật vật lý sẽ được khảo sát, đề xuất và chốt khi bước vào **Phase 2 (MySQL, Flyway and Persistence Foundation)**:
+> [!NOTE]
+> **Bối cảnh Lịch sử & Hiện trạng Thực tế:**  
+> Tại thời điểm khởi tạo đặc tả Phase 0/1, các chi tiết kỹ thuật vật lý dưới đây được đặt ra để khảo sát. Toàn bộ 9 quyết định kỹ thuật này **ĐÃ ĐƯỢC CHỐT VÀ HIỆN THỰC HÓA 100%** trong [`.agents/DATABASE_DESIGN.md`](file:///c:/Users/LENOVO/Downloads/elearning-1.0.0-20260819T062551Z-1-002/elearning-1.0.0/elearning-1.0.0/.agents/DATABASE_DESIGN.md), [`.agents/DECISIONS.md`](file:///c:/Users/LENOVO/Downloads/elearning-1.0.0-20260819T062551Z-1-002/elearning-1.0.0/elearning-1.0.0/.agents/DECISIONS.md) và áp dụng thành công qua Flyway Migration `V1__init_schema.sql` (Phase 2):
 
-1. **Kiểu dữ liệu vật lý cụ thể trên MySQL:** (Ví dụ: `INT` vs `BIGINT` cho từng loại ID, `VARCHAR` vs `TEXT` cho nội dung câu ví dụ, độ dài cụ thể của URL media, kiểu số học `DECIMAL` cho `ease_factor`).
-2. **Chiến lược sinh khóa chính (Primary Key Generation):** Lựa chọn giữa `AUTO_INCREMENT`, `IDENTITY`, hay UUID/HiLo.
-3. **Cấu trúc khóa của bảng liên kết (Junction Tables):** Quyết định bảng liên kết (`ACCOUNT_ROLE`, `VOCAB_RADICAL`, `LESSON_VOCABULARY`) sẽ dùng Khóa chính phức hợp (Composite PK) hay Khóa chính đại diện (Surrogate PK).
-4. **Các chỉ mục và ràng buộc duy nhất kỹ thuật (Technical Indexes & UNIQUE Constraints):** Đánh giá việc tạo chỉ mục cho các trường tìm kiếm (`pinyin_raw`, `hanzi`, `status`), ràng buộc `UNIQUE` trên `email_or_phone`, hay ràng buộc duy nhất của tiến trình thẻ `(user_id, item_type, item_id)`.
-5. **Cơ chế lưu trữ và Collation:** Lựa chọn Storage Engine (khuyến nghị `InnoDB`) và Collation (khuyến nghị `utf8mb4_unicode_ci`).
-6. **Chiến lược thời gian kiểm toán (Audit Timestamps):** Xác định những bảng nào cần bổ sung `created_at` và `updated_at` bên cạnh các bảng đã có trong đặc tả (`PERSONAL_NOTE`, `MODERATION_LOG`, `REVIEW_LOG`).
-7. **Quy tắc toàn vẹn tham chiếu (ON DELETE / ON UPDATE):** Xác định hành vi xóa (`CASCADE`, `SET NULL`, hay `RESTRICT`) khi xóa một tài khoản, từ vựng hay bài học.
-8. **Hiện thực hóa quan hệ Đa hình (Polymorphic Reference Implementation):** Cách thiết kế bảng vật lý trên MySQL cho `item_type` + `item_id` (giữ nguyên 2 cột trong MySQL hay tách bảng quan hệ).
-9. **Chiến lược ánh xạ JPA / Hibernate:** Không đồng nhất 1 bảng = 1 Entity class; quyết định chiến lược ánh xạ `@JoinTable`, `@ElementCollection`, `@EmbeddedId`, hoặc `@IdClass`.
+1. **Kiểu dữ liệu vật lý cụ thể trên MySQL (`DES-01`):** `INT UNSIGNED` cho bảng danh mục nhỏ (`ROLE`, `RADICAL`); `BIGINT UNSIGNED` cho toàn bộ các bảng nghiệp vụ còn lại; `DECIMAL(3,2)` cho `ease_factor`.
+2. **Chiến lược sinh khóa chính (`DES-02`):** Sử dụng `AUTO_INCREMENT` trong MySQL, tương ứng `@GeneratedValue(strategy = GenerationType.IDENTITY)` trong JPA.
+3. **Cấu trúc khóa của bảng liên kết (`DES-03`):** Khóa chính phức hợp (Composite PK): `ACCOUNT_ROLE(account_id, role_id)`, `VOCAB_RADICAL(vocab_id, radical_id)`, `LESSON_VOCABULARY(lesson_id, vocab_id)`.
+4. **Các chỉ mục và ràng buộc duy nhất (`DES-04`, `DATABASE_DESIGN.md`):** `UNIQUE(email_or_phone)`, `UNIQUE(user_id, item_type, item_id)`, `idx_card_progress_due`, `idx_vocab_pinyin_raw`, `idx_lesson_status`.
+5. **Cơ chế lưu trữ và Collation (`DES-05`):** Storage Engine `InnoDB`, Charset `utf8mb4`, Collation `utf8mb4_unicode_ci` (hỗ trợ toàn diện 4-byte Unicode cho chữ Hán Khang Hy, Pinyin và tiếng Việt).
+6. **Chiến lược thời gian kiểm toán (`DES-06`):** Giữ nguyên các timestamp bắt buộc nghiệp vụ; bổ sung `created_at` và `updated_at` cho 5 bảng thực thể vòng đời cốt lõi (`ACCOUNT`, `USER_PROFILE`, `LESSON`, `RADICAL`, `VOCABULARY`).
+7. **Quy tắc toàn vẹn tham chiếu (`DES-07`):** Áp dụng `ON DELETE RESTRICT` cho tác giả bài học, kiểm duyệt viên, vai trò hệ thống, từ vựng trong bài học, và bài học có nhật ký kiểm duyệt để bảo vệ dấu vết kiểm toán.
+8. **Hiện thực hóa quan hệ Đa hình (`DES-04` / Phương án A):** Giữ nguyên cặp trường `item_type` (`VARCHAR(20)`) và `item_id` (`BIGINT UNSIGNED`); kiểm soát toàn vẹn tại tầng Service / JPA (`SrsPolymorphicIntegrityTests` PASS 3/3).
+9. **Chiến lược ánh xạ JPA / Hibernate:** Ánh xạ thực thể chuẩn mực kết hợp `@EmbeddedId` cho các bảng liên kết phức hợp, Hibernate cấu hình `ddl-auto: validate`.

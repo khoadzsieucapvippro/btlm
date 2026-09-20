@@ -19,7 +19,7 @@ Kiểm soát sự thay đổi của Database Schema MySQL theo thời gian, đ�
 # 4. Inputs / Preconditions
 - Đã xác nhận project dùng MySQL (`mysql-connector-j`) và module Flyway MySQL (`flyway-mysql`).
 - Thư mục chuẩn chứa script: `src/main/resources/db/migration`.
-- Đã kiểm tra migration version cao nhất hiện tại để đặt tên file mới (Ví dụ: `V3__Add_users.sql`).
+- Đã kiểm tra migration version cao nhất hiện tại để đặt tên file mới (Baseline hiện tại: `V1`..`V7`; migration tiếp theo nếu có sẽ là `V8__...`).
 
 # 5. Core workflow (Migration Validation Workflow)
 1. **INSPECT CURRENT SCHEMA**: Kiểm tra các file `.sql` cũ và Entity JPA hiện tại.

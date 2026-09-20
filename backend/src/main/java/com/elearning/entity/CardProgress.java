@@ -10,6 +10,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.Version;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -52,6 +53,10 @@ public class CardProgress {
 
     @Column(name = "next_review_at")
     private LocalDateTime nextReviewAt;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    private Long version = 0L;
 
     public CardProgress() {
     }
@@ -128,6 +133,14 @@ public class CardProgress {
 
     public void setNextReviewAt(LocalDateTime nextReviewAt) {
         this.nextReviewAt = nextReviewAt;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
     @Override

@@ -32,11 +32,11 @@
   - Mặc định dùng `FetchType.LAZY`.
   - Khi cần load data liên kết để trả DTO, dùng `@Query("SELECT e FROM Entity e JOIN FETCH e.relation")` hoặc `@EntityGraph`.
 
-## 5. Pagination
-- Frontend gọi: `?page=0&size=10`.
-- Controller nhận: `Pageable pageable`.
+## 5. Pagination (`PageResponse<T>`)
+- Frontend gọi: `?page=0&size=20`.
+- Controller nhận: `@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size`.
 - Repository định nghĩa: `Page<Entity> findAll(Pageable pageable)`.
-- Kết quả map thành `Page<DTO>` và trả ra cục metadata.
+- Kết quả map thành DTO, đóng gói vào `PageResponse<DTO>` (`page`, `size`, `totalElements`, `totalPages`, `items`) và bọc trong phong bì `ApiResponse<PageResponse<DTO>>` (Invariant 6). Tuyệt đối không trả thô `Page<T>` của Spring Data ra ngoài API.
 
 ## 6. Test Strategy
 - Service: Dùng `@ExtendWith(MockitoExtension.class)`, `@Mock` cho repository. Unit test logic độc lập.

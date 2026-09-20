@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phòng Biên Soạn Bài Học | Creator Lesson Studio</title>
+  <meta name="description" content="Phòng biên soạn bài học dành cho Tác giả: Chỉnh sửa tiêu đề, tìm kiếm và thêm từ vựng, sắp xếp thứ tự học tập trực quan và quản lý nội dung bài học.">
+
+  <!-- Verified Bootstrap 5.3.3 CSS via CDN with Authenticated Subresource Integrity (SRI) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Scholarly Brand Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>课</text></svg>">
+
+  <!-- Core Design Tokens & Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Runtime Environment Configuration (Task FE-REMEDIATION-03) -->
+  <script src="js/config.js"></script>
+</head>
+<body>
+
+  <!-- Accessible Skip Link (WCAG 2.2 SC 2.4.1) -->
+  <a href="#mainContent" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Global Header & Navigation Landmark -->
+  <header class="site-header">
+    <div class="container-xl">
+      <nav class="navbar navbar-expand-lg py-2" aria-label="Điều hướng chính của trang">
+        <!-- Brand identity -->
+        <a class="navbar-brand-custom" href="index.html">
+          <span class="brand-seal-mark" aria-hidden="true">字</span>
+          <span>Hán Ngữ &amp; Bộ Thủ</span>
+        </a>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavMenu" aria-controls="primaryNavMenu" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="primaryNavMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+            <li class="nav-item">
+              <a class="nav-link-custom" href="index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="radicals.html">214 Bộ thủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="vocabulary.html">Từ vựng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="lessons.html">Bài học</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="srs-review.html">Ôn tập SRS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom active" href="creator-lessons.html" aria-current="page">Creator Studio</a>
+            </li>
+          </ul>
+
+          <!-- User Session / Navigation Actions (Authoritatively rendered by nav.js) -->
+          <div id="navAuthContainer" class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <a href="login.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Đăng nhập
+            </a>
+            <a href="register.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Bắt đầu học
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent" class="py-4 py-md-5">
+    <div class="container-xl creator-studio-wrapper">
+
+      <!-- Breadcrumbs Landmark -->
+      <nav aria-label="Đường dẫn điều hướng" class="mb-3">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Trang chủ</a></li>
+          <li class="breadcrumb-item"><a href="creator-lessons.html" class="text-decoration-none">Creator Studio</a></li>
+          <li class="breadcrumb-item active" id="editorBreadcrumbTitle" aria-current="page">Chi tiết bài học</li>
+        </ol>
+      </nav>
+
+      <!-- Page Heading Section (Exactly 1 H1) -->
+      <section class="mb-4" aria-labelledby="editorPageHeading">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+          <div>
+            <h1 id="editorPageHeading" class="h2 fw-bold text-dark mb-1">Phòng Biên Soạn Bài Học</h1>
+            <p class="text-secondary mb-0">Quản lý nội dung, tra cứu và bổ sung từ vựng, sắp xếp thứ tự hiển thị tuần tự cho người học.</p>
+          </div>
+          
+          <div class="d-flex align-items-center gap-2 flex-wrap">
+            <a href="creator-lessons.html" class="btn-chinese-secondary btn-sm text-decoration-none">
+              &larr; Về danh sách bài học
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3-State Container for Initial Lesson Detail Loading / Errors -->
+      <div id="editorStateContainer" class="state-container py-4"></div>
+
+      <!-- Main Editor Workspace (Shown after successful load) -->
+      <div id="editorWorkspace" class="d-none">
+
+        <!-- Locked Notification Banner (Shown for Pending or Approved) -->
+        <div id="editorLockedBanner" class="creator-locked-banner d-none mb-3" role="alert">
+          <div class="fw-bold fs-5" aria-hidden="true">&#128274;</div>
+          <div>
+            <strong id="editorLockedBannerTitle">Bài học đang ở trạng thái khóa chỉnh sửa.</strong>
+            <div class="small" id="editorLockedBannerDesc">
+              Nội dung bài học đã được khóa để phục vụ kiểm duyệt hoặc xuất bản. Bạn không thể sửa đổi tiêu đề, thêm/xóa hoặc đổi thứ tự từ vựng.
+            </div>
+          </div>
+        </div>
+
+        <!-- Rejected Feedback Banner (Shown for Rejected) -->
+        <div id="editorRejectedBanner" class="alert alert-danger d-none mb-3" role="alert">
+          <div class="d-flex align-items-start gap-2">
+            <span class="fs-5" aria-hidden="true">⚠️</span>
+            <div class="flex-grow-1">
+              <strong id="editorRejectedBannerTitle" class="d-block mb-1">Bài học đã bị từ chối kiểm duyệt.</strong>
+              <div id="editorRejectedBannerContent" class="small">
+                Bài học này đã bị từ chối. Thông tin phản hồi chi tiết chưa được cung cấp bởi API hiện tại.
+              </div>
+              <div class="mt-2 small text-muted">
+                Bạn có thể điều chỉnh lại tiêu đề, từ vựng và gửi lại kiểm duyệt bằng nút <strong>"Nộp lại bài học"</strong>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. Lesson Metadata Card -->
+        <div class="creator-panel-card mb-4">
+          <div class="creator-panel-header">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+              <span class="small fw-semibold text-secondary text-uppercase tracking-wider">Thông tin bài học</span>
+              <span id="editorStatusBadge" class="badge-status badge-status-draft">Draft</span>
+              <span id="editorVocabCountBadge" class="badge rounded-pill bg-light text-dark border">0 từ vựng</span>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex align-items-center gap-2">
+              <a href="creator-import.html" id="btnLinkExcelImport" class="btn-chinese-secondary btn-sm text-decoration-none">
+                <span aria-hidden="true">📊</span> Nhập từ Excel
+              </a>
+              <button type="button" id="btnSubmitForModeration" class="btn-chinese-primary btn-sm">
+                Nộp kiểm duyệt
+              </button>
+            </div>
+          </div>
+
+          <!-- Lesson Title Editor Form -->
+          <form id="editorTitleForm" class="row g-2 align-items-center" novalidate>
+            <div class="col-md-9 col-12">
+              <label for="editorTitleInput" class="form-label small fw-semibold text-dark visually-hidden">
+                Tiêu đề bài học
+              </label>
+              <div class="input-group">
+                <span class="input-group-text bg-light text-secondary border-end-0 small fw-semibold">Tiêu đề:</span>
+                <input type="text" id="editorTitleInput" class="form-control fw-bold border-start-0" maxlength="200" required autocomplete="off">
+              </div>
+              <div class="d-flex justify-content-between mt-1">
+                <span id="editorTitleError" class="srs-field-error" role="alert"></span>
+                <span id="editorTitleCounter" class="small text-muted note-char-counter">0/200</span>
+              </div>
+            </div>
+
+            <div class="col-md-3 col-12 text-md-end">
+              <button type="submit" id="btnSaveTitle" class="btn-chinese-primary btn-sm w-100 w-md-auto">
+                Lưu tiêu đề
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- 2. Vocabulary Search & Add Panel (Visible when editable) -->
+        <div id="editorAddVocabPanel" class="creator-panel-card mb-4">
+          <h2 class="h6 fw-bold mb-3 d-flex align-items-center gap-2">
+            <span>&#xFF0B;</span> Thêm Từ Vựng Vào Bài Học
+          </h2>
+
+          <div class="position-relative mb-2">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-end-0 text-muted" aria-hidden="true">&#128269;</span>
+              <input type="text" id="editorVocabSearchInput" class="form-control border-start-0" placeholder="Tìm kiếm từ vựng theo chữ Hán (Hanzi), Pinyin hoặc nghĩa tiếng Việt..." autocomplete="off">
+              <button type="button" id="btnEditorSearchClear" class="btn btn-outline-secondary d-none" aria-label="Xóa từ khóa tìm kiếm">
+                &times;
+              </button>
+            </div>
+
+            <!-- Live Search Results Dropdown -->
+            <div id="editorSearchResults" class="creator-search-results mt-1 d-none" role="region" aria-label="Kết quả tìm kiếm từ vựng">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+          <div class="small text-muted">
+            Nhập ít nhất 1 ký tự để tìm kiếm. Nhấn "Thêm" để gắn từ vựng vào cuối bài học.
+          </div>
+        </div>
+
+        <!-- 3. Ordered Vocabulary List Panel -->
+        <div class="creator-panel-card">
+          <div class="creator-panel-header">
+            <div>
+              <h2 class="h6 fw-bold mb-1">Danh Sách Từ Vựng Thuộc Bài Học</h2>
+              <p class="small text-secondary mb-0">Thứ tự hiển thị bên dưới sẽ quyết định trình tự học tập của học viên.</p>
+            </div>
+
+            <!-- Live Screen Reader Announcement Region for Reordering -->
+            <div id="reorderLiveStatus" class="small text-muted" role="status" aria-live="polite">
+              Thứ tự hiện tại đã lưu trên máy chủ.
+            </div>
+          </div>
+
+          <!-- Empty state when lesson has 0 vocabularies -->
+          <div id="editorEmptyVocabState" class="text-center py-5 d-none">
+            <div class="state-empty-glyph mx-auto mb-2" aria-hidden="true">词</div>
+            <h3 class="h6 fw-bold text-secondary mb-1">Chưa có từ vựng nào trong bài học này</h3>
+            <p class="small text-muted mb-0">Hãy sử dụng thanh tìm kiếm phía trên để thêm các từ vựng đầu tiên.</p>
+          </div>
+
+          <!-- Semantic Ordered List of Vocabularies -->
+          <ol id="editorVocabList" class="creator-vocab-list">
+            <!-- Dynamically populated rows -->
+          </ol>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Submit for Moderation Native Dialog Modal (Task 9D.3) -->
+  <dialog id="submitModerationModal" class="notes-dialog" aria-labelledby="submitModalTitle">
+    <div class="notes-modal-card">
+      <div class="notes-modal-header p-3 border-bottom d-flex align-items-center justify-content-between">
+        <h2 id="submitModalTitle" class="h6 fw-bold mb-0">Xác Nhận Nộp Bài Học Kiểm Duyệt</h2>
+        <button type="button" id="btnCancelSubmitModal" class="toast-close-btn" aria-label="Đóng cửa sổ xác nhận nộp bài">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="p-3">
+        <p class="text-secondary small mb-2">
+          Bạn có chắc chắn muốn nộp bài học sau vào hàng đợi kiểm duyệt không?
+        </p>
+
+        <div class="p-3 bg-light rounded border mb-3">
+          <div class="fw-bold text-dark mb-1" id="submitModalLessonTitle">--</div>
+          <div class="small text-secondary d-flex align-items-center gap-2">
+            <span>Trạng thái hiện tại:</span>
+            <span id="submitModalLessonStatus" class="badge-status badge-status-draft">Draft</span>
+          </div>
+        </div>
+
+        <div class="alert alert-warning py-2 px-3 small mb-0 d-flex align-items-start gap-2">
+          <span aria-hidden="true">⚠️</span>
+          <div>
+            <strong>Lưu ý:</strong> Sau khi nộp, trạng thái bài học sẽ chuyển thành <code>Pending</code> và <strong>toàn bộ quyền chỉnh sửa sẽ bị khóa</strong> cho đến khi Kiểm duyệt viên phê duyệt hoặc từ chối.
+          </div>
+        </div>
+
+        <div id="submitModalError" class="srs-field-error mt-2" role="alert"></div>
+      </div>
+
+      <div class="p-3 border-top bg-light d-flex align-items-center justify-content-end gap-2">
+        <button type="button" id="btnDismissSubmitModal" class="btn-chinese-secondary btn-sm">Hủy bỏ</button>
+        <button type="button" id="btnConfirmSubmitModeration" class="btn-chinese-primary btn-sm">
+          Nộp kiểm duyệt
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Global Toast Notification Container (WCAG 2.2 SC 4.1.3) -->
+  <div id="toastContainer" class="toast-container-custom" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Global Semantic Footer Landmark -->
+  <footer class="site-footer">
+    <div class="container-xl">
+      <div class="row align-items-center g-3">
+        <div class="col-md-6 text-center text-md-start">
+          <div class="fw-semibold text-dark mb-1">Hán Ngữ &amp; Bộ Thủ Tiếng Trung</div>
+          <div class="small">Phòng biên soạn giáo trình &bull; Creator Lesson Studio.</div>
+        </div>
+        <div class="col-md-6 text-center text-md-end">
+          <div class="small">Tuân thủ tiêu chuẩn tiếp cận W3C WCAG 2.2 Level AA &bull; Zero-Build Architecture</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Verified Bootstrap 5.3.3 JS Bundle with Authenticated SRI -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- Page Controller Module -->
+  <script type="module" src="js/pages/creator-lesson-editor-page.js"></script>
+
+</body>
+</html>

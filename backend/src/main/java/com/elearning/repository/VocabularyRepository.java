@@ -4,6 +4,7 @@ import com.elearning.entity.Vocabulary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -13,10 +14,10 @@ import java.util.Optional;
 /**
  * Spring Data JPA Repository for {@link Vocabulary} entity.
  * Supports exact lookup, toneless search (pinyin_raw), Hanzi filtering,
- * combined multi-criteria search, and pagination.
+ * combined multi-criteria search, dynamic specifications, and pagination.
  */
 @Repository
-public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
+public interface VocabularyRepository extends JpaRepository<Vocabulary, Long>, JpaSpecificationExecutor<Vocabulary> {
 
     /**
      * Finds a vocabulary by its unique composite business key (hanzi + pinyin_raw).
@@ -59,4 +60,15 @@ public interface VocabularyRepository extends JpaRepository<Vocabulary, Long> {
             "LOWER(v.pinyin) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(v.pinyinRaw) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<Vocabulary> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    /**
+     * Finds a vocabulary by ID with pessimistic write lock (SELECT ... FOR UPDATE).
+     * Serializes concurrent deletions and learning mutations to eliminate TOCTOU race conditions (R3.1A).
+     *
+     * @param vocabId the vocabulary ID
+     * @return Optional containing locked Vocabulary or empty if not found
+     */
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT v FROM Vocabulary v WHERE v.vocabId = :vocabId")
+    Optional<Vocabulary> findByIdWithLock(@Param("vocabId") Long vocabId);
 }

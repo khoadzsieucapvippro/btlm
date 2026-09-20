@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiểm Duyệt Chi Tiết Bài Học | Hán Ngữ &amp; Bộ Thủ</title>
+  <meta name="description" content="Khu vực kiểm tra và thẩm định chi tiết bài học dành cho Moderator và Admin: Xem thông tin bài học, kiểm tra danh sách từ vựng theo đúng thứ tự, nghe phát âm và tra cứu bộ thủ cấu thành.">
+
+  <!-- Verified Bootstrap 5.3.3 CSS via CDN with Authenticated Subresource Integrity (SRI) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Scholarly Review Brand Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>审</text></svg>">
+
+  <!-- Core Design Tokens & Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Runtime Environment Configuration -->
+  <script src="js/config.js"></script>
+</head>
+<body>
+
+  <!-- Accessible Skip Link (WCAG 2.2 SC 2.4.1) -->
+  <a href="#mainContent" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Global Header & Navigation Landmark -->
+  <header class="site-header">
+    <div class="container-xl">
+      <nav class="navbar navbar-expand-lg py-2" aria-label="Điều hướng chính của trang">
+        <!-- Brand identity -->
+        <a class="navbar-brand-custom" href="index.html">
+          <span class="brand-seal-mark" aria-hidden="true">字</span>
+          <span>Hán Ngữ &amp; Bộ Thủ</span>
+        </a>
+
+        <!-- Mobile Navigation Toggle -->
+        <button class="navbar-toggler border-0 p-2" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavMenu" aria-controls="primaryNavMenu" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="primaryNavMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+            <li class="nav-item">
+              <a class="nav-link-custom" href="index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="radicals.html">214 Bộ thủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="vocabulary.html">Từ vựng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="lessons.html">Bài học</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="srs-review.html">Ôn tập SRS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom active" href="moderator-queue.html" aria-current="page">Hàng đợi duyệt</a>
+            </li>
+          </ul>
+
+          <!-- User Session / Navigation Actions (Authoritatively rendered by nav.js) -->
+          <div id="navAuthContainer" class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <a href="login.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Đăng nhập
+            </a>
+            <a href="register.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Bắt đầu học
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent" class="py-4 py-md-5">
+    <div class="container-xl creator-studio-wrapper">
+
+      <!-- Breadcrumbs Landmark -->
+      <nav aria-label="Đường dẫn điều hướng" class="mb-3">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Trang chủ</a></li>
+          <li class="breadcrumb-item"><a href="moderator-queue.html" class="text-decoration-none">Hàng đợi kiểm duyệt</a></li>
+          <li class="breadcrumb-item active" aria-current="page" id="breadcrumbLessonTitle">Kiểm duyệt bài học</li>
+        </ol>
+      </nav>
+
+      <!-- Return Navigation Action -->
+      <div class="mb-4">
+        <a href="moderator-queue.html" class="btn btn-sm btn-chinese-secondary d-inline-flex align-items-center gap-2" id="backToQueueBtn">
+          <span aria-hidden="true">&larr;</span>
+          <span>Quay lại hàng đợi kiểm duyệt</span>
+        </a>
+      </div>
+
+      <!-- Role Guard Message Container (Shown if unauthorized) -->
+      <div id="moderatorAuthGuardContainer" class="d-none mb-4">
+        <div class="creator-panel-card text-center py-5">
+          <div class="state-error-icon mx-auto mb-3" aria-hidden="true">&#9888;</div>
+          <h2 class="h5 fw-bold text-dark mb-2">Yêu Cầu Quyền Kiểm Duyệt (Moderator)</h2>
+          <p class="text-secondary small mb-4" id="moderatorAuthGuardMessage">
+            Bạn cần đăng nhập với vai trò Kiểm duyệt viên (Moderator) hoặc Quản trị viên (Admin) để thực hiện kiểm tra bài học.
+          </p>
+          <a href="login.html?redirect=moderator-queue.html" class="btn-chinese-primary">Đăng nhập tài khoản</a>
+        </div>
+      </div>
+
+      <!-- Main Review Workspace Landmark -->
+      <section id="moderatorReviewSection" aria-labelledby="reviewLessonTitle">
+        
+        <!-- Three-State Container for Initial Fetch / Errors / Stale Queue -->
+        <div id="reviewStateContainer" class="mb-4">
+          <!-- Populated dynamically: Loading Spinner, Error Alert, or Stale Alert -->
+        </div>
+
+        <!-- Lesson Header & Metadata Card (Hidden during loading/error) -->
+        <div id="reviewLessonHeaderCard" class="creator-panel-card mb-4 d-none">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 pb-3 border-bottom mb-3">
+            <div>
+              <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                <span class="badge bg-secondary-subtle text-secondary border px-2 py-1" id="reviewLessonIdBadge">Bài học #...</span>
+                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1" id="reviewLessonStatusBadge">Chờ duyệt (Pending)</span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1" id="reviewLessonVocabCountBadge">0 từ vựng</span>
+              </div>
+              <h1 class="h3 fw-bold text-dark mb-1" id="reviewLessonTitle">Đang tải bài học...</h1>
+            </div>
+
+            <!-- Moderation Action Buttons in Header -->
+            <div id="moderationActionBar" class="d-flex align-items-center gap-2 flex-wrap">
+              <button type="button" class="btn btn-outline-danger d-inline-flex align-items-center gap-2" id="btnOpenRejectModal">
+                <span aria-hidden="true">&#10005;</span>
+                <span>Từ chối</span>
+              </button>
+              <button type="button" class="btn btn-chinese-primary d-inline-flex align-items-center gap-2" id="btnOpenApproveModal">
+                <span aria-hidden="true">&#10003;</span>
+                <span>Phê duyệt</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Moderation Decision Result / Status Banner -->
+          <div id="moderationStatusAlert" class="alert d-none mt-2 mb-3" role="alert"></div>
+
+          <!-- Metadata Information Grid -->
+          <div class="row g-3 small text-secondary">
+            <div class="col-sm-6 col-md-4">
+              <span class="fw-semibold text-dark d-block">Ngày tạo bài học:</span>
+              <span id="reviewLessonCreatedAt">--</span>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <span class="fw-semibold text-dark d-block">Cập nhật lần cuối:</span>
+              <span id="reviewLessonUpdatedAt">--</span>
+            </div>
+            <div class="col-sm-12 col-md-4">
+              <span class="fw-semibold text-dark d-block">Thông tin tác giả:</span>
+              <span class="text-muted fst-italic" id="reviewLessonAuthorNote">Không khả dụng trong hợp đồng chi tiết hiện tại</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vocabulary Inspection List Section -->
+        <div id="reviewVocabSection" class="d-none">
+          <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2 mb-3">
+            <div>
+              <h2 class="h5 fw-bold text-dark mb-1">Danh Sách Từ Vựng Cấu Thành</h2>
+              <p class="text-secondary small mb-0">
+                Thứ tự các mục được sắp xếp nguyên trạng theo chỉ mục hiển thị (orderIndex) của bài học.
+              </p>
+            </div>
+            <div class="text-secondary small" id="reviewVocabSummaryText">
+              <!-- e.g. Tổng cộng 5 mục từ vựng -->
+            </div>
+          </div>
+
+          <!-- Ordered list of vocabulary items -->
+          <ol class="list-unstyled d-flex flex-column gap-3 mb-0" id="reviewVocabList" aria-label="Danh sách từ vựng cấu thành">
+            <!-- Dynamically and safely populated by moderator-review-page.js -->
+          </ol>
+
+          <!-- Bottom Action Bar (Convenience after reviewing full vocabulary list) -->
+          <div id="reviewBottomActionBar" class="creator-panel-card mt-4 d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
+            <div class="small text-secondary">
+              Hoàn tất thẩm định nội dung? Thực hiện phê duyệt hoặc từ chối bài học này.
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <button type="button" class="btn btn-outline-danger d-inline-flex align-items-center gap-2" id="btnBottomRejectModal">
+                <span aria-hidden="true">&#10005;</span>
+                <span>Từ chối</span>
+              </button>
+              <button type="button" class="btn btn-chinese-primary d-inline-flex align-items-center gap-2" id="btnBottomApproveModal">
+                <span aria-hidden="true">&#10003;</span>
+                <span>Phê duyệt</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODERATOR APPROVE MODAL (TASK 9E.3)                               -->
+  <!-- ================================================================= -->
+  <dialog id="approveModal" class="moderator-modal" aria-labelledby="approveModalTitle" aria-modal="true">
+    <div class="moderator-modal-header">
+      <h2 class="h5 mb-0 fw-bold text-dark" id="approveModalTitle">Xác Nhận Phê Duyệt Bài Học</h2>
+      <button type="button" class="btn-close" id="btnCloseApproveModal" aria-label="Đóng hộp thoại phê duyệt"></button>
+    </div>
+    <div class="moderator-modal-body">
+      <div class="alert alert-success d-flex align-items-center gap-2 py-2 px-3 mb-3 small" role="status">
+        <span aria-hidden="true">&#9432;</span>
+        <span>Bài học sẽ chuyển sang trạng thái <strong>Đã duyệt (Approved)</strong> và hiển thị công khai cho tất cả người học.</span>
+      </div>
+      <p class="small text-secondary mb-3">
+        Bạn có thể để lại ghi chú kiểm duyệt (không bắt buộc, tối đa 500 ký tự):
+      </p>
+      <div class="mb-2">
+        <label for="approveNoteInput" class="form-label small fw-semibold text-dark">Ghi chú phê duyệt (tùy chọn):</label>
+        <textarea id="approveNoteInput" class="form-control form-control-sm" rows="3" maxlength="500" placeholder="Nhập ghi chú hoặc phản hồi động viên tác giả..." aria-describedby="approveNoteCount"></textarea>
+        <div class="d-flex justify-content-between align-items-center mt-1">
+          <span class="small text-muted" id="approveNoteHelp">Tối đa 500 ký tự</span>
+          <span class="small text-secondary" id="approveNoteCount" aria-live="polite">0 / 500</span>
+        </div>
+      </div>
+    </div>
+    <div class="moderator-modal-footer">
+      <button type="button" class="btn btn-chinese-secondary btn-sm" id="btnCancelApprove">Hủy bỏ</button>
+      <button type="button" class="btn btn-chinese-primary btn-sm" id="btnConfirmApprove">
+        <span id="btnConfirmApproveText">Xác nhận phê duyệt</span>
+      </button>
+    </div>
+  </dialog>
+
+  <!-- ================================================================= -->
+  <!-- MODERATOR REJECT MODAL (TASK 9E.3)                                -->
+  <!-- ================================================================= -->
+  <dialog id="rejectModal" class="moderator-modal" aria-labelledby="rejectModalTitle" aria-modal="true">
+    <div class="moderator-modal-header">
+      <h2 class="h5 mb-0 fw-bold text-dark" id="rejectModalTitle">Từ Chối Bài Học</h2>
+      <button type="button" class="btn-close" id="btnCloseRejectModal" aria-label="Đóng hộp thoại từ chối"></button>
+    </div>
+    <div class="moderator-modal-body">
+      <div class="alert alert-warning d-flex align-items-center gap-2 py-2 px-3 mb-3 small" role="status">
+        <span aria-hidden="true">&#9888;</span>
+        <span>Bài học sẽ chuyển sang trạng thái <strong>Bị từ chối (Rejected)</strong>. Tác giả sẽ có thể chỉnh sửa và nộp lại sau khi khắc phục.</span>
+      </div>
+      
+      <div class="mb-3">
+        <label for="rejectReasonInput" class="form-label small fw-semibold text-dark">
+          Lý do từ chối <span class="text-danger">*</span>:
+        </label>
+        <textarea id="rejectReasonInput" class="form-control form-control-sm" rows="4" maxlength="500" required aria-required="true" placeholder="Nêu rõ lý do từ chối để tác giả sửa đổi (bắt buộc)..." aria-describedby="rejectReasonCount rejectReasonError"></textarea>
+        <div class="d-flex justify-content-between align-items-center mt-1">
+          <div id="rejectReasonError" class="text-danger small d-none" role="alert">Vui lòng nhập lý do từ chối.</div>
+          <span class="small text-secondary ms-auto" id="rejectReasonCount" aria-live="polite">0 / 500</span>
+        </div>
+      </div>
+
+      <fieldset class="border rounded p-3 bg-light">
+        <legend class="float-none w-auto px-2 fs-6 fw-semibold text-dark mb-2">
+          Các trường cần sửa (tùy chọn):
+        </legend>
+        <div class="flagged-fields-grid" id="flaggedFieldsContainer">
+          <label class="flagged-field-label">
+            <input type="checkbox" name="flaggedFields" value="title" class="form-check-input mt-0">
+            <span>Tiêu đề bài học</span>
+          </label>
+          <label class="flagged-field-label">
+            <input type="checkbox" name="flaggedFields" value="pinyin" class="form-check-input mt-0">
+            <span>Phiên âm Pinyin</span>
+          </label>
+          <label class="flagged-field-label">
+            <input type="checkbox" name="flaggedFields" value="meaningVi" class="form-check-input mt-0">
+            <span>Nghĩa tiếng Việt</span>
+          </label>
+          <label class="flagged-field-label">
+            <input type="checkbox" name="flaggedFields" value="exampleSentence" class="form-check-input mt-0">
+            <span>Câu ví dụ / Dịch</span>
+          </label>
+          <label class="flagged-field-label">
+            <input type="checkbox" name="flaggedFields" value="audioUrl" class="form-check-input mt-0">
+            <span>Phát âm / Audio</span>
+          </label>
+          <label class="flagged-field-label">
+            <input type="checkbox" name="flaggedFields" value="orderIndex" class="form-check-input mt-0">
+            <span>Thứ tự từ vựng</span>
+          </label>
+        </div>
+      </fieldset>
+    </div>
+    <div class="moderator-modal-footer">
+      <button type="button" class="btn btn-chinese-secondary btn-sm" id="btnCancelReject">Hủy bỏ</button>
+      <button type="button" class="btn btn-danger btn-sm" id="btnConfirmReject">
+        <span id="btnConfirmRejectText">Xác nhận từ chối</span>
+      </button>
+    </div>
+  </dialog>
+
+  <!-- Global Footer Landmark -->
+  <footer class="site-footer mt-auto py-4">
+    <div class="container-xl text-center">
+      <p class="text-muted small mb-0">
+        &copy; 2026 Hán Ngữ &amp; Bộ Thủ. Nền tảng học chữ Hán trực quan &amp; ôn tập thông minh SRS.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Page Initialization Entrypoint -->
+  <script type="module" src="js/pages/moderator-review-page.js"></script>
+</body>
+</html>

@@ -41,6 +41,9 @@ public class Account {
     @Column(name = "status", nullable = false, length = 20)
     private String status = "Active";
 
+    @Column(name = "authorization_version", nullable = false)
+    private Long authorizationVersion = 1L;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -72,6 +75,9 @@ public class Account {
         }
         if (this.status == null) {
             this.status = "Active";
+        }
+        if (this.authorizationVersion == null) {
+            this.authorizationVersion = 1L;
         }
     }
 
@@ -129,6 +135,21 @@ public class Account {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getAuthorizationVersion() {
+        return authorizationVersion;
+    }
+
+    public void setAuthorizationVersion(Long authorizationVersion) {
+        this.authorizationVersion = authorizationVersion;
+    }
+
+    public void incrementAuthorizationVersion() {
+        if (this.authorizationVersion == null) {
+            this.authorizationVersion = 1L;
+        }
+        this.authorizationVersion++;
     }
 
     public LocalDateTime getCreatedAt() {

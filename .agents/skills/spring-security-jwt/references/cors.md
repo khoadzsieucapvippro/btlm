@@ -10,15 +10,18 @@
 
 ## 3. Cấu hình chuẩn trong Spring Security 6
 - Trong `SecurityFilterChain`: Thêm `http.cors(Customizer.withDefaults());`
-- Cấu hình Bean `CorsConfigurationSource`:
+- Cấu hình Bean `CorsConfigurationSource` (như trong `SecurityConfig.java:97-124`):
 ```java
 @Bean
-public CorsConfigurationSource corsConfigurationSource() {
+public CorsConfigurationSource corsConfigurationSource(
+        @Value("${app.cors.allowed-origins:http://localhost:5500,http://127.0.0.1:5500,http://localhost:3000,http://127.0.0.1:3000}")
+        List<String> allowedOrigins) {
     CorsConfiguration configuration = new CorsConfiguration();
-    // Thay '*' bằng list cụ thể nếu có cookie/credentials
-    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5500", "http://127.0.0.1:5500"));
+    // Mặc định development hỗ trợ 5500 và 3000; production cấu hình qua biến môi trường APP_CORS_ALLOWED_ORIGINS
+    configuration.setAllowedOrigins(allowedOrigins);
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+    configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "Origin", "X-Requested-With"));
+    configuration.setExposedHeaders(Arrays.asList("Authorization"));
     configuration.setAllowCredentials(true);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);

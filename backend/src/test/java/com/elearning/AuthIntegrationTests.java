@@ -156,9 +156,9 @@ class AuthIntegrationTests {
         // ---------------------------------------------------------------------
         // 6. JWT FILTER HANDOFF (Token accepted by Spring Security on protected route)
         // ---------------------------------------------------------------------
-        // Without token -> 403 Forbidden
+        // Without token -> 401 Unauthorized (standard H-01 contract)
         mockMvc.perform(get("/api/v1/protected/ping"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isUnauthorized());
 
         // With valid token -> 200 OK
         mockMvc.perform(get("/api/v1/protected/ping")

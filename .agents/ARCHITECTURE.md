@@ -1,7 +1,6 @@
 # ARCHITECTURE — THIẾT KẾ KIẾN TRÚC MỤC TIÊU (TARGET ARCHITECTURE)
 
-> **Phạm vi tài liệu:** Thiết kế kiến trúc chuẩn mực cho toàn bộ hệ thống.  
-> **Trạng thái triển khai hiện tại:** Phase 0-3 COMPLETED, Phase 4 IN PROGRESS (Module 4A Task 4A.1 COMPLETED, Task 4A.2 CURRENT NEXT TASK; 201/201 tests PASS).  
+> **Trạng thái triển khai hiện tại:** **Phase 0–8, Module 8D & Hardening Remediation Tasks R1 → R3.11 & Final Remediation (DEC-42) COMPLETED** (Toàn bộ Backend, 15 audit remediation items, 8 phân hệ Module 8D, chuỗi kiểm toán & gia cố ranh giới R1..R3.10, chốt chặn chất lượng R3.11 và đợt kiểm thử đối kháng củng cố bảo mật cuối cùng DEC-42 đã hoàn thành, **`1101/1101 tests PASS, Failures: 0, Errors: 0, Skipped: 0`** trên Testcontainers MySQL 8.4; Backend Audit Status: `SEALED & APPROVED FOR PHASE 9 FRONTEND INTEGRATION` - DEC-41, DEC-42). Chính thức chuyển giao triển khai **Phase 9 — Frontend UI & Client API Integration** (Module 9A — Task 9A.1).  
 
 ---
 
@@ -31,21 +30,30 @@ MySQL Database (Schema controlled 100% by Flyway Migrations)
 ## 2. NGUYÊN TẮC THIẾT KẾ CHI TIẾT TỪNG THÀNH PHẦN
 
 ### 2.1. Client / Frontend & Tích hợp API
-- **Công nghệ:** HTML, CSS, JavaScript thuần (Vanilla JS). Không tự ý sử dụng các SPA frameworks (React, Vue, Angular, Next.js, Nuxt). Các thư viện tĩnh hiện có chỉ được sử dụng khi được lựa chọn cụ thể cho lần triển khai mới.
-- **Tích hợp:** Sử dụng module `api.js` đóng vai trò HTTP client tập trung (`fetch()`).
-- **Xử lý xác thực:** Tự động đính kèm header `Authorization: Bearer <token>` nếu có token trong `localStorage`. Tự động xóa token và điều hướng đến `login.html` khi nhận phản hồi HTTP `401 Unauthorized`.
+- **Công nghệ:** HTML5 ngữ nghĩa, CSS3 với hệ thống design tokens, JavaScript thuần (Vanilla JS ES6+ modular, native `fetch()`, zero-build complexity). Không sử dụng các SPA frameworks (React, Vue, Angular, Next.js, Nuxt). Bootstrap 5.3 CDN được sử dụng giới hạn như công cụ tiện ích layout grid và UI primitives (modal, toast) có kiểm tra SRI; không quyết định nhận diện hình ảnh của sản phẩm.
+- **Cấu trúc module 4 tầng canonical:**
+  - `frontend/js/api/api.js`: HTTP client tập trung (`fetch()`), tự động unwrap `ApiResponse<T>`, phân tích lỗi `parseFieldErrors()`, timeout bằng `AbortController`, backoff khi 429, retry cho các request GET idempotent.
+  - `frontend/js/auth/auth-state.js`: Quản lý phiên đăng nhập và vai trò người dùng phía client.
+  - `frontend/js/ui/ui.js` & `frontend/js/ui/security.js`: UI primitives chia sẻ (3-state UI: loading, empty, error; toasts, modals) và các bộ dựng DOM an toàn (`textContent`, sanitization, chống XSS).
+  - `frontend/js/pages/*-page.js`: Controller cho từng trang HTML độc lập.
+  - `frontend/js/app.js`: Khởi tạo và kết nối shell ứng dụng.
+- **Ranh giới bảo mật Client Storage (OWASP Boundary):**
+  - `localStorage` được xác định rõ là **untrusted client-side convenience storage**, không phải vùng lưu trữ bảo mật (security boundary).
+  - Việc kiểm tra vai trò người dùng ở frontend (`roles.includes('Admin')` - không có tiền tố `ROLE_`) chỉ phục vụ điều hướng và hiển thị giao diện (UX).
+  - Ranh giới xác thực và phân quyền duy nhất có giá trị bảo mật thuộc về backend Spring Security (`@PreAuthorize`, `SecurityFilterChain`, `authorization_version`).
+- **Xử lý phiên đăng nhập:** Tự động đính kèm header `Authorization: Bearer <token>` nếu có token trong `localStorage`. Tự động xóa token và điều hướng đến `login.html` khi nhận phản hồi HTTP `401 Unauthorized` hoặc khi token không hợp lệ.
 - **Quản lý trạng thái UI:** Bắt buộc mọi màn hình dữ liệu phải xử lý đầy đủ 3 trạng thái:
   1. *Loading state:* Hiển thị spinner/chờ khi đang fetch dữ liệu.
   2. *Empty state:* Hiển thị thông báo thân thiện khi danh sách rỗng.
   3. *Error state:* Hiển thị thông báo lỗi rõ ràng và nút thử lại khi call API thất bại.
-- **Bảo mật giao diện:** Escape toàn bộ dữ liệu do người dùng nhập trước khi đưa vào DOM để chống tấn công XSS.
+- **Bảo mật giao diện DOM:** Cấm sử dụng `innerHTML` không kiểm soát với dữ liệu từ người dùng hoặc external input; bắt buộc sử dụng `textContent`, `document.createElement`, hoặc các helper safe DOM từ `frontend/js/ui/security.js`.
 
 ### 2.2. REST API & DTO Boundaries
 - **Phân tách ranh giới tuyệt đối (DTO Isolation):** 
   - Toàn bộ dữ liệu đi vào Controller phải thông qua **Request DTOs** (ví dụ: `LoginRequest`, `RegisterRequest`, `PersonalNoteRequest`).
-  - Toàn bộ dữ liệu trả về cho client phải thông qua **Response DTOs** (ví dụ: `RadicalDto`, `VocabularyDto`, `LessonDto`).
+  - Toàn bộ dữ liệu trả về cho client phải thông qua **Response DTOs** (ví dụ: `RadicalResponse`, `VocabularyResponse`, `LessonDetailResponse`).
   - **Tuyệt đối cấm** trả trực tiếp JPA Entity ra ngoài API để tránh rò rỉ cấu trúc database, tránh lỗi `LazyInitializationException` và vòng lặp tuần hoàn Jackson (infinite circular reference).
-- **Chuẩn phong bì phản hồi (Unified ApiResponse Envelope):** Mọi phản hồi API đều có cấu trúc:
+- **Chuẩn phong bì phản hồi (Unified ApiResponse Envelope):** Hầu hết các phản hồi API nghiệp vụ sử dụng phong bì `ApiResponse<T>`. Các phản hồi đặc thù theo từng endpoint được ưu tiên áp dụng. Các phản hồi HTTP 204 No Content không chứa body và do đó không chứa `ApiResponse<T>`:
   ```json
   {
     "code": "SUCCESS",
@@ -71,14 +79,14 @@ MySQL Database (Schema controlled 100% by Flyway Migrations)
   ```
 
 ### 2.3. Spring MVC Controller Layer
-- Chỉ chịu trách nhiệm tiếp nhận HTTP request, ánh xạ URL, validate payload qua `@Valid`, điều phối Service và trả về `ResponseEntity<ApiResponse<T>>`.
+- Chỉ chịu trách nhiệm tiếp nhận HTTP request, ánh xạ URL, validate payload qua `@Valid`, điều phối Service và trả về `ResponseEntity<ApiResponse<T>>` (hoặc `ResponseEntity.noContent().build()` không body cho HTTP 204).
 - Không chứa nghiệp vụ tính toán, không truy cập database trực tiếp.
 - Thống nhất quy ước tiền tố đường dẫn: `/api/v1/...` trên toàn bộ hệ thống.
 
 ### 2.4. Validation & Exception Handling
 - **Input Validation:** Áp dụng Bean Validation (Jakarta Validation: `@NotBlank`, `@Size`, `@Pattern`, `@NotNull`, v.v.) trực tiếp trên Request DTOs.
 - **Tập trung xử lý lỗi (@RestControllerAdvice):** `GlobalExceptionHandler` bắt và chuẩn hóa toàn bộ lỗi thành định dạng `ApiResponse` thống nhất:
-  - `MethodArgumentNotValidException` / `BindException` -> HTTP 400 (`code: "VALIDATION_ERROR"`, `errors: [{field, message}]`).
+  - `MethodArgumentNotValidException` / `BindException` -> HTTP 400 (`code: "VALIDATION_ERROR"`, `errors: ["${field}: ${message}", ...]` — `List<String>`, mỗi phần tử là chuỗi `"tên_field: thông_báo_lỗi"`).
   - `BusinessException(ErrorCode)` -> HTTP tương ứng (400, 404, 409, 422).
   - `AccessDeniedException` -> HTTP 403 (`code: "FORBIDDEN"`).
   - `BadCredentialsException` -> HTTP 401 (`code: "UNAUTHORIZED"`).

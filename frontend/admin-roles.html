@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Trị Phân Quyền Vai Trò — Hệ Thống Học Tiếng Trung</title>
+  <meta name="description" content="Giao diện quản trị danh mục vai trò hệ thống và phân quyền vai trò cho người dùng dành riêng cho Quản trị viên (Admin).">
+
+  <!-- Verified Bootstrap 5.3.3 CSS via CDN with Authenticated Subresource Integrity (SRI) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+
+  <!-- Core Design Tokens & Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Runtime Environment Configuration -->
+  <script src="js/config.js"></script>
+</head>
+<body class="bg-chinese-surface text-chinese-text">
+
+  <!-- Accessibility Skip Link -->
+  <a href="#mainContent" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Global Application Header & Navbar -->
+  <header class="navbar-wrapper sticky-top border-bottom">
+    <div class="container-xl">
+      <nav class="navbar navbar-expand-lg py-2" aria-label="Điều hướng chính">
+        <!-- Brand Logo & Home Link -->
+        <a class="navbar-brand fw-bold text-chinese-red d-flex align-items-center gap-2" href="index.html">
+          <span class="fs-4" aria-hidden="true">🀄</span>
+          <span class="tracking-tight">Học Tiếng Trung</span>
+        </a>
+
+        <!-- Mobile Toggler -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavMenu" aria-controls="primaryNavMenu" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="primaryNavMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+            <li class="nav-item">
+              <a class="nav-link-custom" href="index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="radicals.html">214 Bộ thủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="vocabulary.html">Từ vựng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="lessons.html">Bài học</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="srs-review.html">Ôn tập SRS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom active" href="admin-roles.html" aria-current="page">Quản trị</a>
+            </li>
+          </ul>
+
+          <!-- User Session / Navigation Actions (Authoritatively rendered by nav.js) -->
+          <div id="navAuthContainer" class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <a href="login.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Đăng nhập
+            </a>
+            <a href="register.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Bắt đầu học
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent" class="py-4 py-md-5">
+    <div class="container-xl creator-studio-wrapper">
+
+      <!-- Breadcrumbs Landmark -->
+      <nav aria-label="Đường dẫn điều hướng" class="mb-3">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Trang chủ</a></li>
+          <li class="breadcrumb-item"><a href="admin-accounts.html" class="text-decoration-none">Quản trị</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Phân quyền vai trò</li>
+        </ol>
+      </nav>
+
+      <!-- Admin Section Sub-navigation Tabs -->
+      <nav class="moderator-nav-tabs" aria-label="Phân khu quản trị hệ thống">
+        <a href="admin-accounts.html" class="moderator-nav-tab" id="tabAdminAccounts">
+          Quản trị tài khoản
+        </a>
+        <a href="admin-roles.html" class="moderator-nav-tab active" id="tabAdminRoles" aria-current="page">
+          Phân quyền vai trò
+        </a>
+        <a href="admin-radicals.html" class="moderator-nav-tab" id="tabAdminRadicals">
+          Quản trị bộ thủ
+        </a>
+        <a href="admin-vocabulary.html" class="moderator-nav-tab" id="tabAdminVocabulary">
+          Quản trị từ vựng
+        </a>
+        <a href="admin-lessons.html" class="moderator-nav-tab" id="tabAdminLessons">
+          Giám sát bài học
+        </a>
+      </nav>
+
+      <!-- Role Guard Message Container (Shown if unauthorized) -->
+      <div id="adminAuthGuardContainer" class="d-none mb-4">
+        <div class="creator-panel-card text-center py-5">
+          <div class="state-error-icon mx-auto mb-3" aria-hidden="true">&#9888;</div>
+          <h2 class="h5 fw-bold text-dark mb-2">Yêu Cầu Quyền Quản Trị Viên (Admin)</h2>
+          <p class="text-secondary small mb-4" id="adminAuthGuardMessage">
+            Bạn cần đăng nhập với vai trò Quản trị viên (Admin) để sử dụng trang phân quyền vai trò hệ thống.
+          </p>
+          <a href="login.html?redirect=admin-roles.html" class="btn-chinese-primary">Đăng nhập tài khoản Admin</a>
+        </div>
+      </div>
+
+      <!-- Admin Roles Workspace Section -->
+      <section id="adminRolesWorkspaceSection" aria-labelledby="rolesHeading">
+        <!-- Page Header & Actions Bar -->
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+          <div>
+            <h1 id="rolesHeading" class="h3 fw-bold text-dark mb-1">Quản Trị Phân Quyền Vai Trò</h1>
+            <p class="text-secondary small mb-0" id="rolesSubHeading">
+              Khám phá danh mục vai trò hệ thống, gán hoặc thu hồi vai trò cho người dùng với cơ chế bảo vệ tự thân (POL-8D-02).
+            </p>
+          </div>
+
+          <!-- Quick Controls: Result Count & Refresh Button -->
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" id="btnRefreshRoleCatalog" class="btn btn-chinese-secondary btn-sm" title="Tải lại danh mục vai trò từ máy chủ">
+              <span aria-hidden="true">&#8635;</span> Tải lại vai trò
+            </button>
+            <span id="accountResultCountBadge" class="badge bg-secondary py-2 px-3 fw-normal" aria-live="polite">
+              Đang tải...
+            </span>
+          </div>
+        </div>
+
+        <!-- 1. System Role Catalog Overview Card -->
+        <div class="creator-panel-card mb-4" id="roleCatalogCard">
+          <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-2">
+            <h2 class="h6 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+              <span aria-hidden="true">🏷️</span> Danh Mục Vai Trò Hệ Thống (Role Catalog)
+            </h2>
+            <span class="badge bg-light text-secondary border small">Authoritative Backend Data</span>
+          </div>
+          <div id="roleCatalogContainer" class="row g-3" aria-live="polite">
+            <!-- Rendered dynamically by JavaScript -->
+            <div class="col-12 text-center text-muted py-3 small">
+              Đang nạp danh mục vai trò từ máy chủ...
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Account Search & Selection Card -->
+        <div class="creator-panel-card mb-4" id="accountToolbarCard">
+          <div class="row g-3 align-items-end">
+            <!-- Search Input -->
+            <div class="col-12 col-md-8 col-lg-6">
+              <label for="accountSearchInput" class="form-label small fw-semibold text-secondary mb-1">
+                Tìm kiếm tài khoản
+              </label>
+              <div class="input-group">
+                <input type="text" id="accountSearchInput" class="form-control" placeholder="Tìm theo email, SĐT hoặc họ tên..." aria-label="Tìm kiếm theo email, số điện thoại hoặc họ tên">
+                <button type="button" id="btnAccountSearch" class="btn btn-chinese-primary">
+                  Tìm kiếm
+                </button>
+                <button type="button" id="btnAccountClearSearch" class="btn btn-outline-secondary" title="Xóa bộ lọc tìm kiếm">
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <!-- Page Size Dropdown -->
+            <div class="col-6 col-md-4 col-lg-3 ms-auto">
+              <label for="pageSizeSelect" class="form-label small fw-semibold text-secondary mb-1">
+                Số bản ghi / trang
+              </label>
+              <select id="pageSizeSelect" class="form-select" aria-label="Số bản ghi hiển thị trên mỗi trang">
+                <option value="10">10 tài khoản</option>
+                <option value="20" selected>20 tài khoản</option>
+                <option value="50">50 tài khoản</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback & Three-State UI Container (Loading / Empty / Error) -->
+        <div id="accountStateContainer" class="mb-4" aria-live="polite"></div>
+
+        <!-- 3. Accounts Table Container -->
+        <div id="accountsTableContainer" class="creator-panel-card p-0 overflow-hidden mb-4 d-none">
+          <div class="table-responsive">
+            <table class="table align-middle mb-0" id="accountsTable" aria-describedby="rolesHeading">
+              <caption class="visually-hidden">Danh sách tài khoản người dùng và vai trò hệ thống</caption>
+              <thead class="table-light text-secondary small text-uppercase">
+                <tr>
+                  <th scope="col" class="py-3 px-3 text-center" style="width: 80px;">ID</th>
+                  <th scope="col" class="py-3 px-3" style="min-width: 200px;">Email / SĐT</th>
+                  <th scope="col" class="py-3 px-3" style="min-width: 160px;">Họ và tên</th>
+                  <th scope="col" class="py-3 px-3" style="min-width: 220px;">Vai trò hiện tại</th>
+                  <th scope="col" class="py-3 px-2 text-center" style="width: 130px;">Trạng thái</th>
+                  <th scope="col" class="py-3 px-3 text-center" style="width: 150px;">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="accountsTableBody">
+                <!-- Populated dynamically via safe DOM creation -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. Server Pagination Container -->
+        <nav id="accountsPaginationNav" class="d-flex flex-wrap align-items-center justify-content-between gap-3 d-none mb-5" aria-label="Phân trang danh sách tài khoản">
+          <div class="text-secondary small" id="accountsPaginationSummary">
+            <!-- e.g. "Hiển thị 1 - 20 trên 65 tài khoản" -->
+          </div>
+          <ul class="pagination pagination-sm mb-0 gap-1" id="accountsPaginationList">
+            <!-- Rendered dynamically -->
+          </ul>
+        </nav>
+
+      </section>
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       ROLE ASSIGNMENT MODAL DIALOG (Native HTML5 <dialog> with WAI-ARIA)
+       ========================================================================= -->
+  <dialog id="roleAssignmentModal" class="notes-dialog" aria-labelledby="roleModalTitle" aria-describedby="roleModalDesc">
+    <div class="notes-dialog-content">
+      <!-- Modal Header -->
+      <div class="d-flex align-items-center justify-content-between pb-3 border-bottom mb-3">
+        <h2 id="roleModalTitle" class="h5 fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+          <span aria-hidden="true">🛡️</span> Phân Quyền Vai Trò Tài Khoản
+        </h2>
+        <button type="button" id="btnCloseRoleModal" class="btn-close" aria-label="Đóng hộp thoại phân quyền"></button>
+      </div>
+
+      <!-- Modal Description & Target Identity Preview -->
+      <p id="roleModalDesc" class="text-secondary small mb-3">
+        Cập nhật toàn bộ tập hợp vai trò được gán cho tài khoản người dùng dưới đây.
+      </p>
+
+      <div class="p-3 bg-light rounded-2 border mb-3">
+        <div class="row g-2 small">
+          <div class="col-sm-6">
+            <span class="text-muted d-block">Tài khoản:</span>
+            <strong id="modalTargetEmail" class="text-dark text-break">—</strong>
+          </div>
+          <div class="col-sm-6">
+            <span class="text-muted d-block">Họ và tên:</span>
+            <span id="modalTargetFullName" class="text-dark">—</span>
+          </div>
+          <div class="col-12 mt-2 pt-2 border-top d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+              <span class="text-muted me-1">Mã định danh:</span>
+              <code id="modalTargetAccountId" class="fw-bold">#—</code>
+            </div>
+            <div id="modalTargetSelfBadge" class="d-none">
+              <span class="badge bg-secondary small">Tài khoản Admin của bạn</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current Server Roles Preview -->
+      <div class="mb-3">
+        <span class="form-label small fw-semibold text-secondary d-block mb-1">
+          Vai trò hiện tại phía máy chủ:
+        </span>
+        <div id="modalCurrentRolesContainer" class="d-flex flex-wrap gap-1 align-items-center">
+          <!-- Populated dynamically with badges -->
+        </div>
+      </div>
+
+      <!-- Role Selection Form -->
+      <form id="roleAssignmentForm" novalidate>
+        <fieldset class="mb-3 border rounded-2 p-3 bg-white">
+          <legend class="float-none w-auto px-2 fs-6 fw-bold text-dark mb-2">
+            Chọn tập hợp vai trò mới:
+          </legend>
+
+          <!-- Checkboxes Container -->
+          <div id="roleCheckboxesContainer" class="d-flex flex-column gap-2" role="group" aria-label="Danh sách vai trò lựa chọn">
+            <!-- Dynamically populated checkboxes -->
+          </div>
+
+          <!-- Self-Demotion Defense Note (POL-8D-02) -->
+          <div id="modalSelfDemotionNotice" class="alert alert-warning py-2 px-3 small mt-3 mb-0 d-none" role="note">
+            <div class="d-flex align-items-start gap-2">
+              <span aria-hidden="true" class="fs-6">&#9888;</span>
+              <div>
+                <strong>Chính sách bảo vệ tự thân (POL-8D-02):</strong>
+                <span>Bạn không thể tự tước quyền Quản trị viên (Admin) của chính mình. Vai trò Admin được cố định, nhưng bạn vẫn có thể gán hoặc thu hồi các vai trò khác.</span>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Consequence Notice (DEC-42: Server-Side Token Invalidation) -->
+        <div class="alert alert-info py-2 px-3 small mb-3" id="roleModalWarningNotice" role="note">
+          <div class="d-flex align-items-start gap-2">
+            <span aria-hidden="true" class="fs-6">&#8505;</span>
+            <div>
+              <strong>Hệ quả bảo mật máy chủ (DEC-42):</strong>
+              <span>Khi tập hợp vai trò có sự thay đổi thực tế, máy chủ sẽ tự động tăng <code>authorization_version</code> để làm mất hiệu lực toàn bộ phiên làm việc và token JWT hiện có của tài khoản mục tiêu.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- No-Change / Unchanged Roles Indicator -->
+        <div id="roleModalNoChangeNotice" class="alert alert-secondary py-2 px-3 small mb-3 d-none" role="status">
+          <span>Tập hợp vai trò được chọn trùng khớp với trạng thái hiện tại trên máy chủ (Không có thay đổi cần lưu).</span>
+        </div>
+
+        <!-- Error Feedback Area -->
+        <div id="roleModalError" class="alert alert-danger py-2 px-3 small mb-3 d-none" role="alert" aria-live="assertive"></div>
+
+        <!-- Modal Actions Footer -->
+        <div class="d-flex align-items-center justify-content-end gap-2 pt-2 border-top">
+          <button type="button" id="btnCancelRoleModal" class="btn btn-chinese-secondary">
+            Hủy bỏ
+          </button>
+          <button type="button" id="btnSaveRoles" class="btn btn-chinese-primary">
+            Lưu phân quyền
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Global Toast Notification Container (WCAG 2.2 SC 4.1.3) -->
+  <div id="toastContainer" class="toast-container-custom" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Global Application Footer -->
+  <footer class="border-top py-4 mt-auto bg-white">
+    <div class="container-xl text-center text-secondary small">
+      <p class="mb-1">&copy; 2026 Hệ Thống Học Tiếng Trung &amp; 214 Bộ Thủ Khang Hy.</p>
+      <p class="mb-0 text-muted">Phân hệ Quản trị Phân quyền Vai trò Hệ thống — Task 9F.2.</p>
+    </div>
+  </footer>
+
+  <!-- Page Initialization Entrypoint -->
+  <script type="module" src="js/pages/admin-roles-page.js"></script>
+</body>
+</html>

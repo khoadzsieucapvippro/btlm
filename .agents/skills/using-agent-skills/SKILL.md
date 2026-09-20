@@ -6,6 +6,11 @@ description: Meta guidance for selecting relevant engineering skills based on ta
 # 1. Purpose
 Sử dụng như bảng điều hướng (Routing) để gọi đúng các skill chuyên môn dựa trên tác động của task (Impact). Thống nhất nguyên tắc: Skill-First, No Guessing, và Skill Precedence.
 
+> [!IMPORTANT]
+> **SKILL IS NOT TRUTH**: Skills describe current engineering guidance. They are not immutable truth and must be verified against current source, tests, schema and actual project behavior before implementation.
+> Nếu phát hiện skill stale hoặc mâu thuẫn với thực tế codebase:
+> `Do not blindly obey → Verify against source → Report discrepancy → Update skill`.
+
 # 2. When to use
 - Khi bắt đầu một task để phân loại và xác định các skill chuyên môn cần kích hoạt.
 - Ngay khi nhận được bất kỳ yêu cầu nào (để lên kế hoạch áp dụng skill).
@@ -34,7 +39,11 @@ Sử dụng như bảng điều hướng (Routing) để gọi đúng các skill
    - 5. General engineering workflow skill.
    - 6. General agent behavior.
 4. **Phân loại task theo Impact**:
-   - Simple UI/CSS -> `frontend-ui-engineering`
+   - Frontend UI, Layout & Design System -> `frontend-ui-engineering`
+   - Frontend API Client, Forms & Excel Import -> `frontend-api-integration`
+   - Vanilla JS Architecture, Safe DOM & XSS -> `vanilla-js-dom-security`
+   - Browser & E2E Testing -> `browser-testing-with-devtools`
+   - Frontend Code Review Gate -> `frontend-code-review`
    - New feature -> `spec-driven-development` -> `planning-and-task-breakdown` -> `incremental-implementation`
    - DB change -> `database-flyway-mysql`
    - Backend/API -> `spring-boot-backend` -> `api-and-interface-design`

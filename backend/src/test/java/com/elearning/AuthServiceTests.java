@@ -90,7 +90,7 @@ class AuthServiceTests {
                 } catch (Exception ignored) {}
                 return acc;
             });
-            when(jwtUtil.generateToken("newlearner@elearning.com", List.of("Learner"))).thenReturn("mock.jwt.token");
+            when(jwtUtil.generateToken("newlearner@elearning.com", List.of("Learner"), 1L)).thenReturn("mock.jwt.token");
 
             AuthResponse response = authService.register(request);
 
@@ -165,7 +165,7 @@ class AuthServiceTests {
 
             when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(auth);
             when(accountRepository.findByEmailOrPhone("user@elearning.com")).thenReturn(Optional.of(account));
-            when(jwtUtil.generateToken("user@elearning.com", List.of("Learner"))).thenReturn("login.jwt.token");
+            when(jwtUtil.generateToken("user@elearning.com", List.of("Learner"), 1L)).thenReturn("login.jwt.token");
 
             AuthResponse response = authService.login(request);
 

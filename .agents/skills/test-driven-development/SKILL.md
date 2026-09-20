@@ -38,12 +38,13 @@ description: Viết test để xác minh chức năng, đảm bảo Test Quality
 - Viết test bị vướng các anti-patterns như Mirror Assertion, Change Detectors.
 - Dùng API đã deprecated của Spring Boot (ví dụ: cần chú ý `@MockBean` vs `@MockitoBean` trong Spring Boot 3.4+).
 
-# 8. Verification
-- Chạy các công cụ/terminal test (ví dụ `mvn test`).
+# 8. Verification & Test Evidence Transparency
+- Chạy các công cụ/terminal test (ví dụ `mvn test` hoặc test cụ thể).
 - Terminal output hiển thị `BUILD SUCCESS`.
+- **Minh bạch bằng chứng kiểm thử**: Phải phân biệt rõ giữa "EXECUTED NOW" (vừa chạy trong phiên làm việc hiện tại) và "VERIFIED FROM EXISTING ARTIFACT". Nếu phiên làm việc không thực thi lại toàn bộ Maven suite (ví dụ task chỉ sửa tài liệu), bắt buộc ghi rõ: *"Existing project test artifact reports 1101/1101 tests PASS; test suite was not re-executed in this session"*, tuyệt đối không nhận vơ kết quả cũ là vừa chạy mới.
 
 # 9. Exit criteria
-- Đã chạy RED -> GREEN -> REFACTOR thành công. Tất cả bài test (mới và cũ) đều pass, code pass các rule về chất lượng.
+- Khi có sửa mã nguồn: Đã chạy RED -> GREEN -> REFACTOR thành công. Tất cả bài test (mới và cũ) đều pass, code pass các rule về chất lượng.
 
 # 10. References to load conditionally
 - Khi gặp khó khăn trong việc viết test (dùng mock, helper) hoặc test không bắt được lỗi: Đọc `references/testing-anti-patterns.md`.

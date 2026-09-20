@@ -47,6 +47,9 @@ class SecurityConfigTests {
     private com.elearning.security.JwtUtil jwtUtil;
 
     @Autowired
+    private com.elearning.repository.AccountRepository accountRepository;
+
+    @Autowired
     private MockMvc mockMvc;
 
     @TestConfiguration
@@ -188,23 +191,32 @@ class SecurityConfigTests {
         }
 
         @Test
-        @DisplayName("GIVEN unauthenticated request to protected endpoint WHEN executed THEN access is rejected by Spring Security")
+        @DisplayName("GIVEN unauthenticated request to protected endpoint WHEN executed THEN access is rejected with 401 Unauthorized")
         void testProtectedEndpointRejectedWhenUnauthenticated() throws Exception {
             mockMvc.perform(get("/api/v1/protected/resource"))
-                    .andExpect(status().isForbidden());
+                    .andExpect(status().isUnauthorized());
         }
 
         @Test
-        @DisplayName("GIVEN unauthenticated POST request to catalog endpoint WHEN executed THEN access is rejected as protected")
+        @DisplayName("GIVEN unauthenticated POST request to catalog endpoint WHEN executed THEN access is rejected with 401 Unauthorized")
         void testCatalogNonGetRejectedWhenUnauthenticated() throws Exception {
             mockMvc.perform(post("/api/v1/radicals/test-post"))
-                    .andExpect(status().isForbidden());
+                    .andExpect(status().isUnauthorized());
         }
 
         @Test
         @DisplayName("GIVEN valid JWT Bearer token WHEN accessing protected endpoint THEN access is granted")
         void testProtectedEndpointAllowedWithValidJwt() throws Exception {
-            String token = jwtUtil.generateToken("authed-user@elearning.com", java.util.List.of("Learner"));
+            com.elearning.entity.Account acc = accountRepository.findByEmailOrPhone("authed-user@elearning.com")
+                    .orElseGet(() -> {
+                        com.elearning.entity.Account a = new com.elearning.entity.Account();
+                        a.setEmailOrPhone("authed-user@elearning.com");
+                        a.setPasswordHash("hash1234567890");
+                        a.setStatus("Active");
+                        return accountRepository.save(a);
+                    });
+
+            String token = jwtUtil.generateToken(acc.getEmailOrPhone(), java.util.List.of("Learner"));
 
             mockMvc.perform(get("/api/v1/protected/resource")
                             .header("Authorization", "Bearer " + token))
@@ -212,11 +224,11 @@ class SecurityConfigTests {
         }
 
         @Test
-        @DisplayName("GIVEN invalid JWT Bearer token WHEN accessing protected endpoint THEN access is rejected")
+        @DisplayName("GIVEN invalid JWT Bearer token WHEN accessing protected endpoint THEN access is rejected with 401 Unauthorized")
         void testProtectedEndpointRejectedWithInvalidJwt() throws Exception {
             mockMvc.perform(get("/api/v1/protected/resource")
                             .header("Authorization", "Bearer invalid.jwt.token"))
-                    .andExpect(status().isForbidden());
+                    .andExpect(status().isUnauthorized());
         }
     }
 }

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Trị Danh Mục Bộ Thủ — Hệ Thống Học Tiếng Trung</title>
+  <meta name="description" content="Giao diện quản trị danh mục bộ thủ Khang Hy (CRUD), phục vụ tra cứu, tạo mới, chỉnh sửa và xóa bộ thủ dành riêng cho Quản trị viên (Admin).">
+
+  <!-- Verified Bootstrap 5.3.3 CSS via CDN with Authenticated Subresource Integrity (SRI) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🀄</text></svg>">
+
+  <!-- Core Design Tokens & Styles -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Runtime Environment Configuration -->
+  <script src="js/config.js"></script>
+</head>
+<body class="bg-chinese-surface text-chinese-text">
+
+  <!-- Accessibility Skip Link -->
+  <a href="#mainContent" class="skip-link">Chuyển đến nội dung chính</a>
+
+  <!-- Global Application Header & Navbar -->
+  <header class="navbar-wrapper sticky-top border-bottom">
+    <div class="container-xl">
+      <nav class="navbar navbar-expand-lg py-2" aria-label="Điều hướng chính">
+        <!-- Brand Logo & Home Link -->
+        <a class="navbar-brand fw-bold text-chinese-red d-flex align-items-center gap-2" href="index.html">
+          <span class="fs-4" aria-hidden="true">🀄</span>
+          <span class="tracking-tight">Học Tiếng Trung</span>
+        </a>
+
+        <!-- Mobile Toggler -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#primaryNavMenu" aria-controls="primaryNavMenu" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navigation Links -->
+        <div class="collapse navbar-collapse" id="primaryNavMenu">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-3 gap-1">
+            <li class="nav-item">
+              <a class="nav-link-custom" href="index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="radicals.html">214 Bộ thủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="vocabulary.html">Từ vựng</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="lessons.html">Bài học</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom" href="srs-review.html">Ôn tập SRS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link-custom active" href="admin-radicals.html" aria-current="page">Quản trị</a>
+            </li>
+          </ul>
+
+          <!-- User Session / Navigation Actions (Authoritatively rendered by nav.js) -->
+          <div id="navAuthContainer" class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+            <a href="login.html" class="btn-chinese-secondary py-2 px-3 text-decoration-none">
+              Đăng nhập
+            </a>
+            <a href="register.html" class="btn-chinese-primary py-2 px-3 text-decoration-none">
+              Bắt đầu học
+            </a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Landmark -->
+  <main id="mainContent" class="py-4 py-md-5">
+    <div class="container-xl creator-studio-wrapper">
+
+      <!-- Breadcrumbs Landmark -->
+      <nav aria-label="Đường dẫn điều hướng" class="mb-3">
+        <ol class="breadcrumb mb-0 small">
+          <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Trang chủ</a></li>
+          <li class="breadcrumb-item"><a href="admin-accounts.html" class="text-decoration-none">Quản trị</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Quản trị bộ thủ</li>
+        </ol>
+      </nav>
+
+      <!-- Admin Section Sub-navigation Tabs -->
+      <nav class="moderator-nav-tabs" aria-label="Phân khu quản trị hệ thống">
+        <a href="admin-accounts.html" class="moderator-nav-tab" id="tabAdminAccounts">
+          Quản trị tài khoản
+        </a>
+        <a href="admin-roles.html" class="moderator-nav-tab" id="tabAdminRoles">
+          Phân quyền vai trò
+        </a>
+        <a href="admin-radicals.html" class="moderator-nav-tab active" id="tabAdminRadicals" aria-current="page">
+          Quản trị bộ thủ
+        </a>
+        <a href="admin-vocabulary.html" class="moderator-nav-tab" id="tabAdminVocabulary">
+          Quản trị từ vựng
+        </a>
+        <a href="admin-lessons.html" class="moderator-nav-tab" id="tabAdminLessons">
+          Giám sát bài học
+        </a>
+      </nav>
+
+      <!-- Role Guard Message Container (Shown if unauthorized) -->
+      <div id="adminAuthGuardContainer" class="d-none mb-4">
+        <div class="creator-panel-card text-center py-5">
+          <div class="state-error-icon mx-auto mb-3" aria-hidden="true">&#9888;</div>
+          <h2 class="h5 fw-bold text-dark mb-2">Yêu Cầu Quyền Quản Trị Viên (Admin)</h2>
+          <p class="text-secondary small mb-4" id="adminAuthGuardMessage">
+            Bạn cần đăng nhập với vai trò Quản trị viên (Admin) để sử dụng trang quản trị danh mục bộ thủ.
+          </p>
+          <a href="login.html" class="btn-chinese-primary py-2 px-4 text-decoration-none">
+            Đăng nhập Quản trị
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Admin Radicals Content Panel -->
+      <div id="adminRadicalsMainContent">
+
+        <!-- Page Header & Action Bar -->
+        <div class="creator-panel-card mb-4">
+          <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+            <div>
+              <h1 class="h4 fw-bold text-chinese-red mb-1">
+                Quản Trị Danh Mục Bộ Thủ
+              </h1>
+              <p class="text-secondary small mb-0">
+                Thêm mới, cập nhật, tra cứu và quản lý danh mục bộ thủ Khang Hy trong cơ sở dữ liệu hệ thống.
+              </p>
+            </div>
+            <div class="d-flex align-items-center gap-2 flex-shrink-0">
+              <button type="button" id="btnOpenCreateModal" class="btn-chinese-primary d-flex align-items-center gap-2">
+                <span aria-hidden="true" class="fw-bold fs-5 leading-none">+</span>
+                <span>Thêm bộ thủ mới</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter, Search & Catalog Overview Controls -->
+        <div class="creator-panel-card mb-4">
+          <div class="row g-3 align-items-center">
+            <!-- Client-side Search Input -->
+            <div class="col-md-7 col-lg-8">
+              <label for="radicalSearchInput" class="form-label small fw-semibold text-secondary mb-1">
+                Tìm kiếm bộ thủ:
+              </label>
+              <div class="position-relative">
+                <input
+                  type="search"
+                  id="radicalSearchInput"
+                  class="form-control form-control-chinese pe-5"
+                  placeholder="Tìm theo ký tự (木), Hán-Việt (Mộc), nghĩa tiếng Việt (Cây, gỗ)..."
+                  autocomplete="off"
+                  aria-describedby="radicalSearchHelp"
+                >
+                <button
+                  type="button"
+                  id="searchClearBtn"
+                  class="btn btn-sm text-secondary position-absolute end-0 top-50 translate-middle-y me-2 border-0 d-none"
+                  aria-label="Xóa từ khóa tìm kiếm"
+                >
+                  &times;
+                </button>
+              </div>
+              <div id="radicalSearchHelp" class="form-text small text-muted">
+                Hỗ trợ tìm kiếm tiếng Việt có dấu hoặc không dấu, ký tự Hán tự và âm Hán-Việt.
+              </div>
+            </div>
+
+            <!-- Page Size & Result Count -->
+            <div class="col-md-5 col-lg-4">
+              <div class="d-flex flex-column align-items-md-end gap-2">
+                <div class="d-flex align-items-center gap-2">
+                  <label for="pageSizeSelect" class="small text-secondary text-nowrap">Hiển thị:</label>
+                  <select id="pageSizeSelect" class="form-select form-select-sm w-auto">
+                    <option value="25">25 bộ thủ</option>
+                    <option value="50" selected>50 bộ thủ</option>
+                    <option value="100">100 bộ thủ</option>
+                    <option value="214">Tất cả</option>
+                  </select>
+                </div>
+                <div id="radicalResultCount" class="badge-status badge-status-draft text-nowrap" aria-live="polite">
+                  Đang tải danh mục...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Component Lifecycle State Container (Loading / Empty / Error) -->
+        <div id="radicalStateContainer" class="mb-4" aria-live="polite">
+          <!-- Dynamically managed by setComponentState() -->
+        </div>
+
+        <!-- Radicals Data Table Card -->
+        <div class="creator-panel-card p-0 overflow-hidden mb-4" id="radicalTableCard">
+          <div class="table-responsive">
+            <table class="table table-chinese align-middle mb-0" id="radicalTable">
+              <caption class="visually-hidden">Danh sách bộ thủ Khang Hy trong hệ thống</caption>
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 70px;" class="text-center">ID</th>
+                  <th scope="col" style="width: 90px;" class="text-center">Ký tự</th>
+                  <th scope="col" style="width: 130px;">Pinyin</th>
+                  <th scope="col" style="width: 160px;">Nghĩa Hán-Việt</th>
+                  <th scope="col">Nghĩa tiếng Việt</th>
+                  <th scope="col" style="width: 140px;" class="text-center">Media</th>
+                  <th scope="col" style="width: 150px;" class="text-end pe-3">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody id="radicalTableBody">
+                <!-- Dynamically populated rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Accessible Client-side Pagination Navigation -->
+          <nav id="radicalPagination" class="d-flex align-items-center justify-content-between p-3 border-top flex-wrap gap-2" aria-label="Phân trang danh mục bộ thủ">
+            <div class="small text-secondary" id="paginationSummary">
+              <!-- Summary populated dynamically -->
+            </div>
+            <div class="d-flex align-items-center gap-1" id="paginationControls">
+              <!-- Buttons populated dynamically -->
+            </div>
+          </nav>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 1: CREATE / EDIT RADICAL DIALOG (<dialog>)                      -->
+  <!-- ===================================================================== -->
+  <dialog id="radicalFormModal" class="dialog-chinese p-0 rounded-3 shadow-lg border-0" aria-labelledby="modalFormTitle" aria-modal="true">
+    <div class="dialog-content p-4" style="max-width: 580px; width: 100%;">
+      <!-- Modal Header -->
+      <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom">
+        <h2 id="modalFormTitle" class="h5 fw-bold text-chinese-red mb-0">
+          Thêm Bộ Thủ Mới
+        </h2>
+        <button type="button" id="modalFormCloseBtn" class="btn-close" aria-label="Đóng hộp thoại"></button>
+      </div>
+
+      <p id="modalFormDesc" class="text-secondary small mb-3">
+        Nhập đầy đủ thông tin bộ thủ. Các trường đánh dấu (<span class="text-danger">*</span>) là bắt buộc.
+      </p>
+
+      <!-- Radical Form -->
+      <form id="radicalForm" novalidate>
+        <!-- Hidden input for edit mode radical ID -->
+        <input type="hidden" id="radicalFormId" value="">
+
+        <!-- Form-Level Error Alert -->
+        <div id="formGeneralError" class="alert alert-danger py-2 px-3 small mb-3 d-none" role="alert" aria-live="assertive"></div>
+
+        <div class="row g-3 mb-3">
+          <!-- Character Field -->
+          <div class="col-sm-4">
+            <label for="inputCharacter" class="form-label small fw-semibold text-dark mb-1">
+              Ký tự bộ thủ <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              id="inputCharacter"
+              class="form-control form-control-chinese font-chinese fs-4 text-center py-1"
+              maxlength="10"
+              required
+              placeholder="木"
+              autocomplete="off"
+            >
+            <div id="errorCharacter" class="invalid-feedback small"></div>
+          </div>
+
+          <!-- Pinyin Field -->
+          <div class="col-sm-8">
+            <label for="inputPinyin" class="form-label small fw-semibold text-dark mb-1">
+              Phiên âm Pinyin <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              id="inputPinyin"
+              class="form-control form-control-chinese"
+              maxlength="50"
+              required
+              placeholder="mù"
+              autocomplete="off"
+            >
+            <div id="errorPinyin" class="invalid-feedback small"></div>
+          </div>
+
+          <!-- Meaning Han-Viet Field -->
+          <div class="col-12">
+            <label for="inputMeaningHanViet" class="form-label small fw-semibold text-dark mb-1">
+              Nghĩa Hán-Việt <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              id="inputMeaningHanViet"
+              class="form-control form-control-chinese"
+              maxlength="100"
+              required
+              placeholder="Mộc"
+              autocomplete="off"
+            >
+            <div id="errorMeaningHanViet" class="invalid-feedback small"></div>
+          </div>
+
+          <!-- Meaning Vietnamese Field -->
+          <div class="col-12">
+            <label for="inputMeaningVi" class="form-label small fw-semibold text-dark mb-1">
+              Nghĩa tiếng Việt <span class="text-danger">*</span>
+            </label>
+            <input
+              type="text"
+              id="inputMeaningVi"
+              class="form-control form-control-chinese"
+              maxlength="255"
+              required
+              placeholder="Cây, gỗ"
+              autocomplete="off"
+            >
+            <div id="errorMeaningVi" class="invalid-feedback small"></div>
+          </div>
+
+          <!-- Audio URL Field -->
+          <div class="col-12">
+            <label for="inputAudioUrl" class="form-label small fw-semibold text-dark mb-1">
+              Đường dẫn Audio phát âm <span class="text-muted fw-normal">(Tùy chọn, tối đa 500 ký tự)</span>
+            </label>
+            <input
+              type="url"
+              id="inputAudioUrl"
+              class="form-control form-control-chinese"
+              maxlength="500"
+              placeholder="https://example.com/audio/mu.mp3 hoặc /media/audio/..."
+              autocomplete="off"
+            >
+            <div id="errorAudioUrl" class="invalid-feedback small"></div>
+          </div>
+
+          <!-- Video Writing URL Field -->
+          <div class="col-12">
+            <label for="inputVideoWritingUrl" class="form-label small fw-semibold text-dark mb-1">
+              Đường dẫn Video tập viết <span class="text-muted fw-normal">(Tùy chọn, tối đa 500 ký tự)</span>
+            </label>
+            <input
+              type="url"
+              id="inputVideoWritingUrl"
+              class="form-control form-control-chinese"
+              maxlength="500"
+              placeholder="https://example.com/video/mu.mp4 hoặc /media/video/..."
+              autocomplete="off"
+            >
+            <div id="errorVideoWritingUrl" class="invalid-feedback small"></div>
+          </div>
+        </div>
+
+        <!-- Modal Actions Footer -->
+        <div class="d-flex align-items-center justify-content-end gap-2 pt-3 border-top">
+          <button type="button" id="btnCancelFormModal" class="btn-chinese-secondary">
+            Hủy bỏ
+          </button>
+          <button type="button" id="btnSaveRadical" class="btn-chinese-primary">
+            <span id="saveRadicalBtnSpinner" class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
+            <span id="saveRadicalBtnText">Lưu bộ thủ</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ===================================================================== -->
+  <!-- MODAL 2: DELETE CONFIRMATION DIALOG (<dialog>)                        -->
+  <!-- ===================================================================== -->
+  <dialog id="deleteRadicalModal" class="dialog-chinese p-0 rounded-3 shadow-lg border-0" aria-labelledby="deleteModalTitle" aria-modal="true">
+    <div class="dialog-content p-4" style="max-width: 480px; width: 100%;">
+      <!-- Header -->
+      <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom">
+        <h2 id="deleteModalTitle" class="h5 fw-bold text-danger mb-0">
+          Xác Nhận Xóa Bộ Thủ
+        </h2>
+        <button type="button" id="deleteModalCloseBtn" class="btn-close" aria-label="Đóng hộp thoại"></button>
+      </div>
+
+      <!-- Warning Note -->
+      <div class="alert alert-warning py-2 px-3 small mb-3" role="note">
+        <div class="d-flex align-items-start gap-2">
+          <span aria-hidden="true" class="fs-5">&#9888;</span>
+          <div>
+            <strong>Hành động mang tính vĩnh viễn:</strong>
+            <span>Bộ thủ bị xóa sẽ không thể hoàn tác. Nếu bộ thủ đang được tham chiếu bởi từ vựng, hệ thống sẽ ngăn chặn thao tác này.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Target Info Card -->
+      <div class="p-3 bg-light rounded-2 border mb-3 text-center">
+        <div class="text-muted small mb-1">Bộ thủ mục tiêu:</div>
+        <div id="deleteTargetCharacter" class="font-chinese text-chinese-red display-4 fw-bold mb-1">
+          —
+        </div>
+        <div class="fw-bold text-dark" id="deleteTargetMeaning">
+          —
+        </div>
+        <div class="text-secondary small mt-1">
+          Mã định danh ID: <code id="deleteTargetId" class="fw-bold">#—</code>
+        </div>
+      </div>
+
+      <!-- Error Feedback Area -->
+      <div id="deleteModalError" class="alert alert-danger py-2 px-3 small mb-3 d-none" role="alert" aria-live="assertive"></div>
+
+      <!-- Actions Footer -->
+      <div class="d-flex align-items-center justify-content-end gap-2 pt-3 border-top">
+        <button type="button" id="btnCancelDeleteModal" class="btn-chinese-secondary">
+          Hủy bỏ
+        </button>
+        <button type="button" id="btnConfirmDeleteRadical" class="btn btn-danger">
+          <span id="deleteRadicalBtnSpinner" class="spinner-border spinner-border-sm me-1 d-none" role="status" aria-hidden="true"></span>
+          <span id="deleteRadicalBtnText">Xác nhận xóa vĩnh viễn</span>
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Global Toast Notification Container (WCAG 2.2 SC 4.1.3) -->
+  <div id="toastContainer" class="toast-container-custom" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Global Application Footer -->
+  <footer class="border-top py-4 mt-auto bg-white">
+    <div class="container-xl text-center text-secondary small">
+      <p class="mb-1">&copy; 2026 Hệ Thống Học Tiếng Trung &amp; 214 Bộ Thủ Khang Hy.</p>
+      <p class="mb-0 text-muted">Phân hệ Quản trị Danh mục Bộ thủ Khang Hy — Task 9F.3.</p>
+    </div>
+  </footer>
+
+  <!-- Verified Bootstrap 5.3.3 JS Bundle with Authenticated SRI -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+  <!-- Admin Radicals Page Controller Module -->
+  <script type="module" src="js/pages/admin-radicals-page.js"></script>
+
+</body>
+</html>

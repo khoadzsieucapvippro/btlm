@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import java.util.List;
 /**
  * Utility component for generating, parsing, and validating JSON Web Tokens (JWT).
  * Uses modern JJWT API (0.12.x) with HMAC-SHA256 algorithm.
+ * Enforces mandatory issuer (iss) binding and validation (BE-AUTH-003).
  * Thread-safe and stateless: holds no per-request state.
  */
 @Component
@@ -26,13 +28,23 @@ public class JwtUtil {
 
     private static final Logger log = LoggerFactory.getLogger(JwtUtil.class);
 
+    public static final String DEFAULT_ISSUER = "elearning-backend";
+    public static final String CLAIM_AUTH_VER = "auth_ver";
+
     private final SecretKey signingKey;
     private final long expirationMs;
+    private final String issuer;
     private final JwtParser jwtParser;
 
+    public JwtUtil(String secret, long expirationMs) {
+        this(secret, expirationMs, DEFAULT_ISSUER);
+    }
+
+    @Autowired
     public JwtUtil(
-            @Value("${jwt.secret:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}") String secret,
-            @Value("${jwt.expiration-ms:86400000}") long expirationMs) {
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.expiration-ms:86400000}") long expirationMs,
+            @Value("${jwt.issuer:elearning-backend}") String issuer) {
 
         if (secret == null || secret.isBlank()) {
             throw new IllegalArgumentException("JWT secret cannot be null or blank");
@@ -43,31 +55,61 @@ public class JwtUtil {
             throw new IllegalArgumentException("JWT secret must be at least 32 bytes (256 bits). Provided length: " + keyBytes.length);
         }
 
+        if (issuer == null || issuer.isBlank()) {
+            throw new IllegalArgumentException("JWT issuer cannot be null or blank");
+        }
+
         this.signingKey = Keys.hmacShaKeyFor(keyBytes);
         this.expirationMs = expirationMs;
-        this.jwtParser = Jwts.parser().verifyWith(this.signingKey).build();
+        this.issuer = issuer.trim();
+        this.jwtParser = Jwts.parser()
+                .requireIssuer(this.issuer)
+                .verifyWith(this.signingKey)
+                .build();
     }
 
     /**
-     * Generates a signed JWT with the default configured expiration time.
+     * Gets the configured expected issuer string.
+     *
+     * @return issuer string
+     */
+    public String getIssuer() {
+        return this.issuer;
+    }
+
+    /**
+     * Generates a signed JWT with default authorization version (1L) and expiration time.
      *
      * @param subject email or phone identifying the account
      * @param roles   list of roles assigned to the user
      * @return signed JWT string
      */
     public String generateToken(String subject, List<String> roles) {
-        return generateToken(subject, roles, this.expirationMs);
+        return generateToken(subject, roles, 1L, this.expirationMs);
     }
 
     /**
-     * Generates a signed JWT with a custom expiration duration (in milliseconds).
+     * Generates a signed JWT with an explicit authorization version and default expiration time.
      *
-     * @param subject      email or phone identifying the account
-     * @param roles        list of roles assigned to the user
-     * @param customExpMs  expiration duration in milliseconds
+     * @param subject              email or phone identifying the account
+     * @param roles                list of roles assigned to the user
+     * @param authorizationVersion current authorization version of the account
      * @return signed JWT string
      */
-    public String generateToken(String subject, List<String> roles, long customExpMs) {
+    public String generateToken(String subject, List<String> roles, Long authorizationVersion) {
+        return generateToken(subject, roles, authorizationVersion, this.expirationMs);
+    }
+
+    /**
+     * Generates a signed JWT with explicit authorization version, custom expiration duration, and issuer.
+     *
+     * @param subject              email or phone identifying the account
+     * @param roles                list of roles assigned to the user
+     * @param authorizationVersion current authorization version of the account
+     * @param customExpMs          expiration duration in milliseconds
+     * @return signed JWT string
+     */
+    public String generateToken(String subject, List<String> roles, Long authorizationVersion, long customExpMs) {
         if (subject == null || subject.isBlank()) {
             throw new IllegalArgumentException("JWT subject cannot be null or blank");
         }
@@ -75,13 +117,29 @@ public class JwtUtil {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + customExpMs);
 
-        return Jwts.builder()
+        var builder = Jwts.builder()
+                .issuer(this.issuer)
                 .subject(subject)
                 .claim("roles", roles != null ? roles : Collections.emptyList())
                 .issuedAt(now)
                 .expiration(expiryDate)
-                .signWith(this.signingKey)
-                .compact();
+                .signWith(this.signingKey);
+
+        if (authorizationVersion != null) {
+            builder.claim(CLAIM_AUTH_VER, authorizationVersion);
+        }
+
+        return builder.compact();
+    }
+
+    /**
+     * Extracts the issuer (iss) from the token.
+     *
+     * @param token JWT token string
+     * @return issuer string
+     */
+    public String extractIssuer(String token) {
+        return extractAllClaims(token).getIssuer();
     }
 
     /**
@@ -110,6 +168,41 @@ public class JwtUtil {
     }
 
     /**
+     * Extracts the authorization version from the token string.
+     *
+     * @param token JWT token string
+     * @return authorization version as Long, or null if claim is missing or invalid
+     */
+    public Long extractAuthorizationVersion(String token) {
+        Claims claims = extractAllClaims(token);
+        return extractAuthorizationVersion(claims);
+    }
+
+    /**
+     * Extracts the authorization version from parsed Claims.
+     *
+     * @param claims Claims object
+     * @return authorization version as Long, or null if claim is missing or invalid
+     */
+    public Long extractAuthorizationVersion(Claims claims) {
+        if (claims == null) {
+            return null;
+        }
+        Object verObj = claims.get(CLAIM_AUTH_VER);
+        if (verObj instanceof Number number) {
+            return number.longValue();
+        }
+        if (verObj instanceof String str && !str.isBlank()) {
+            try {
+                return Long.parseLong(str.trim());
+            } catch (NumberFormatException ignored) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Extracts expiration timestamp from the token.
      *
      * @param token JWT token string
@@ -131,6 +224,7 @@ public class JwtUtil {
 
     /**
      * Parses and returns all claims from a signed JWT.
+     * Enforces signature verification and required issuer claim match.
      * Throws JwtException or IllegalArgumentException if invalid.
      *
      * @param token JWT token string
@@ -145,7 +239,7 @@ public class JwtUtil {
 
     /**
      * Validates whether a token is structurally valid, has valid signature,
-     * has not expired, and contains a non-blank subject.
+     * has not expired, contains the expected issuer, and contains a non-blank subject.
      *
      * @param token JWT token string
      * @return true if valid; false otherwise

@@ -490,3 +490,16 @@ CREATE TABLE `MODERATION_LOG` (
 
 - **OQ-08 (Lựa chọn thư viện tĩnh Frontend cho Phase 9):** Giữ nguyên ở trạng thái OPEN, sẽ quyết định khi bắt đầu Phase 9 (Frontend Implementation).
 - Toàn bộ các câu hỏi kỹ thuật CSDL (`OQ-01`, `OQ-02`, `OQ-03`, `OQ-04`, `OQ-05`, `OQ-06`, `OQ-07`) đã được giải quyết dứt điểm trong tài liệu thiết kế này và được User ủy quyền.
+
+---
+
+## 21. TIẾN HÓA SCHEMA QUA FLYWAY MIGRATIONS (SCHEMA EVOLUTION)
+
+Toàn bộ các thay đổi cấu trúc CSDL sau khởi tạo ban đầu được quản lý nghiêm ngặt qua các file Flyway Migration tiếp theo:
+1. `V1__init_schema.sql`: Khởi tạo 14 bảng dữ liệu, khóa chính, khóa ngoại, ràng buộc duy nhất và CHECK constraints.
+2. `V2__seed_roles.sql`: Nạp 4 vai trò hệ thống (`1 = Learner`, `2 = Creator`, `3 = Moderator`, `4 = Admin`).
+3. `V3__seed_radicals.sql`: Nạp dữ liệu chuẩn 214 Bộ thủ Khang Hy.
+4. `V4__add_version_to_card_progress.sql`: Bổ sung cột `version BIGINT NOT NULL DEFAULT 0` vào bảng `CARD_PROGRESS` để kích hoạt khóa lạc quan `@Version` (khắc phục `BE-CONC-001`).
+5. `V5__add_version_to_lesson.sql`: Bổ sung cột `version BIGINT NOT NULL DEFAULT 0` vào bảng `LESSON` để kích hoạt khóa lạc quan `@Version` cho quy trình kiểm duyệt và vòng đời bài học (khắc phục `BE-CONC-003`).
+6. `V6__add_authorization_version_to_account.sql`: Bổ sung cột `authorization_version BIGINT UNSIGNED NOT NULL DEFAULT 1` vào bảng `ACCOUNT` để hỗ trợ cơ chế thu hồi token JWT tức thì khi thay đổi vai trò (`auth_ver` invalidation, `DEC-24`, `Task 8D.2`).
+7. `V7__correct_radical_pinyin.sql`: Bổ sung Pinyin cho Radical ID 49 (`己` $\rightarrow$ `jǐ`) và ID 172 (`隹` $\rightarrow$ `zhuī`) chuẩn Unihan kMandarin, bảo toàn 100% 214 radicals và empty `meaning_vi` (`DEC-38`, `Task R3.8`).
