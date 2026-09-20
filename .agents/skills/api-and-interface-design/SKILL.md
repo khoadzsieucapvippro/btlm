@@ -25,8 +25,8 @@ Thống nhất chuẩn giao tiếp (Contract) giữa Backend và Frontend, trán
 5. **Documentation**: Chốt hợp đồng bằng file Spec, hoặc Code Comment.
 
 # 6. Decision points
-- Có pagination không? -> Phải trả về chuẩn có `currentPage`, `totalItems` (Tham khảo `contract-semantics.md`).
-- Success vs Error structure: Có thể dùng chung 1 format (Wrapper) HOẶC trả về tự nhiên nhưng cấu trúc lỗi phải tuân theo 1 format chuẩn.
+- Có pagination không? -> Phải trả về chuẩn `PageResponse<T>` với các trường: `page`, `size`, `totalElements`, `totalPages`, `items` bọc trong `ApiResponse<T>.data` (Tham khảo `references/contract-semantics.md` và `PROJECT-CONTRACT.md` Invariant 6).
+- Cấu trúc phản hồi: Hầu hết các endpoint nghiệp vụ bắt buộc bọc trong phong bì chuẩn `ApiResponse<T>` (`code`, `message`, `data`, `errors`). HTTP 204 No Content không chứa body.
 
 # 7. Red flags
 - Rò rỉ Implementation Details: Ném trực tiếp Entity Database ra API, vô tình phơi bày mật khẩu hoặc cột nhạy cảm.

@@ -9,14 +9,16 @@ Khi Frontend gửi request, nó sẽ đi qua các lớp (layers) sau trước kh
    Kiểm tra CORS (Origin, Method, Header). Nếu gửi `OPTIONS` preflight, Spring Security phải chừa đường cho nó đi qua.
 3. **SecurityFilterChain**:
    Bắt đầu chuỗi Filter.
-4. **Custom JWT Authentication Filter**:
+4. **Custom JWT Authentication Filter (`JwtAuthenticationFilter`)**:
    - `request.getHeader("Authorization")`.
-   - Lọc chữ `Bearer `.
-   - Parse và Validate Signature/Expiration bằng thư viện `io.jsonwebtoken.Jwts`.
-   - Lấy Subject (Username/Email) và Claims (Roles).
+   - Lọc tiền tố `Bearer `.
+   - Parse và Validate Signature, Expiration (24h), Issuer (`elearning-backend`) bằng thư viện JJWT 0.12.x (`io.jsonwebtoken.Jwts`).
+   - Trích xuất claim `auth_ver` và `roles`.
+   - **Xác thực phiên bản ủy quyền (DEC-42)**: Kiểm tra `auth_ver` với database (`account.authorization_version`) và trạng thái tài khoản `Active`. Nếu mismatch hoặc tài khoản bị khóa/đổi quyền, từ chối ngay với HTTP 401 Unauthorized.
 5. **Authentication & SecurityContext**:
-   - Nếu token hợp lệ, tạo đối tượng `UsernamePasswordAuthenticationToken`.
-   - Gọi `SecurityContextHolder.getContext().setAuthentication(auth)`.
+   - Chuyển đổi danh sách role (vd: `"Admin"`) thành `SimpleGrantedAuthority("ROLE_" + role)`.
+   - Tạo đối tượng `UsernamePasswordAuthenticationToken` (với `CustomUserDetails`).
+   - Đưa vào `SecurityContextHolder.getContext().setAuthentication(auth)`.
 6. **Authorization Filter**:
    - Xem endpoint này cấu hình `permitAll()` hay `authenticated()`.
    - Xem `@PreAuthorize` có yêu cầu Role trùng với Role trong Context không.

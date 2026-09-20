@@ -146,27 +146,38 @@ Phase 0 = COMPLETED
 Phase 1 = COMPLETED
 Phase 2 = COMPLETED
 Phase 3 = COMPLETED
-Phase 4 = IN PROGRESS (Module 4A)
+Phase 4 = COMPLETED
+Phase 5 = COMPLETED (Modules 5A, 5B, 5C, 5D COMPLETED; Checkpoint Phase 5 VERIFIED)
+Phase 6 = COMPLETED (Modules 6A, 6B, 6C COMPLETED; Checkpoint Phase 6 VERIFIED)
+Phase 7 = COMPLETED (Modules 7A, 7B, 7C COMPLETED; Checkpoint Phase 7 VERIFIED)
+Phase 8 = COMPLETED (Modules 8A, 8B, 8C COMPLETED; Checkpoints 8A, 8B, Checkpoint Phase 8 VERIFIED)
+Backend Hardening Gate = COMPLETED (15/15 audit remediation items CLOSED / VERIFIED)
+Module 8D = COMPLETED (8/8 functional completion tasks 8D.1..8D.8 CLOSED / VERIFIED)
+Backend Remediation & Hardening Tasks = COMPLETED (R1 → R3.11 VERIFIED)
+Backend Release Status = SEALED & APPROVED FOR PHASE 9 FRONTEND INTEGRATION (DEC-41)
+Phase 9 = UNBLOCKED / READY TO COMMENCE (Module 9A Task 9A.1 CURRENT NEXT TASK)
 ```
 
 Regression suite hiện tại đã đạt:
 
 ```text
-PASS 201/201 tests
+PASS 1101/1101 tests
 Failures: 0
 Errors: 0
+Skipped: 0
+Build: SUCCESS (~04:38 min trên Testcontainers MySQL 8.4)
 ```
 
 Nhiệm vụ vừa hoàn thành:
 
 ```text
-Task 4A.1 — Radical DTOs & RadicalService (COMPLETED)
+Final Adversarial Backend Remediation & Security Hardening (DEC-42) / Task R3.11 Sealed (DEC-41) (COMPLETED / VERIFIED)
 ```
 
 Nhiệm vụ kế tiếp duy nhất:
 
 ```text
-Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ
+Task 9A.1 — Khởi tạo khung giao diện, layout dùng chung & hệ thống CSS (Phase 9 / Module 9A)
 ```
 
 Sau khi quay lại project, luôn kiểm tra:
@@ -274,190 +285,195 @@ Project root là context đầy đủ của project.
 
 ---
 
-# 7. DATABASE STARTUP
+# 7. DATABASE STARTUP & VERIFICATION
 
-Trước khi chạy backend:
-
-```text
-MySQL
-↓
-Database server running
-↓
-elearning_db available
-↓
-Backend startup
-```
-
-Đăng nhập MySQL:
-
-```bash
-mysql -u root -p
-```
-
-Kiểm tra database:
-
-```sql
-SHOW DATABASES;
-```
-
-Nếu cần:
-
-```sql
-USE elearning_db;
-```
-
-Kiểm tra các bảng:
-
-```sql
-SHOW TABLES;
-```
-
-Project hiện có các domain tables chính:
+Trước khi chạy backend, MySQL Server phải đang chạy và database `elearning_db` phải sẵn sàng:
 
 ```text
-ACCOUNT
-USER_PROFILE
-ROLE
-ACCOUNT_ROLE
-RADICAL
-VOCABULARY
-VOCAB_RADICAL
-LESSON
-LESSON_VOCABULARY
-USER_SRS_SETTING
-CARD_PROGRESS
-REVIEW_LOG
-PERSONAL_NOTE
-MODERATION_LOG
+MySQL Server 8.4 (Port 3306)
+         ↓
+Database elearning_db sẵn sàng
+         ↓
+Backend startup & Flyway auto-migrate (V1..V7)
 ```
 
-Không tự tạo bảng bằng tay nếu Flyway migration đã quản lý schema.
+### Bước 7.1: Kiểm tra MySQL Server đang chạy
+
+Trên Windows PowerShell:
+
+```powershell
+& "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqladmin.exe" -u root ping
+```
+
+* Nếu xuất hiện: `mysqld is alive` $\rightarrow$ MySQL đã sẵn sàng, chuyển sang Bước 7.3.
+* Nếu báo lỗi kết nối (`connect to localhost failed`): tiến hành Bước 7.2 để khởi động MySQL.
+
+### Bước 7.2: Khởi động MySQL Server Daemon (nếu chưa chạy)
+
+Khởi động MySQL daemon với file cấu hình chuẩn của project (`my.ini`):
+
+```powershell
+Start-Process -FilePath "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe" -ArgumentList '--defaults-file="C:\ProgramData\MySQL\MySQL Server 8.4\my.ini"'
+```
+
+Sau đó kiểm tra lại bằng lệnh ping:
+
+```powershell
+& "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqladmin.exe" -u root ping
+```
+
+### Bước 7.3: Kiểm tra Database `elearning_db`
+
+Đăng nhập hoặc kiểm tra danh sách database bằng client MySQL:
+
+```powershell
+& "C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe" -u root -e "SHOW DATABASES;"
+```
+
+Xác nhận có cơ sở dữ liệu `elearning_db`.
 
 ---
 
-# 8. CHECK DATABASE CONNECTION CONFIGURATION
+# 8. CONFIGURATION & MANDATORY SECRETS (`application.yml`)
 
-Trước khi chạy backend, kiểm tra configuration thực tế:
-
+Nguồn chân lý cấu hình runtime duy nhất của Backend:
 ```text
-backend/src/main/resources/
+backend/src/main/resources/application.yml
 ```
 
-Tìm:
+### 8.1. Tham số Bí mật BẮT BUỘC (`JWT_SECRET`)
 
-```text
-application.properties
-application.yml
-application-local.properties
-application-dev.properties
-```
+> [!CAUTION]
+> **Ràng buộc Bảo mật Khóa Cứng (Security Enforcement):**  
+> `application.yml` định nghĩa `jwt.secret: ${JWT_SECRET}` và **tuyệt đối không để giá trị fallback mặc định** nhằm chống rủi ro rò rỉ secret lên Git.  
+> Do đó, **BẮT BUỘC PHẢI CUNG CẤP `JWT_SECRET`** khi khởi động backend. Nếu thiếu, Spring Boot sẽ dừng ngay lập tức với lỗi:  
+> `IllegalArgumentException: Could not resolve placeholder 'JWT_SECRET' in value "${JWT_SECRET}"`.
 
-Xác định:
+* **Yêu cầu kỹ thuật:** Khóa bí mật phải có độ dài tối thiểu 256 bits (ít nhất 32 ký tự ASCII) để thuật toán mã hóa `HS256` của JJWT hoạt động an toàn.
+* **Giá trị mẫu cho môi trường Local / Development:**
+  ```text
+  elearning-chinese-platform-secret-key-jwt-256-bits-minimum-length-key!
+  ```
 
-```text
-spring.datasource.url
-spring.datasource.username
-spring.datasource.password
-```
+### 8.2. Cấu hình Kết nối CSDL & Cổng Mặc định
 
-Không đoán username/password.
-
-Nếu backend không kết nối được database:
-
-> kiểm tra configuration thực tế trước khi sửa code.
+| Tham số | Biến môi trường | Giá trị mặc định trong `application.yml` | Ghi chú |
+| :--- | :--- | :--- | :--- |
+| **Port** | `server.port` | `8080` | Cổng HTTP REST API |
+| **Reverse Proxy** | `server.forward-headers-strategy` | `framework` | Xử lý `X-Forwarded-For` (Task R3.10) |
+| **DB URL** | `SPRING_DATASOURCE_URL` | `jdbc:mysql://localhost:3306/elearning_db?...` | MySQL 8.4 Community |
+| **DB Username** | `SPRING_DATASOURCE_USERNAME` | `root` | Tài khoản CSDL local |
+| **DB Password** | `SPRING_DATASOURCE_PASSWORD` | `""` (chuỗi rỗng) | Mặc định không mật khẩu |
+| **Flyway** | `spring.flyway.enabled` | `true` | Tự động migrate V1..V7 khi khởi động |
 
 ---
 
-# 9. RUN BACKEND — DEVELOPMENT MODE
+# 9. RUN BACKEND — DEVELOPMENT MODE (QUY TRÌNH CHẠY LẦN LƯỢT)
 
-## Cách thông thường
+Để khởi động backend hoàn chỉnh từ đầu, thực hiện tuần tự theo 4 bước:
 
-Từ project root:
+```text
+BƯỚC 1: Xác nhận MySQL đang chạy trên port 3306
+   ↓
+BƯỚC 2: Chuẩn bị khóa bí mật JWT_SECRET
+   ↓
+BƯỚC 3: Thực thi lệnh chạy Spring Boot Maven
+   ↓
+BƯỚC 4: Xác minh Health Check và API Endpoint
+```
 
-```bash
+### Cách 1: Chạy trực tiếp truyền tham số qua Maven Argument (KHUYẾN NGHỊ TRÊN WINDOWS)
+
+Từ thư mục gốc dự án (`project-root`):
+
+```powershell
+mvn -f backend/pom.xml spring-boot:run "-Dspring-boot.run.arguments=--jwt.secret=elearning-chinese-platform-secret-key-jwt-256-bits-minimum-length-key!"
+```
+
+Hoặc di chuyển vào thư mục `backend/`:
+
+```powershell
+cd backend
+mvn spring-boot:run "-Dspring-boot.run.arguments=--jwt.secret=elearning-chinese-platform-secret-key-jwt-256-bits-minimum-length-key!"
+```
+
+> [!NOTE]
+> Trên Windows PowerShell, bắt buộc phải bao bọc `"-Dspring-boot.run.arguments=..."` trong cặp dấu ngoặc kép `""` để tránh PowerShell ngắt chuỗi command-line arguments.
+
+---
+
+### Cách 2: Thiết lập biến môi trường trong Terminal Session
+
+**Trên Windows PowerShell:**
+```powershell
+$env:JWT_SECRET="elearning-chinese-platform-secret-key-jwt-256-bits-minimum-length-key!"
 mvn -f backend/pom.xml spring-boot:run
 ```
 
-Hoặc:
+**Trên Windows Command Prompt (cmd):**
+```cmd
+set JWT_SECRET=elearning-chinese-platform-secret-key-jwt-256-bits-minimum-length-key!
+mvn -f backend/pom.xml spring-boot:run
+```
 
+**Trên Linux / macOS (Bash / Zsh):**
 ```bash
-cd backend
-mvn spring-boot:run
+export JWT_SECRET="elearning-chinese-platform-secret-key-jwt-256-bits-minimum-length-key!"
+mvn -f backend/pom.xml spring-boot:run
 ```
-
-Spring Boot Maven Plugin hỗ trợ `spring-boot:run` để compile và chạy application.
 
 ---
 
-## Nếu có Maven Wrapper
+# 10. BACKEND START SUCCESSFULLY & VERIFICATION
 
-Windows:
+### 10.1. Dấu hiệu Khởi động Thành công trong Console Log
 
-```bat
-cd backend
-mvnw.cmd spring-boot:run
-```
-
-Hoặc từ project root tùy vị trí wrapper:
-
-```bat
-mvnw.cmd -f backend/pom.xml spring-boot:run
-```
-
-Chỉ dùng cách này nếu file:
+Khi Spring Boot khởi động hoàn tất, log console sẽ xuất hiện các dòng thông báo then chốt:
 
 ```text
-mvnw.cmd
+... o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+... com.elearning.ElearningApplication       : Started ElearningApplication in X.XX seconds
 ```
 
-thực sự tồn tại tại vị trí tương ứng.
+Đồng thời, Flyway sẽ tự động kiểm tra và thực thi các migration tăng dần (`V1`..`V7`) vào CSDL `elearning_db` mà không cần can thiệp thủ công.
 
-Không đoán vị trí Maven Wrapper.
+### 10.2. Lệnh Kiểm tra Nhanh (Smoke Test / Health Check)
+
+Mở một terminal PowerShell khác và chạy các lệnh kiểm thử sau:
+
+1. **Kiểm tra Health Probe (Spring Boot Actuator):**
+   ```powershell
+   Invoke-RestMethod -Uri "http://localhost:8080/actuator/health" -Method Get
+   ```
+   *Kết quả mong đợi:*
+   ```json
+   {"status": "UP"}
+   ```
+
+2. **Kiểm tra API Danh mục 214 Bộ thủ (Public Endpoint):**
+   ```powershell
+   Invoke-RestMethod -Uri "http://localhost:8080/api/v1/radicals" -Method Get
+   ```
+   *Kết quả mong đợi:* Phản hồi chuẩn phong bì `ApiResponse` chứa danh sách 214 bộ thủ Khang Hy (`totalElements: 214`, `code: "SUCCESS"`).
 
 ---
 
-# 10. BACKEND START SUCCESSFULLY
+# 11. STOP BACKEND & PORT MANAGEMENT
 
-Khi Spring Boot khởi động thành công, terminal thường xuất hiện thông tin tương tự:
-
-```text
-Started ...
-```
-
-Nếu backend hiện dùng port mặc định đã được project cấu hình:
-
-```text
-http://localhost:8080
-```
-
-Kiểm tra port thực tế trong:
-
-```text
-application.properties
-application.yml
-```
-
-Nếu gặp:
-
-```text
-Port 8080 was already in use
-```
-
-xem phần Troubleshooting.
-
----
-
-# 11. STOP BACKEND
-
+### 11.1. Dừng thông thường
 Trong terminal đang chạy Spring Boot:
+* Nhấn tổ hợp phím **`Ctrl + C`** và chờ process Tomcat giải phóng tài nguyên.
 
-```text
-Ctrl + C
+### 11.2. Giải phóng cổng 8080 nếu bị chiếm dụng (Port Conflict)
+Nếu gặp lỗi `Port 8080 was already in use`, kiểm tra và kết thúc tiến trình đang chiếm port trên Windows PowerShell:
+
+```powershell
+# 1. Tìm Process ID (PID) đang chiếm port 8080
+Get-NetTCPConnection -LocalPort 8080 -ErrorAction SilentlyContinue | Select-Object LocalAddress, LocalPort, OwningProcess, State
+
+# 2. Dừng tiến trình chiếm dụng
+Stop-Process -Id (Get-NetTCPConnection -LocalPort 8080).OwningProcess -Force
 ```
-
-Sau đó chờ process dừng hoàn toàn.
-
-Không đóng VS Code một cách ngẫu nhiên nếu đang cần đọc log lỗi.
 
 ---
 
@@ -597,31 +613,33 @@ No regression
 
 ---
 
-# 16. HOW TO RUN A PACKAGED APPLICATION
+# 16. HOW TO RUN A PACKAGED APPLICATION (.JAR)
 
-Sau khi:
+### Bước 16.1: Đóng gói ứng dụng thành file JAR thực thi
+Từ thư mục gốc dự án:
 
-```bash
-mvn -f backend/pom.xml clean package
+```powershell
+mvn -f backend/pom.xml clean package -DskipTests
 ```
 
-kiểm tra:
-
+File JAR thực thi được sinh ra tại:
 ```text
-backend/target/
+backend/target/elearning-backend-1.0.0.jar
 ```
 
-Xác định file `.jar` thực tế.
+### Bước 16.2: Khởi chạy file JAR độc lập
+Truyền `jwt.secret` qua thuộc tính hệ thống Java (`-Djwt.secret=...`):
 
-Sau đó:
-
-```bash
-java -jar backend/target/<actual-file-name>.jar
+```powershell
+java -Djwt.secret="elearning-chinese-platform-secret-key-jwt-256-bits-minimum-length-key!" -jar backend/target/elearning-backend-1.0.0.jar
 ```
 
-Không đoán tên JAR.
+Hoặc thiết lập biến môi trường trước khi chạy:
 
-Spring Boot hỗ trợ chạy packaged executable JAR bằng `java -jar`.
+```powershell
+$env:JWT_SECRET="elearning-chinese-platform-secret-key-jwt-256-bits-minimum-length-key!"
+java -jar backend/target/elearning-backend-1.0.0.jar
+```
 
 ---
 
@@ -768,7 +786,16 @@ trong report/chat công khai.
 
 # 21. API TESTING OVERVIEW
 
-Luồng test API hiện tại:
+Hệ thống cung cấp danh mục API hoàn chỉnh gồm:
+- **15 Controller classes** (`com.elearning.controller`)
+- **48 Java handler methods**
+- **49 HTTP method+path mappings** (do `/{id}/reorder` hỗ trợ cả PUT và POST)
+- **1 Actuator health probe** (`GET /actuator/health`)
+
+Chi tiết toàn bộ đặc tả API xem tại `.agents/API.md`.  
+Bộ sưu tập tự động hóa **Postman Collection** đầy đủ bao phủ 100% 49 HTTP mappings (kèm assertion scripts) được định nghĩa và bàn giao chính thức tại **Task 11D.1** (`docs/postman_collection.json`).
+
+Luồng kiểm thử API thủ công:
 
 ```text
 Backend running
@@ -1671,12 +1698,12 @@ Checklist:
 
 ---
 
-# 50. TASK 4A.2 PREPARATION CHECKLIST
+# 50. TASK 5D.1 PREPARATION CHECKLIST
 
 Trước khi bắt đầu:
 
 ```text
-Task 4A.2 — RadicalController công khai & Admin CRUD Bộ thủ
+Task 5D.1 — Lesson Lifecycle Integration Verification & Checkpoint Phase 5
 ```
 
 làm:
@@ -1685,14 +1712,11 @@ làm:
 [ ] Read .agents/ROADMAP.md
 [ ] Read .agents/PROGRESS.md
 [ ] Read .agents/CURRENT_STATE.md
-[ ] Read .agents/API.md (Mục Radical endpoints)
-[ ] Read .agents/ARCHITECTURE.md
-[ ] Read .agents/DECISIONS.md
-[ ] Inspect RadicalService và RadicalServiceImpl (Task 4A.1)
-[ ] Inspect RadicalResponse và RadicalDetailResponse
-[ ] Inspect SecurityConfig (route matching /api/v1/radicals/** và /api/v1/admin/**)
+[ ] Read .agents/API.md (Mục 2.4 & 2.5: Phân hệ Lesson và Import)
+[ ] Inspect CreatorLessonService & CreatorLessonController (Module 5B & 5C)
+[ ] Inspect ExcelParserService (Module 5C)
 [ ] Run baseline:
-    mvn -f backend/pom.xml clean test (201/201 tests PASS)
+    mvn -f backend/pom.xml clean test (467/467 tests PASS)
 ```
 
 Sau đó mới gửi implementation prompt cho AI coding agent.

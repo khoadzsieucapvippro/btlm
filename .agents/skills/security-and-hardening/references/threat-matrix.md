@@ -16,12 +16,14 @@ Không dùng lời khuyên chung chung "Sanitize input". Hãy phòng thủ theo 
   - Tại FE: Dùng `textContent` hoặc DOM element mapping. Nếu buộc dùng `innerHTML`, phải qua thư viện Sanitizer (vd: DOMPurify).
 
 ## 3. Insecure File Upload & Path Traversal
-- **Threat**: Upload file `shell.php` hoặc tải lên file name `../../../windows/system32/cmd.exe`.
-- **Attack Surface**: Tính năng thay avatar, upload audio/ảnh bài học.
-- **Prevention**:
-  - Không giữ nguyên tên file của user. Phải rename bằng `UUID`.
-  - Check File Extension (Whitelist: `.jpg`, `.mp3`) và Content-Type.
-  - Lưu file ra ổ cứng thì hàm resolve Path tuyệt đối không được cộng chuỗi trực tiếp từ user input.
+- **Threat**: Upload file độc hại (`shell.php`, ZIP bomb, XML bomb, zip-slip path traversal).
+- **Attack Surface trong dự án**: Tính năng nhập bài học từ Excel hai bước (`POST /api/v1/creator/lessons/import` & `/confirm`). *(Lưu ý: Avatar và Media trong dự án chỉ lưu dưới dạng URL string, không có API upload ảnh/audio lên server).*
+- **Phòng vệ thực tế trong Backend (`ExcelParserServiceImpl.java`)**:
+  - **Zero Disk Persistence**: File `.xlsx` được xử lý hoàn toàn qua `InputStream` trong bộ nhớ (try-with-resources), tuyệt đối không lưu ra file system của hệ điều hành.
+  - **Định dạng & Magic Bytes**: Kiểm tra đuôi `.xlsx` và kiểm tra 4 magic bytes đầu tiên (`PK\x03\x04` - Zip header) trước khi đưa vào Apache POI.
+  - **Giới hạn dung lượng cứng (DoS Guard)**: Tối đa 10MB (`MAX_FILE_SIZE_BYTES`), vượt quá trả về HTTP 413 `FILE_TOO_LARGE`.
+  - **Giới hạn số dòng dữ liệu**: Tối đa 5.000 dòng (`MAX_DATA_ROWS = 5000` theo OWASP API4:2023), vượt quá trả về `ROW_LIMIT_EXCEEDED`.
+  - **Thư viện an toàn**: Sử dụng Apache POI 5.4.0 vá triệt để lỗ hổng duplicate ZIP entry / OOXML decompression bomb (CVE-2025-31672).
 
 ## 4. Insecure Direct Object Reference (IDOR)
 - **Threat**: User A có id=1, truyền lên URL `GET /api/users/2` để xem thông tin của User B.

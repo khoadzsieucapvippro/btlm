@@ -11,16 +11,29 @@ Ngăn chặn Spring Boot trả về lỗi 500 kèm StackTrace thô sơ hoặc m�
    - Class có annotation `@RestControllerAdvice`.
    - Các hàm có annotation `@ExceptionHandler(ExceptionClass.class)`.
 
-## 3. Standard JSON Error Shape
+## 3. Standard JSON Error Shape (`ApiResponse<Void>`)
+Toàn bộ phản hồi lỗi được chuẩn hóa qua `ApiResponse<T>` bởi `GlobalExceptionHandler` (`@RestControllerAdvice`), tuyệt đối không dùng format mặc định của Spring Boot (`timestamp`, `status`, `path`):
+
 ```json
 {
-  "timestamp": "2023-10-01T12:00:00",
-  "status": 400,
-  "error": "Bad Request",
-  "message": "Email đã tồn tại",
-  "path": "/api/users"
+  "code": "VALIDATION_ERROR",
+  "message": "Dữ liệu đầu vào không hợp lệ",
+  "data": null,
+  "errors": [
+    "emailOrPhone: Email hoặc số điện thoại không được để trống"
+  ]
+}
+```
+
+Khi là lỗi nghiệp vụ (`BusinessException` / `ResourceNotFoundException`), `errors` là mảng rỗng `[]`:
+```json
+{
+  "code": "RESOURCE_NOT_FOUND",
+  "message": "Không tìm thấy bài học với ID: 123",
+  "data": null,
+  "errors": []
 }
 ```
 
 ## 4. Bắt lỗi DTO Validation
-Bắt `MethodArgumentNotValidException` (Sinh ra khi Request DTO trượt `@Valid`). Trả ra HTTP 400, lặp qua danh sách field lỗi và trả về list message.
+Bắt `MethodArgumentNotValidException` (khi Request DTO vi phạm các ràng buộc `@Valid`). Trả về HTTP 400 Bad Request, duyệt `BindingResult.getFieldErrors()` và định dạng từng chuỗi lỗi thành `"${field}: ${message}"` trong `errors[]` (`List<String>`). Frontend sử dụng hàm chuẩn `parseFieldErrors()` để phân tách và hiển thị dưới từng ô nhập liệu.
