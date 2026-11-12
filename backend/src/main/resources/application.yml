@@ -94,7 +94,7 @@ app:
     seed-accounts: ${APP_DEMO_SEED_ACCOUNTS:false}
   email:
     brevo-api-key: ${BREVO_API_KEY:}
-    brevo-sender-email: ${BREVO_SENDER_EMAIL:keodeom1700a15@gmail.com}
+    brevo-sender-email: ${BREVO_SENDER_EMAIL:noreply@elearning-chinese.com}
     resend-api-key: ${RESEND_API_KEY:}
     from-email: ${APP_EMAIL_FROM:onboarding@resend.dev}
     from-name: ${APP_EMAIL_FROM_NAME:Hán Ngữ Học Đường}

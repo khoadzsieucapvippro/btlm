@@ -41,7 +41,7 @@ public class EmailServiceImpl implements EmailService {
     @Value("${app.email.brevo-api-key:${BREVO_API_KEY:}}")
     private String brevoApiKey;
 
-    @Value("${app.email.brevo-sender-email:${BREVO_SENDER_EMAIL:keodeom1700a15@gmail.com}}")
+    @Value("${app.email.brevo-sender-email:${BREVO_SENDER_EMAIL:noreply@elearning-chinese.com}}")
     private String brevoSenderEmail;
 
     @Value("${app.email.from-email:${APP_EMAIL_FROM:onboarding@resend.dev}}")
@@ -153,7 +153,7 @@ public class EmailServiceImpl implements EmailService {
             sender.put("name", fromName);
             String senderEmail = (brevoSenderEmail != null && !brevoSenderEmail.isBlank())
                     ? brevoSenderEmail.trim()
-                    : "keodeom1700a15@gmail.com";
+                    : "noreply@elearning-chinese.com";
             sender.put("email", senderEmail);
             payload.put("sender", sender);
 

@@ -109,7 +109,7 @@ playwright-report/
 
 # Local Agent & IDE Artifacts
 .gemini/
-.agents/scratch/
+.agents/
 
 # Temporary Research, Scraping & Visual Review Artifacts
 /tests/*.pdf

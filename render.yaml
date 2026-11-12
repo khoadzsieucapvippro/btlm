@@ -75,7 +75,7 @@ services:
       - key: BREVO_API_KEY
         sync: false
       - key: BREVO_SENDER_EMAIL
-        value: "keodeom1700a15@gmail.com"
+        value: "noreply@elearning-chinese.com"
 
       # Resend API Key for Cloud HTTPS Email Delivery (Port 443)
       - key: RESEND_API_KEY
